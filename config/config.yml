@@ -1,0 +1,27 @@
+app:
+  name: "go-profile"
+  version: "1.0.0"
+  environment: "dev" # 'prod', 'dev'
+
+http:
+  host: "localhost"
+  port: 10010
+
+grpc:
+  host: "localhost"
+  port: 11010
+
+logger:
+  log_level: "debug" # 'panic', 'fatal', 'error', 'warn', 'warning', 'info', 'debug', 'trace'
+
+postgres:
+  pool_max: 2
+  username: "user"
+  password: "password"
+  host: "localhost"
+  port: 5010
+  db_name: "playground"
+
+jwt:
+  expire_hour: 36
+  signed_key: "2e1f352a-533b-42f6-2224-a4e2efe31de4"

@@ -1,0 +1,35 @@
+networks:
+  go-profile:
+    driver: bridge
+
+services:
+  go-profile-app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: go-profile-app-container
+    depends_on:
+      - go-profile-db-postgres
+    environment:
+      APP_ENVIRONMENT: prod
+      HTTP_HOST: 0.0.0.0
+      GRPC_HOST: 0.0.0.0
+      POSTGRES_HOST: go-profile-db-postgres-container
+      POSTGRES_PORT: 5432
+    image: go-profile-app
+    networks:
+      - go-profile
+    ports:
+      - "10010:10010"
+      - "11010:11010"
+  go-profile-db-postgres:
+    container_name: go-profile-db-postgres-container
+    environment:
+      POSTGRES_DB: playground
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: user
+    image: postgres:16
+    networks:
+      - go-profile
+    ports:
+      - "5010:5432"
