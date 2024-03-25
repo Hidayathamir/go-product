@@ -73,7 +73,56 @@ func TestUnitProductSearch(t *testing.T) {
 		require.NoError(t, err)
 		assert.Equal(t, expectedRes, res)
 	})
-	t.Run("query error should return error", func(t *testing.T) { t.Parallel() }) // TODO: IMPLEMENT
-	t.Run("scan error should return error", func(t *testing.T) { t.Parallel() })
-	t.Run("sql builder error should return error", func(t *testing.T) { t.Parallel() })
+	t.Run("query error should return error", func(t *testing.T) {
+		t.Parallel()
+
+		mockpool, err := pgxmock.NewPool(pgxmock.QueryMatcherOption(pgxmock.QueryMatcherRegexp))
+		require.NoError(t, err)
+
+		p := &Product{
+			cfg: config.Config{},
+			db: &db.Postgres{
+				Builder: builder,
+				Pool:    mockpool,
+			},
+		}
+
+		keyword := "iphone"
+		keywordIlike := "%" + keyword + "%"
+
+		mockpool.ExpectQuery("SELECT").WithArgs(keywordIlike, keywordIlike).
+			WillReturnError(assert.AnError)
+
+		res, err := p.Search(context.Background(), keyword)
+
+		assert.Empty(t, res)
+		require.Error(t, err)
+		require.ErrorIs(t, err, assert.AnError)
+	})
+	t.Run("scan error should return error", func(t *testing.T) {
+		t.Parallel()
+
+		mockpool, err := pgxmock.NewPool(pgxmock.QueryMatcherOption(pgxmock.QueryMatcherRegexp))
+		require.NoError(t, err)
+
+		p := &Product{
+			cfg: config.Config{},
+			db: &db.Postgres{
+				Builder: builder,
+				Pool:    mockpool,
+			},
+		}
+
+		keyword := "iphone"
+		keywordIlike := "%" + keyword + "%"
+
+		mockpool.ExpectQuery("SELECT").WithArgs(keywordIlike, keywordIlike).
+			WillReturnRows(pgxmock.NewRows([]string{table.Product.ID}).AddRow(123))
+
+		res, err := p.Search(context.Background(), keyword)
+
+		assert.Empty(t, res)
+		require.Error(t, err)
+		require.ErrorContains(t, err, "pgx.Rows.Scan")
+	})
 }
