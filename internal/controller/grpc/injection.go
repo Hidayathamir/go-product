@@ -7,15 +7,15 @@ import (
 	"github.com/Hidayathamir/go-product/internal/usecase"
 )
 
-func injectionProduct(cfg config.Config, _ *db.Postgres) *Product {
-	var repoProduct repo.IProduct // TODO: UPDATE
+func injectionProduct(cfg config.Config, db *db.Postgres) *Product {
+	repoProduct := repo.NewProduct(cfg, db)
 	usecaseProduct := usecase.NewProduct(cfg, repoProduct)
 	controllerProduct := newProduct(cfg, usecaseProduct)
 	return controllerProduct
 }
 
-func injectionStock(cfg config.Config, _ *db.Postgres) *Stock {
-	var repoStock repo.IStock // TODO: UPDATE
+func injectionStock(cfg config.Config, db *db.Postgres) *Stock {
+	repoStock := repo.NewStock(cfg, db)
 	usecaseStock := usecase.NewStock(cfg, repoStock)
 	controllerStock := newStock(cfg, usecaseStock)
 	return controllerStock
