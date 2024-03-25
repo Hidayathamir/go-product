@@ -13,3 +13,10 @@ func injectionProduct(cfg config.Config, _ *db.Postgres) *Product {
 	controllerProduct := newProduct(cfg, usecaseProduct)
 	return controllerProduct
 }
+
+func injectionStock(cfg config.Config, _ *db.Postgres) *Stock {
+	var repoStock repo.IStock // TODO: UPDATE
+	usecaseStock := usecase.NewStock(cfg, repoStock)
+	controllerStock := newStock(cfg, usecaseStock)
+	return controllerStock
+}

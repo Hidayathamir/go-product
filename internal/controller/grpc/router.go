@@ -11,6 +11,8 @@ import (
 
 func registerServer(cfg config.Config, grpcServer *grpc.Server, db *db.Postgres) {
 	cProduct := injectionProduct(cfg, db)
+	cStock := injectionStock(cfg, db)
 
 	goproductgrpc.RegisterProductServer(grpcServer, cProduct)
+	goproductgrpc.RegisterStockServer(grpcServer, cStock)
 }
