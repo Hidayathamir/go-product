@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+option go_package = "github.com/Hidayathamir/gouser/pkg/goproductgrpc";
+
+package goproductgrpc;
+
+service Stock {
+  rpc IncrementStock(ReqIncrementStock) returns (StockEmpty) {}
+  rpc DecrementStock(ReqDecrementStock) returns (StockEmpty) {}
+}
+
+message StockEmpty {}
+
+message ReqIncrementStock {
+    int64 product_id = 1;
+}
+
+message ReqDecrementStock {
+    int64 product_id = 1;
+}

@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/Hidayathamir/gouser/pkg/goproductgrpc";
+
+package goproductgrpc;
+
+service Product {
+  rpc Search(ReqProductSearch) returns (ResProductSearch) {}
+  rpc GetDetail(ReqProductDetail) returns (ResProductDetail) {}
+}
+
+message ReqProductSearch {
+    string name = 1;
+}
+
+message ResProductSearch {
+    repeated ResProductDetail products = 1;
+}
+
+message ReqProductDetail {
+    int64 id = 1;
+    string sku = 2;
+    string slug = 3;
+}
+
+message ResProductDetail {
+    int64 id = 1;
+    string sku = 2;
+    string slug = 3;
+    string name = 4;
+    int32 stock = 5;
+    google.protobuf.Timestamp created_at = 6;
+    google.protobuf.Timestamp updated_at = 7;
+}

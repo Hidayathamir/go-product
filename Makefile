@@ -30,3 +30,12 @@ air:
 # For deployment. Run postgres container also build and run go app container.
 deploy:
 	docker compose up --build
+
+###################################
+
+# Generate proto file.
+generate-proto:
+	protoc \
+		--go_out=.      --go_opt=paths=source_relative \
+		--go-grpc_out=. --go-grpc_opt=paths=source_relative \
+		pkg/goproductgrpc/*.proto
