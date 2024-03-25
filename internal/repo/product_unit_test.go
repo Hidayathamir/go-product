@@ -15,96 +15,6 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestUnitProductGetDetailByID(t *testing.T) {
-	t.Parallel()
-
-	t.Run("get detail success", func(t *testing.T) {
-		t.Parallel()
-
-		mockpool, err := pgxmock.NewPool(pgxmock.QueryMatcherOption(pgxmock.QueryMatcherRegexp))
-		require.NoError(t, err)
-
-		p := &Product{
-			cfg: config.Config{},
-			db: &db.Postgres{
-				Builder: builder,
-				Pool:    mockpool,
-			},
-		}
-
-		p1 := goproduct.ResProductDetail{
-			ID:          2141,
-			SKU:         "sku",
-			Slug:        "slug",
-			Name:        "name",
-			Description: "desc",
-			Stock:       23,
-			CreatedAt:   time.Now(),
-			UpdatedAt:   time.Now(),
-		}
-
-		mockpool.ExpectQuery("SELECT").WithArgs(p1.ID).
-			WillReturnRows(
-				pgxmock.NewRows([]string{
-					table.Product.ID, table.Product.SKU, table.Product.Slug,
-					table.Product.Name, table.Product.Description, table.Stock.Stock,
-					table.Product.CreatedAt, table.Product.UpdatedAt,
-				}).AddRow(p1.ID, p1.SKU, p1.Slug, p1.Name, p1.Description, p1.Stock, p1.CreatedAt, p1.UpdatedAt),
-			)
-
-		res, err := p.GetDetailByID(context.Background(), p1.ID)
-		require.NoError(t, err)
-		assert.Equal(t, p1, res)
-	})
-	t.Run("query error should return error", func(t *testing.T) {
-		t.Parallel()
-
-		mockpool, err := pgxmock.NewPool(pgxmock.QueryMatcherOption(pgxmock.QueryMatcherRegexp))
-		require.NoError(t, err)
-
-		p := &Product{
-			cfg: config.Config{},
-			db: &db.Postgres{
-				Builder: builder,
-				Pool:    mockpool,
-			},
-		}
-
-		id := int64(2342)
-
-		mockpool.ExpectQuery("SELECT").WithArgs(id).
-			WillReturnError(assert.AnError)
-
-		res, err := p.GetDetailByID(context.Background(), id)
-		assert.Empty(t, res)
-		require.Error(t, err)
-		require.ErrorIs(t, err, assert.AnError)
-	})
-	t.Run("query error no rows should return error", func(t *testing.T) {
-		t.Parallel()
-
-		mockpool, err := pgxmock.NewPool(pgxmock.QueryMatcherOption(pgxmock.QueryMatcherRegexp))
-		require.NoError(t, err)
-
-		p := &Product{
-			cfg: config.Config{},
-			db: &db.Postgres{
-				Builder: builder,
-				Pool:    mockpool,
-			},
-		}
-
-		id := int64(2342)
-
-		mockpool.ExpectQuery("SELECT").WithArgs(id).WillReturnError(pgx.ErrNoRows)
-
-		res, err := p.GetDetailByID(context.Background(), id)
-		assert.Empty(t, res)
-		require.Error(t, err)
-		require.ErrorIs(t, err, goproduct.ErrProductNotFound)
-	})
-}
-
 func TestUnitProductSearch(t *testing.T) {
 	t.Parallel()
 
@@ -215,5 +125,272 @@ func TestUnitProductSearch(t *testing.T) {
 		assert.Empty(t, res)
 		require.Error(t, err)
 		require.ErrorContains(t, err, "pgx.Rows.Scan")
+	})
+}
+
+func TestUnitProductGetDetailByID(t *testing.T) {
+	t.Parallel()
+
+	t.Run("get detail success", func(t *testing.T) {
+		t.Parallel()
+
+		mockpool, err := pgxmock.NewPool(pgxmock.QueryMatcherOption(pgxmock.QueryMatcherRegexp))
+		require.NoError(t, err)
+
+		p := &Product{
+			cfg: config.Config{},
+			db: &db.Postgres{
+				Builder: builder,
+				Pool:    mockpool,
+			},
+		}
+
+		p1 := goproduct.ResProductDetail{
+			ID:          2141,
+			SKU:         "sku",
+			Slug:        "slug",
+			Name:        "name",
+			Description: "desc",
+			Stock:       23,
+			CreatedAt:   time.Now(),
+			UpdatedAt:   time.Now(),
+		}
+
+		mockpool.ExpectQuery("SELECT").WithArgs(p1.ID).
+			WillReturnRows(
+				pgxmock.NewRows([]string{
+					table.Product.ID, table.Product.SKU, table.Product.Slug,
+					table.Product.Name, table.Product.Description, table.Stock.Stock,
+					table.Product.CreatedAt, table.Product.UpdatedAt,
+				}).AddRow(p1.ID, p1.SKU, p1.Slug, p1.Name, p1.Description, p1.Stock, p1.CreatedAt, p1.UpdatedAt),
+			)
+
+		res, err := p.GetDetailByID(context.Background(), p1.ID)
+		require.NoError(t, err)
+		assert.Equal(t, p1, res)
+	})
+	t.Run("query error should return error", func(t *testing.T) {
+		t.Parallel()
+
+		mockpool, err := pgxmock.NewPool(pgxmock.QueryMatcherOption(pgxmock.QueryMatcherRegexp))
+		require.NoError(t, err)
+
+		p := &Product{
+			cfg: config.Config{},
+			db: &db.Postgres{
+				Builder: builder,
+				Pool:    mockpool,
+			},
+		}
+
+		id := int64(2342)
+
+		mockpool.ExpectQuery("SELECT").WithArgs(id).WillReturnError(assert.AnError)
+
+		res, err := p.GetDetailByID(context.Background(), id)
+		assert.Empty(t, res)
+		require.Error(t, err)
+		require.ErrorIs(t, err, assert.AnError)
+	})
+	t.Run("query error no rows should return error", func(t *testing.T) {
+		t.Parallel()
+
+		mockpool, err := pgxmock.NewPool(pgxmock.QueryMatcherOption(pgxmock.QueryMatcherRegexp))
+		require.NoError(t, err)
+
+		p := &Product{
+			cfg: config.Config{},
+			db: &db.Postgres{
+				Builder: builder,
+				Pool:    mockpool,
+			},
+		}
+
+		id := int64(2342)
+
+		mockpool.ExpectQuery("SELECT").WithArgs(id).WillReturnError(pgx.ErrNoRows)
+
+		res, err := p.GetDetailByID(context.Background(), id)
+		assert.Empty(t, res)
+		require.Error(t, err)
+		require.ErrorIs(t, err, goproduct.ErrProductNotFound)
+	})
+}
+
+func TestUnitProductGetDetailBySKU(t *testing.T) {
+	t.Parallel()
+
+	t.Run("get detail success", func(t *testing.T) {
+		t.Parallel()
+
+		mockpool, err := pgxmock.NewPool(pgxmock.QueryMatcherOption(pgxmock.QueryMatcherRegexp))
+		require.NoError(t, err)
+
+		p := &Product{
+			cfg: config.Config{},
+			db: &db.Postgres{
+				Builder: builder,
+				Pool:    mockpool,
+			},
+		}
+
+		p1 := goproduct.ResProductDetail{
+			ID:          2141,
+			SKU:         "sku",
+			Slug:        "slug",
+			Name:        "name",
+			Description: "desc",
+			Stock:       23,
+			CreatedAt:   time.Now(),
+			UpdatedAt:   time.Now(),
+		}
+
+		mockpool.ExpectQuery("SELECT").WithArgs(p1.SKU).
+			WillReturnRows(
+				pgxmock.NewRows([]string{
+					table.Product.ID, table.Product.SKU, table.Product.Slug,
+					table.Product.Name, table.Product.Description, table.Stock.Stock,
+					table.Product.CreatedAt, table.Product.UpdatedAt,
+				}).AddRow(p1.ID, p1.SKU, p1.Slug, p1.Name, p1.Description, p1.Stock, p1.CreatedAt, p1.UpdatedAt),
+			)
+
+		res, err := p.GetDetailBySKU(context.Background(), p1.SKU)
+		require.NoError(t, err)
+		assert.Equal(t, p1, res)
+	})
+	t.Run("query error should return error", func(t *testing.T) {
+		t.Parallel()
+
+		mockpool, err := pgxmock.NewPool(pgxmock.QueryMatcherOption(pgxmock.QueryMatcherRegexp))
+		require.NoError(t, err)
+
+		p := &Product{
+			cfg: config.Config{},
+			db: &db.Postgres{
+				Builder: builder,
+				Pool:    mockpool,
+			},
+		}
+
+		sku := "skutest"
+
+		mockpool.ExpectQuery("SELECT").WithArgs(sku).WillReturnError(assert.AnError)
+
+		res, err := p.GetDetailBySKU(context.Background(), sku)
+		assert.Empty(t, res)
+		require.Error(t, err)
+		require.ErrorIs(t, err, assert.AnError)
+	})
+	t.Run("query error no rows should return error", func(t *testing.T) {
+		t.Parallel()
+
+		mockpool, err := pgxmock.NewPool(pgxmock.QueryMatcherOption(pgxmock.QueryMatcherRegexp))
+		require.NoError(t, err)
+
+		p := &Product{
+			cfg: config.Config{},
+			db: &db.Postgres{
+				Builder: builder,
+				Pool:    mockpool,
+			},
+		}
+
+		sku := "skutest"
+
+		mockpool.ExpectQuery("SELECT").WithArgs(sku).WillReturnError(pgx.ErrNoRows)
+
+		res, err := p.GetDetailBySKU(context.Background(), sku)
+		assert.Empty(t, res)
+		require.Error(t, err)
+		require.ErrorIs(t, err, goproduct.ErrProductNotFound)
+	})
+}
+
+func TestUnitProductGetDetailBySlug(t *testing.T) {
+	t.Parallel()
+
+	t.Run("get detail success", func(t *testing.T) {
+		t.Parallel()
+
+		mockpool, err := pgxmock.NewPool(pgxmock.QueryMatcherOption(pgxmock.QueryMatcherRegexp))
+		require.NoError(t, err)
+
+		p := &Product{
+			cfg: config.Config{},
+			db: &db.Postgres{
+				Builder: builder,
+				Pool:    mockpool,
+			},
+		}
+
+		p1 := goproduct.ResProductDetail{
+			ID:          2141,
+			SKU:         "sku",
+			Slug:        "slug",
+			Name:        "name",
+			Description: "desc",
+			Stock:       23,
+			CreatedAt:   time.Now(),
+			UpdatedAt:   time.Now(),
+		}
+
+		mockpool.ExpectQuery("SELECT").WithArgs(p1.Slug).
+			WillReturnRows(
+				pgxmock.NewRows([]string{
+					table.Product.ID, table.Product.SKU, table.Product.Slug,
+					table.Product.Name, table.Product.Description, table.Stock.Stock,
+					table.Product.CreatedAt, table.Product.UpdatedAt,
+				}).AddRow(p1.ID, p1.SKU, p1.Slug, p1.Name, p1.Description, p1.Stock, p1.CreatedAt, p1.UpdatedAt),
+			)
+
+		res, err := p.GetDetailBySlug(context.Background(), p1.Slug)
+		require.NoError(t, err)
+		assert.Equal(t, p1, res)
+	})
+	t.Run("query error should return error", func(t *testing.T) {
+		t.Parallel()
+
+		mockpool, err := pgxmock.NewPool(pgxmock.QueryMatcherOption(pgxmock.QueryMatcherRegexp))
+		require.NoError(t, err)
+
+		p := &Product{
+			cfg: config.Config{},
+			db: &db.Postgres{
+				Builder: builder,
+				Pool:    mockpool,
+			},
+		}
+
+		slug := "slugtest"
+
+		mockpool.ExpectQuery("SELECT").WithArgs(slug).WillReturnError(assert.AnError)
+
+		res, err := p.GetDetailBySlug(context.Background(), slug)
+		assert.Empty(t, res)
+		require.Error(t, err)
+		require.ErrorIs(t, err, assert.AnError)
+	})
+	t.Run("query error no rows should return error", func(t *testing.T) {
+		t.Parallel()
+
+		mockpool, err := pgxmock.NewPool(pgxmock.QueryMatcherOption(pgxmock.QueryMatcherRegexp))
+		require.NoError(t, err)
+
+		p := &Product{
+			cfg: config.Config{},
+			db: &db.Postgres{
+				Builder: builder,
+				Pool:    mockpool,
+			},
+		}
+
+		slug := "slugtest"
+
+		mockpool.ExpectQuery("SELECT").WithArgs(slug).WillReturnError(pgx.ErrNoRows)
+
+		res, err := p.GetDetailBySlug(context.Background(), slug)
+		assert.Empty(t, res)
+		require.Error(t, err)
+		require.ErrorIs(t, err, goproduct.ErrProductNotFound)
 	})
 }
