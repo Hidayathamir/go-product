@@ -40,11 +40,12 @@ func (r ReqProductDetail) Validate() error {
 
 // ResProductDetail -.
 type ResProductDetail struct {
-	ID        int64     `json:"id"`
-	SKU       string    `json:"sku"`
-	Slug      string    `json:"slug"`
-	Name      string    `json:"name"`
-	Stock     int32     `json:"stock"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	ID          int64     `json:"id"`
+	SKU         string    `json:"sku"`
+	Slug        string    `json:"slug"`
+	Name        string    `json:"name"`
+	Description string    `json:"description"`
+	Stock       int32     `json:"stock"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
 }

@@ -44,13 +44,14 @@ func (p *Product) Search(c context.Context, r *goproductgrpc.ReqProductSearch) (
 
 	for _, product := range resSearch.Products {
 		resProducts = append(resProducts, &goproductgrpc.ResProductDetail{
-			Id:        product.ID,
-			Sku:       product.SKU,
-			Slug:      product.Slug,
-			Name:      product.Name,
-			Stock:     product.Stock,
-			CreatedAt: timestamppb.New(product.CreatedAt),
-			UpdatedAt: timestamppb.New(product.UpdatedAt),
+			Id:          product.ID,
+			Sku:         product.SKU,
+			Slug:        product.Slug,
+			Name:        product.Name,
+			Description: product.Description,
+			Stock:       product.Stock,
+			CreatedAt:   timestamppb.New(product.CreatedAt),
+			UpdatedAt:   timestamppb.New(product.UpdatedAt),
 		})
 	}
 
@@ -76,13 +77,14 @@ func (p *Product) GetDetail(c context.Context, r *goproductgrpc.ReqProductDetail
 	}
 
 	res := &goproductgrpc.ResProductDetail{
-		Id:        resGetDetail.ID,
-		Sku:       resGetDetail.SKU,
-		Slug:      resGetDetail.Slug,
-		Name:      resGetDetail.Name,
-		Stock:     resGetDetail.Stock,
-		CreatedAt: timestamppb.New(resGetDetail.CreatedAt),
-		UpdatedAt: timestamppb.New(resGetDetail.UpdatedAt),
+		Id:          resGetDetail.ID,
+		Sku:         resGetDetail.SKU,
+		Slug:        resGetDetail.Slug,
+		Name:        resGetDetail.Name,
+		Description: resGetDetail.Description,
+		Stock:       resGetDetail.Stock,
+		CreatedAt:   timestamppb.New(resGetDetail.CreatedAt),
+		UpdatedAt:   timestamppb.New(resGetDetail.UpdatedAt),
 	}
 
 	return res, nil

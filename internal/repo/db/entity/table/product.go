@@ -9,12 +9,13 @@ var Product *product
 type product struct {
 	tableName string
 
-	ID        string
-	SKU       string
-	Slug      string
-	Name      string
-	CreatedAt string
-	UpdatedAt string
+	ID          string
+	SKU         string
+	Slug        string
+	Name        string
+	Description string
+	CreatedAt   string
+	UpdatedAt   string
 
 	Constraint productConstraint
 }
@@ -36,13 +37,14 @@ func initTableProduct() {
 	}
 
 	Product = &product{
-		tableName: "product",
-		ID:        "id",
-		SKU:       "sku",
-		Slug:      "slug",
-		Name:      "name",
-		CreatedAt: "created_at",
-		UpdatedAt: "updated_at",
+		tableName:   "product",
+		ID:          "id",
+		SKU:         "sku",
+		Slug:        "slug",
+		Name:        "\"name\"",
+		Description: "description",
+		CreatedAt:   "created_at",
+		UpdatedAt:   "updated_at",
 		Constraint: productConstraint{
 			ProductPk:      "product_pk",
 			ProductUnique:  "product_unique",

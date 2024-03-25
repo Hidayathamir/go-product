@@ -4,6 +4,7 @@ CREATE TABLE product (
     sku varchar NOT NULL,
     slug varchar NOT NULL,
     "name" varchar NOT NULL,
+    description varchar NOT NULL,
     created_at timestamptz NOT NULL,
     updated_at timestamptz NOT NULL,
     CONSTRAINT product_pk PRIMARY KEY (id),
