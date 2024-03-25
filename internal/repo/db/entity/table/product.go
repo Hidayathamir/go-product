@@ -9,6 +9,8 @@ var Product *product
 type product struct {
 	tableName string
 
+	Dot *product
+
 	ID          string
 	SKU         string
 	Slug        string
@@ -49,6 +51,22 @@ func initTableProduct() {
 			ProductPk:      "product_pk",
 			ProductUnique:  "product_unique",
 			ProductUnique1: "product_unique_1",
+		},
+	}
+
+	Product.Dot = &product{
+		tableName:   Product.tableName,
+		ID:          Product.tableName + "." + Product.ID,
+		SKU:         Product.tableName + "." + Product.SKU,
+		Slug:        Product.tableName + "." + Product.Slug,
+		Name:        Product.tableName + "." + Product.Name,
+		Description: Product.tableName + "." + Product.Description,
+		CreatedAt:   Product.tableName + "." + Product.CreatedAt,
+		UpdatedAt:   Product.tableName + "." + Product.UpdatedAt,
+		Constraint: productConstraint{
+			ProductPk:      Product.Constraint.ProductPk,
+			ProductUnique:  Product.Constraint.ProductUnique,
+			ProductUnique1: Product.Constraint.ProductUnique1,
 		},
 	}
 }

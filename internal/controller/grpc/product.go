@@ -31,7 +31,7 @@ func newProduct(cfg config.Config, usecaseProduct usecase.IProduct) *Product {
 // Search implements goproductgrpc.ProductServer.
 func (p *Product) Search(c context.Context, r *goproductgrpc.ReqProductSearch) (*goproductgrpc.ResProductSearch, error) {
 	req := goproduct.ReqProductSearch{
-		Name: r.GetName(),
+		Keyword: r.GetKeyword(),
 	}
 
 	resSearch, err := p.usecaseProduct.Search(c, req)

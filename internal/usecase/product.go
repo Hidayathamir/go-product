@@ -14,7 +14,7 @@ import (
 
 // IProduct contains abstraction of usecase product.
 type IProduct interface {
-	// Search search product by name.
+	// Search search product by name or description using keyword.
 	Search(ctx context.Context, req goproduct.ReqProductSearch) (goproduct.ResProductSearch, error)
 	// GetDetail get product detail by id, or sku, or slug. With priority id > sku > slug.
 	GetDetail(ctx context.Context, req goproduct.ReqProductDetail) (goproduct.ResProductDetail, error)
@@ -44,9 +44,9 @@ func (p *Product) Search(ctx context.Context, req goproduct.ReqProductSearch) (g
 		return goproduct.ResProductSearch{}, fmt.Errorf("%w: %w", goproduct.ErrRequestInvalid, err)
 	}
 
-	products, err := p.repoProduct.SearchByName(ctx, req.Name)
+	products, err := p.repoProduct.Search(ctx, req.Keyword)
 	if err != nil {
-		return goproduct.ResProductSearch{}, fmt.Errorf("Product.repoProduct.SearchByName: %w", err)
+		return goproduct.ResProductSearch{}, fmt.Errorf("Product.repoProduct.Search: %w", err)
 	}
 
 	return products, nil

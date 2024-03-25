@@ -9,6 +9,8 @@ var Stock *stock
 type stock struct {
 	tableName string
 
+	Dot *stock
+
 	ID        string
 	ProductID string
 	Stock     string
@@ -43,6 +45,19 @@ func initTableStock() {
 		Constraint: stockConstraint{
 			StockPk:        "stock_pk",
 			StockProductFk: "stock_product_fk",
+		},
+	}
+
+	Stock.Dot = &stock{
+		tableName: Stock.tableName,
+		ID:        Stock.tableName + "." + Stock.ID,
+		ProductID: Stock.tableName + "." + Stock.ProductID,
+		Stock:     Stock.tableName + "." + Stock.Stock,
+		CreatedAt: Stock.tableName + "." + Stock.CreatedAt,
+		UpdatedAt: Stock.tableName + "." + Stock.UpdatedAt,
+		Constraint: stockConstraint{
+			StockPk:        Stock.Constraint.StockPk,
+			StockProductFk: Stock.Constraint.StockProductFk,
 		},
 	}
 }

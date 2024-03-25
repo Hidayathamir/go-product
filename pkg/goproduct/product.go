@@ -7,13 +7,13 @@ import (
 
 // ReqProductSearch -.
 type ReqProductSearch struct {
-	Name string `json:"name"`
+	Keyword string `json:"keyword"`
 }
 
 // Validate -.
 func (r ReqProductSearch) Validate() error {
-	if r.Name == "" {
-		return errors.New("name can not be empty")
+	if r.Keyword == "" {
+		return errors.New("keyword can not be empty")
 	}
 	return nil
 }
