@@ -25,6 +25,12 @@ go-run:
 air:
 	air -c .air.toml
 
+# Run test unit.
+go-test-unit:
+	go clean -testcache && \
+	go test -v ./internal/repo -run TestUnit && \
+	go test -cover ./internal/repo -run TestUnit
+
 ###################################
 
 # For deployment. Run postgres container also build and run go app container.

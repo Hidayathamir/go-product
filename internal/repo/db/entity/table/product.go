@@ -7,9 +7,9 @@ import "github.com/sirupsen/logrus"
 var Product *product
 
 type product struct {
-	tableName string
-
-	Dot *product
+	tableName  string
+	Dot        *product
+	Constraint productConstraint
 
 	ID          string
 	SKU         string
@@ -18,8 +18,6 @@ type product struct {
 	Description string
 	CreatedAt   string
 	UpdatedAt   string
-
-	Constraint productConstraint
 }
 
 type productConstraint struct {
@@ -39,7 +37,13 @@ func initTableProduct() {
 	}
 
 	Product = &product{
-		tableName:   "product",
+		tableName: "product",
+		Dot:       &product{},
+		Constraint: productConstraint{
+			ProductPk:      "product_pk",
+			ProductUnique:  "product_unique",
+			ProductUnique1: "product_unique_1",
+		},
 		ID:          "id",
 		SKU:         "sku",
 		Slug:        "slug",
@@ -47,15 +51,16 @@ func initTableProduct() {
 		Description: "description",
 		CreatedAt:   "created_at",
 		UpdatedAt:   "updated_at",
-		Constraint: productConstraint{
-			ProductPk:      "product_pk",
-			ProductUnique:  "product_unique",
-			ProductUnique1: "product_unique_1",
-		},
 	}
 
 	Product.Dot = &product{
-		tableName:   Product.tableName,
+		tableName: Product.tableName,
+		Dot:       &product{},
+		Constraint: productConstraint{
+			ProductPk:      Product.Constraint.ProductPk,
+			ProductUnique:  Product.Constraint.ProductUnique,
+			ProductUnique1: Product.Constraint.ProductUnique1,
+		},
 		ID:          Product.tableName + "." + Product.ID,
 		SKU:         Product.tableName + "." + Product.SKU,
 		Slug:        Product.tableName + "." + Product.Slug,
@@ -63,10 +68,5 @@ func initTableProduct() {
 		Description: Product.tableName + "." + Product.Description,
 		CreatedAt:   Product.tableName + "." + Product.CreatedAt,
 		UpdatedAt:   Product.tableName + "." + Product.UpdatedAt,
-		Constraint: productConstraint{
-			ProductPk:      Product.Constraint.ProductPk,
-			ProductUnique:  Product.Constraint.ProductUnique,
-			ProductUnique1: Product.Constraint.ProductUnique1,
-		},
 	}
 }

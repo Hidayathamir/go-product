@@ -7,17 +7,15 @@ import "github.com/sirupsen/logrus"
 var Stock *stock
 
 type stock struct {
-	tableName string
-
-	Dot *stock
+	tableName  string
+	Dot        *stock
+	Constraint stockConstraint
 
 	ID        string
 	ProductID string
 	Stock     string
 	CreatedAt string
 	UpdatedAt string
-
-	Constraint stockConstraint
 }
 
 type stockConstraint struct {
@@ -37,27 +35,29 @@ func initTableStock() {
 
 	Stock = &stock{
 		tableName: "stock",
+		Dot:       &stock{},
+		Constraint: stockConstraint{
+			StockPk:        "stock_pk",
+			StockProductFk: "stock_product_fk",
+		},
 		ID:        "id",
 		ProductID: "product_id",
 		Stock:     "stock",
 		CreatedAt: "created_at",
 		UpdatedAt: "updated_at",
-		Constraint: stockConstraint{
-			StockPk:        "stock_pk",
-			StockProductFk: "stock_product_fk",
-		},
 	}
 
 	Stock.Dot = &stock{
 		tableName: Stock.tableName,
+		Dot:       &stock{},
+		Constraint: stockConstraint{
+			StockPk:        Stock.Constraint.StockPk,
+			StockProductFk: Stock.Constraint.StockProductFk,
+		},
 		ID:        Stock.tableName + "." + Stock.ID,
 		ProductID: Stock.tableName + "." + Stock.ProductID,
 		Stock:     Stock.tableName + "." + Stock.Stock,
 		CreatedAt: Stock.tableName + "." + Stock.CreatedAt,
 		UpdatedAt: Stock.tableName + "." + Stock.UpdatedAt,
-		Constraint: stockConstraint{
-			StockPk:        Stock.Constraint.StockPk,
-			StockProductFk: Stock.Constraint.StockProductFk,
-		},
 	}
 }
