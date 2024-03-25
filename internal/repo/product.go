@@ -2,6 +2,7 @@ package repo
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/Hidayathamir/go-product/config"
@@ -10,6 +11,7 @@ import (
 	"github.com/Hidayathamir/go-product/internal/repo/db/entity/table"
 	"github.com/Hidayathamir/go-product/pkg/goproduct"
 	sq "github.com/Masterminds/squirrel"
+	"github.com/jackc/pgx/v5"
 )
 
 //go:generate mockgen -source=product.go -destination=mockrepo/product.go -package=mockrepo
@@ -85,16 +87,97 @@ func (p *Product) Search(ctx context.Context, keyword string) (goproduct.ResProd
 }
 
 // GetDetailByID implements IProduct.
-func (p *Product) GetDetailByID(context.Context, int64) (goproduct.ResProductDetail, error) {
-	panic("unimplemented")
+func (p *Product) GetDetailByID(ctx context.Context, id int64) (goproduct.ResProductDetail, error) { //nolint:dupl
+	sql, args, err := p.db.Builder.
+		Select(
+			table.Product.Dot.ID, table.Product.Dot.SKU, table.Product.Dot.Slug,
+			table.Product.Dot.Name, table.Product.Dot.Description, table.Stock.Dot.Stock,
+			table.Product.Dot.CreatedAt, table.Product.Dot.UpdatedAt).
+		From(table.Product.String()).
+		Join(query.JoinOnEqual(table.Stock.String(), table.Product.Dot.ID, table.Stock.Dot.ProductID)).
+		Where(sq.Eq{table.Product.Dot.ID: id}).
+		ToSql()
+	if err != nil {
+		return goproduct.ResProductDetail{}, fmt.Errorf("Product.db.Builder.ToSql: %w", err)
+	}
+
+	product := goproduct.ResProductDetail{}
+	err = p.db.Pool.QueryRow(ctx, sql, args...).Scan(
+		&product.ID, &product.SKU, &product.Slug,
+		&product.Name, &product.Description, &product.Stock,
+		&product.CreatedAt, &product.UpdatedAt,
+	)
+	if err != nil {
+		err := fmt.Errorf("Product.db.Pool.QueryRow: %w", err)
+		if errors.Is(err, pgx.ErrNoRows) {
+			err = fmt.Errorf("%w: %w", goproduct.ErrProductNotFound, err)
+		}
+		return goproduct.ResProductDetail{}, err
+	}
+
+	return product, nil
 }
 
 // GetDetailBySKU implements IProduct.
-func (p *Product) GetDetailBySKU(context.Context, string) (goproduct.ResProductDetail, error) {
-	panic("unimplemented")
+func (p *Product) GetDetailBySKU(ctx context.Context, sku string) (goproduct.ResProductDetail, error) { //nolint:dupl
+	sql, args, err := p.db.Builder.
+		Select(
+			table.Product.Dot.ID, table.Product.Dot.SKU, table.Product.Dot.Slug,
+			table.Product.Dot.Name, table.Product.Dot.Description, table.Stock.Dot.Stock,
+			table.Product.Dot.CreatedAt, table.Product.Dot.UpdatedAt).
+		From(table.Product.String()).
+		Join(query.JoinOnEqual(table.Stock.String(), table.Product.Dot.ID, table.Stock.Dot.ProductID)).
+		Where(sq.Eq{table.Product.Dot.SKU: sku}).
+		ToSql()
+	if err != nil {
+		return goproduct.ResProductDetail{}, fmt.Errorf("Product.db.Builder.ToSql: %w", err)
+	}
+
+	product := goproduct.ResProductDetail{}
+	err = p.db.Pool.QueryRow(ctx, sql, args...).Scan(
+		&product.ID, &product.SKU, &product.Slug,
+		&product.Name, &product.Description, &product.Stock,
+		&product.CreatedAt, &product.UpdatedAt,
+	)
+	if err != nil {
+		err := fmt.Errorf("Product.db.Pool.QueryRow: %w", err)
+		if errors.Is(err, pgx.ErrNoRows) {
+			err = fmt.Errorf("%w: %w", goproduct.ErrProductNotFound, err)
+		}
+		return goproduct.ResProductDetail{}, err
+	}
+
+	return product, nil
 }
 
 // GetDetailBySlug implements IProduct.
-func (p *Product) GetDetailBySlug(context.Context, string) (goproduct.ResProductDetail, error) {
-	panic("unimplemented")
+func (p *Product) GetDetailBySlug(ctx context.Context, slug string) (goproduct.ResProductDetail, error) { //nolint:dupl
+	sql, args, err := p.db.Builder.
+		Select(
+			table.Product.Dot.ID, table.Product.Dot.SKU, table.Product.Dot.Slug,
+			table.Product.Dot.Name, table.Product.Dot.Description, table.Stock.Dot.Stock,
+			table.Product.Dot.CreatedAt, table.Product.Dot.UpdatedAt).
+		From(table.Product.String()).
+		Join(query.JoinOnEqual(table.Stock.String(), table.Product.Dot.ID, table.Stock.Dot.ProductID)).
+		Where(sq.Eq{table.Product.Dot.Slug: slug}).
+		ToSql()
+	if err != nil {
+		return goproduct.ResProductDetail{}, fmt.Errorf("Product.db.Builder.ToSql: %w", err)
+	}
+
+	product := goproduct.ResProductDetail{}
+	err = p.db.Pool.QueryRow(ctx, sql, args...).Scan(
+		&product.ID, &product.SKU, &product.Slug,
+		&product.Name, &product.Description, &product.Stock,
+		&product.CreatedAt, &product.UpdatedAt,
+	)
+	if err != nil {
+		err := fmt.Errorf("Product.db.Pool.QueryRow: %w", err)
+		if errors.Is(err, pgx.ErrNoRows) {
+			err = fmt.Errorf("%w: %w", goproduct.ErrProductNotFound, err)
+		}
+		return goproduct.ResProductDetail{}, err
+	}
+
+	return product, nil
 }

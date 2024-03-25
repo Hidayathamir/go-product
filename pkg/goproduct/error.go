@@ -2,5 +2,9 @@ package goproduct
 
 import "errors"
 
-// ErrRequestInvalid occurs when request invalid.
-var ErrRequestInvalid = errors.New("request invalid")
+var (
+	// ErrRequestInvalid occurs when request invalid.
+	ErrRequestInvalid = errors.New("request invalid")
+	// ErrProductNotFound occurs when product does not exists.
+	ErrProductNotFound = errors.New("product not found")
+)
