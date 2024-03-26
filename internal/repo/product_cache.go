@@ -80,7 +80,14 @@ func (p *ProductCache) GetDetailByID(ctx context.Context, id int64) (goproduct.R
 	product := goproduct.ResProductDetail{}
 	err = json.Unmarshal([]byte(val), &product)
 	if err != nil {
-		return goproduct.ResProductDetail{}, fmt.Errorf("json.Unmarshal: %w", err)
+		err := fmt.Errorf("json.Unmarshal, able to get value from redis but error when json unmarshal, trying to delete redis cache key: %w", err)
+
+		errDel := p.rdb.Del(ctx, p.keyDetailByID(id)).Err()
+		if errDel != nil {
+			err = fmt.Errorf("ProductCache.rdb.Del, error delete redis cache key: %w", errDel)
+		}
+
+		return goproduct.ResProductDetail{}, err
 	}
 
 	return product, nil
@@ -111,7 +118,14 @@ func (p *ProductCache) GetDetailBySKU(ctx context.Context, sku string) (goproduc
 	product := goproduct.ResProductDetail{}
 	err = json.Unmarshal([]byte(val), &product)
 	if err != nil {
-		return goproduct.ResProductDetail{}, fmt.Errorf("json.Unmarshal: %w", err)
+		err := fmt.Errorf("json.Unmarshal, able to get value from redis but error when json unmarshal, trying to delete redis cache key: %w", err)
+
+		errDel := p.rdb.Del(ctx, p.keyDetailBySKU(sku)).Err()
+		if errDel != nil {
+			err = fmt.Errorf("ProductCache.rdb.Del, error delete redis cache key: %w", errDel)
+		}
+
+		return goproduct.ResProductDetail{}, err
 	}
 
 	return product, nil
@@ -142,7 +156,14 @@ func (p *ProductCache) GetDetailBySlug(ctx context.Context, slug string) (goprod
 	product := goproduct.ResProductDetail{}
 	err = json.Unmarshal([]byte(val), &product)
 	if err != nil {
-		return goproduct.ResProductDetail{}, fmt.Errorf("json.Unmarshal: %w", err)
+		err := fmt.Errorf("json.Unmarshal, able to get value from redis but error when json unmarshal, trying to delete redis cache key: %w", err)
+
+		errDel := p.rdb.Del(ctx, p.keyDetailBySlug(slug)).Err()
+		if errDel != nil {
+			err = fmt.Errorf("ProductCache.rdb.Del, error delete redis cache key: %w", errDel)
+		}
+
+		return goproduct.ResProductDetail{}, err
 	}
 
 	return product, nil
