@@ -131,6 +131,78 @@ func TestUnitProductSearch(t *testing.T) {
 func TestUnitProductGetDetail(t *testing.T) {
 	t.Parallel()
 
-	t.Run("get product success", func(t *testing.T) { t.Parallel() })
-	t.Run("get product usecaes error should return error", func(t *testing.T) { t.Parallel() })
+	t.Run("get product success", func(t *testing.T) {
+		t.Parallel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		usecaseProduct := mockusecase.NewMockIProduct(ctrl)
+
+		p := &Product{
+			cfg:            config.Config{},
+			usecaseProduct: usecaseProduct,
+		}
+
+		reqUsecase := goproduct.ReqProductDetail{ID: 23423}
+		resUsecase := goproduct.ResProductDetail{
+			ID:          23423,
+			SKU:         "asdfaesf",
+			Slug:        "fsefsae",
+			Name:        "sefaef",
+			Description: "aefax",
+			Stock:       23423,
+			CreatedAt:   time.Now(),
+			UpdatedAt:   time.Now(),
+		}
+
+		usecaseProduct.EXPECT().
+			GetDetail(context.Background(), reqUsecase).
+			Return(resUsecase, nil)
+
+		reqGRPC := &goproductgrpc.ReqProductDetail{Id: reqUsecase.ID}
+		expectedResGRPC := &goproductgrpc.ResProductDetail{
+			Id:          resUsecase.ID,
+			Sku:         resUsecase.SKU,
+			Slug:        resUsecase.Slug,
+			Name:        resUsecase.Name,
+			Description: resUsecase.Description,
+			Stock:       resUsecase.Stock,
+			CreatedAt:   timestamppb.New(resUsecase.CreatedAt),
+			UpdatedAt:   timestamppb.New(resUsecase.UpdatedAt),
+		}
+
+		res, err := p.GetDetail(context.Background(), reqGRPC)
+
+		require.NoError(t, err)
+		assert.Equal(t, expectedResGRPC, res)
+	})
+	t.Run("get product usecaes error should return error", func(t *testing.T) {
+		t.Parallel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		usecaseProduct := mockusecase.NewMockIProduct(ctrl)
+
+		p := &Product{
+			cfg:            config.Config{},
+			usecaseProduct: usecaseProduct,
+		}
+
+		reqUsecase := goproduct.ReqProductDetail{ID: 23423}
+		resUsecase := goproduct.ResProductDetail{}
+
+		usecaseProduct.EXPECT().
+			GetDetail(context.Background(), reqUsecase).
+			Return(resUsecase, assert.AnError)
+
+		reqGRPC := &goproductgrpc.ReqProductDetail{Id: reqUsecase.ID}
+
+		res, err := p.GetDetail(context.Background(), reqGRPC)
+
+		assert.Nil(t, res)
+		require.Error(t, err)
+		require.ErrorIs(t, err, assert.AnError)
+	})
 }
