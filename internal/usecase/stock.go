@@ -9,6 +9,8 @@ import (
 	"github.com/Hidayathamir/go-product/pkg/goproduct"
 )
 
+//go:generate mockgen -source=stock.go -destination=mockusecase/stock.go -package=mockusecase
+
 // IStock contains abstraction of usecase stock.
 type IStock interface {
 	// IncrementStock increment product stock.
