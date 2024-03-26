@@ -12,6 +12,7 @@ package mockrepo
 import (
 	context "context"
 	reflect "reflect"
+	time "time"
 
 	goproduct "github.com/Hidayathamir/go-product/pkg/goproduct"
 	gomock "go.uber.org/mock/gomock"
@@ -154,45 +155,45 @@ func (mr *MockIProductCacheMockRecorder) GetDetailBySlug(ctx, slug any) *gomock.
 }
 
 // SetDetailByID mocks base method.
-func (m *MockIProductCache) SetDetailByID(ctx context.Context, data goproduct.ResProductDetail) error {
+func (m *MockIProductCache) SetDetailByID(ctx context.Context, data goproduct.ResProductDetail, expire time.Duration) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetDetailByID", ctx, data)
+	ret := m.ctrl.Call(m, "SetDetailByID", ctx, data, expire)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // SetDetailByID indicates an expected call of SetDetailByID.
-func (mr *MockIProductCacheMockRecorder) SetDetailByID(ctx, data any) *gomock.Call {
+func (mr *MockIProductCacheMockRecorder) SetDetailByID(ctx, data, expire any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetDetailByID", reflect.TypeOf((*MockIProductCache)(nil).SetDetailByID), ctx, data)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetDetailByID", reflect.TypeOf((*MockIProductCache)(nil).SetDetailByID), ctx, data, expire)
 }
 
 // SetDetailBySKU mocks base method.
-func (m *MockIProductCache) SetDetailBySKU(ctx context.Context, data goproduct.ResProductDetail) error {
+func (m *MockIProductCache) SetDetailBySKU(ctx context.Context, data goproduct.ResProductDetail, expire time.Duration) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetDetailBySKU", ctx, data)
+	ret := m.ctrl.Call(m, "SetDetailBySKU", ctx, data, expire)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // SetDetailBySKU indicates an expected call of SetDetailBySKU.
-func (mr *MockIProductCacheMockRecorder) SetDetailBySKU(ctx, data any) *gomock.Call {
+func (mr *MockIProductCacheMockRecorder) SetDetailBySKU(ctx, data, expire any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetDetailBySKU", reflect.TypeOf((*MockIProductCache)(nil).SetDetailBySKU), ctx, data)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetDetailBySKU", reflect.TypeOf((*MockIProductCache)(nil).SetDetailBySKU), ctx, data, expire)
 }
 
 // SetDetailBySlug mocks base method.
-func (m *MockIProductCache) SetDetailBySlug(ctx context.Context, data goproduct.ResProductDetail) error {
+func (m *MockIProductCache) SetDetailBySlug(ctx context.Context, data goproduct.ResProductDetail, expire time.Duration) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetDetailBySlug", ctx, data)
+	ret := m.ctrl.Call(m, "SetDetailBySlug", ctx, data, expire)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // SetDetailBySlug indicates an expected call of SetDetailBySlug.
-func (mr *MockIProductCacheMockRecorder) SetDetailBySlug(ctx, data any) *gomock.Call {
+func (mr *MockIProductCacheMockRecorder) SetDetailBySlug(ctx, data, expire any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetDetailBySlug", reflect.TypeOf((*MockIProductCache)(nil).SetDetailBySlug), ctx, data)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetDetailBySlug", reflect.TypeOf((*MockIProductCache)(nil).SetDetailBySlug), ctx, data, expire)
 }
 
 // MockIProduct is a mock of IProduct interface.

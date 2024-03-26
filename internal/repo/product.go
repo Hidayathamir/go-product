@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/Hidayathamir/go-product/config"
 	"github.com/Hidayathamir/go-product/internal/pkg/query"
@@ -32,11 +33,11 @@ type IProductCache interface {
 	IProductCacheGet
 
 	// SetDetailByID get product detail by id.
-	SetDetailByID(ctx context.Context, data goproduct.ResProductDetail) error
+	SetDetailByID(ctx context.Context, data goproduct.ResProductDetail, expire time.Duration) error
 	// SetDetailBySKU get product detail by sku.
-	SetDetailBySKU(ctx context.Context, data goproduct.ResProductDetail) error
+	SetDetailBySKU(ctx context.Context, data goproduct.ResProductDetail, expire time.Duration) error
 	// SetDetailBySlug get product detail by slug.
-	SetDetailBySlug(ctx context.Context, data goproduct.ResProductDetail) error
+	SetDetailBySlug(ctx context.Context, data goproduct.ResProductDetail, expire time.Duration) error
 }
 
 // IProduct contains abstraction of repo product.
@@ -143,7 +144,7 @@ func (p *Product) GetDetailByID(ctx context.Context, id int64) (goproduct.ResPro
 		return goproduct.ResProductDetail{}, err
 	}
 
-	err = p.cache.SetDetailByID(ctx, product)
+	err = p.cache.SetDetailByID(ctx, product, goproduct.DefaultCacheExpire)
 	if err != nil {
 		logrus.Warnf("Product.cache.SetDetailByID: %v", err)
 	}
@@ -187,7 +188,7 @@ func (p *Product) GetDetailBySKU(ctx context.Context, sku string) (goproduct.Res
 		return goproduct.ResProductDetail{}, err
 	}
 
-	err = p.cache.SetDetailBySKU(ctx, product)
+	err = p.cache.SetDetailBySKU(ctx, product, goproduct.DefaultCacheExpire)
 	if err != nil {
 		logrus.Warnf("Product.cache.SetDetailBySKU: %v", err)
 	}
@@ -231,7 +232,7 @@ func (p *Product) GetDetailBySlug(ctx context.Context, slug string) (goproduct.R
 		return goproduct.ResProductDetail{}, err
 	}
 
-	err = p.cache.SetDetailBySlug(ctx, product)
+	err = p.cache.SetDetailBySlug(ctx, product, goproduct.DefaultCacheExpire)
 	if err != nil {
 		logrus.Warnf("Product.cache.SetDetailBySlug: %v", err)
 	}

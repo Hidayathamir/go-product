@@ -7,15 +7,16 @@ import (
 
 	"github.com/Hidayathamir/go-product/config"
 	"github.com/Hidayathamir/go-product/internal/repo/db"
+	"github.com/redis/go-redis/v9"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 )
 
 // RunServer run grpc server.
-func RunServer(cfg config.Config, db *db.Postgres) error {
+func RunServer(cfg config.Config, db *db.Postgres, rdb *redis.Client) error {
 	grpcServer := grpc.NewServer()
 
-	registerServer(cfg, grpcServer, db)
+	registerServer(cfg, grpcServer, db, rdb)
 
 	addr := net.JoinHostPort(cfg.GRPC.Host, strconv.Itoa(cfg.GRPC.Port))
 	lis, err := net.Listen("tcp", addr)

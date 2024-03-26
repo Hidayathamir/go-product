@@ -217,7 +217,7 @@ func TestUnitProductGetDetailByID(t *testing.T) {
 			)
 
 		cache.EXPECT().
-			SetDetailByID(context.Background(), p1).
+			SetDetailByID(context.Background(), p1, goproduct.DefaultCacheExpire).
 			Return(nil)
 
 		res, err := p.GetDetailByID(context.Background(), p1.ID)
@@ -379,7 +379,7 @@ func TestUnitProductGetDetailBySKU(t *testing.T) {
 			)
 
 		cache.EXPECT().
-			SetDetailBySKU(context.Background(), p1).
+			SetDetailBySKU(context.Background(), p1, goproduct.DefaultCacheExpire).
 			Return(nil)
 
 		res, err := p.GetDetailBySKU(context.Background(), p1.SKU)
@@ -541,7 +541,7 @@ func TestUnitProductGetDetailBySlug(t *testing.T) {
 			)
 
 		cache.EXPECT().
-			SetDetailBySlug(context.Background(), p1).
+			SetDetailBySlug(context.Background(), p1, goproduct.DefaultCacheExpire).
 			Return(nil)
 
 		res, err := p.GetDetailBySlug(context.Background(), p1.Slug)
