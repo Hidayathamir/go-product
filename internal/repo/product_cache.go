@@ -13,22 +13,25 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
-const productRedisKeyPrefix = "product"
+//go:generate mockgen -source=product_cache.go -destination=mockrepo/product_cache.go -package=mockrepo
 
-var (
-	keyDetailByID = func(id int64) string {
-		keyList := []string{productRedisKeyPrefix, "GetDetailByID", strconv.FormatInt(id, 10)}
-		return strings.Join(keyList, ":")
-	}
-	keyDetailBySKU = func(sku string) string {
-		keyList := []string{productRedisKeyPrefix, "GetDetailBySKU", sku}
-		return strings.Join(keyList, ":")
-	}
-	keyDetailBySlug = func(slug string) string {
-		keyList := []string{productRedisKeyPrefix, "GetDetailBySlug", slug}
-		return strings.Join(keyList, ":")
-	}
-)
+// IProductCache contains abstraction of repo product cache.
+type IProductCache interface {
+	// GetDetailByID get product detail by id.
+	GetDetailByID(ctx context.Context, ID int64) (goproduct.ResProductDetail, error)
+	// SetDetailByID set product detail cache by id.
+	SetDetailByID(ctx context.Context, data goproduct.ResProductDetail, expire time.Duration) error
+
+	// GetDetailBySKU get product detail by sku.
+	GetDetailBySKU(ctx context.Context, SKU string) (goproduct.ResProductDetail, error)
+	// SetDetailBySKU get product detail cache by sku.
+	SetDetailBySKU(ctx context.Context, data goproduct.ResProductDetail, expire time.Duration) error
+
+	// GetDetailBySlug get product detail by slug.
+	GetDetailBySlug(ctx context.Context, slug string) (goproduct.ResProductDetail, error)
+	// SetDetailBySlug get product detail cache by slug.
+	SetDetailBySlug(ctx context.Context, data goproduct.ResProductDetail, expire time.Duration) error
+}
 
 // ProductCache implement IProductCache.
 type ProductCache struct {
@@ -46,9 +49,30 @@ func NewProductCache(cfg config.Config, rdb *redis.Client) *ProductCache {
 	}
 }
 
+///////////////////////////////// redis cache key /////////////////////////////////
+
+const productRedisKeyPrefix = "product"
+
+func (p *ProductCache) keyDetailByID(id int64) string {
+	keyList := []string{p.cfg.App.Name, productRedisKeyPrefix, "DetailByID", strconv.FormatInt(id, 10)}
+	return strings.Join(keyList, ":")
+}
+
+func (p *ProductCache) keyDetailBySKU(sku string) string {
+	keyList := []string{p.cfg.App.Name, productRedisKeyPrefix, "DetailBySKU", sku}
+	return strings.Join(keyList, ":")
+}
+
+func (p *ProductCache) keyDetailBySlug(slug string) string {
+	keyList := []string{p.cfg.App.Name, productRedisKeyPrefix, "DetailBySlug", slug}
+	return strings.Join(keyList, ":")
+}
+
+///////////////////////////////// redis cache key /////////////////////////////////
+
 // GetDetailByID implements IProductCache.
 func (p *ProductCache) GetDetailByID(ctx context.Context, id int64) (goproduct.ResProductDetail, error) {
-	val, err := p.rdb.Get(ctx, keyDetailByID(id)).Result()
+	val, err := p.rdb.Get(ctx, p.keyDetailByID(id)).Result()
 	if err != nil {
 		return goproduct.ResProductDetail{}, fmt.Errorf("ProductCache.rdb.Get: %w", err)
 	}
@@ -69,7 +93,7 @@ func (p *ProductCache) SetDetailByID(ctx context.Context, product goproduct.ResP
 		return fmt.Errorf("json.Marshal: %w", err)
 	}
 
-	err = p.rdb.Set(ctx, keyDetailByID(product.ID), string(jsonByte), expire).Err()
+	err = p.rdb.Set(ctx, p.keyDetailByID(product.ID), string(jsonByte), expire).Err()
 	if err != nil {
 		return fmt.Errorf("ProductCache.rdb.Set: %w", err)
 	}
@@ -79,7 +103,7 @@ func (p *ProductCache) SetDetailByID(ctx context.Context, product goproduct.ResP
 
 // GetDetailBySKU implements IProductCache.
 func (p *ProductCache) GetDetailBySKU(ctx context.Context, sku string) (goproduct.ResProductDetail, error) {
-	val, err := p.rdb.Get(ctx, keyDetailBySKU(sku)).Result()
+	val, err := p.rdb.Get(ctx, p.keyDetailBySKU(sku)).Result()
 	if err != nil {
 		return goproduct.ResProductDetail{}, fmt.Errorf("ProductCache.rdb.Get: %w", err)
 	}
@@ -100,7 +124,7 @@ func (p *ProductCache) SetDetailBySKU(ctx context.Context, product goproduct.Res
 		return fmt.Errorf("json.Marshal: %w", err)
 	}
 
-	err = p.rdb.Set(ctx, keyDetailBySKU(product.SKU), string(jsonByte), expire).Err()
+	err = p.rdb.Set(ctx, p.keyDetailBySKU(product.SKU), string(jsonByte), expire).Err()
 	if err != nil {
 		return fmt.Errorf("ProductCache.rdb.Set: %w", err)
 	}
@@ -110,7 +134,7 @@ func (p *ProductCache) SetDetailBySKU(ctx context.Context, product goproduct.Res
 
 // GetDetailBySlug implements IProductCache.
 func (p *ProductCache) GetDetailBySlug(ctx context.Context, slug string) (goproduct.ResProductDetail, error) {
-	val, err := p.rdb.Get(ctx, keyDetailBySlug(slug)).Result()
+	val, err := p.rdb.Get(ctx, p.keyDetailBySlug(slug)).Result()
 	if err != nil {
 		return goproduct.ResProductDetail{}, fmt.Errorf("ProductCache.rdb.Get: %w", err)
 	}
@@ -131,7 +155,7 @@ func (p *ProductCache) SetDetailBySlug(ctx context.Context, product goproduct.Re
 		return fmt.Errorf("json.Marshal: %w", err)
 	}
 
-	err = p.rdb.Set(ctx, keyDetailBySlug(product.Slug), string(jsonByte), expire).Err()
+	err = p.rdb.Set(ctx, p.keyDetailBySlug(product.Slug), string(jsonByte), expire).Err()
 	if err != nil {
 		return fmt.Errorf("ProductCache.rdb.Set: %w", err)
 	}
