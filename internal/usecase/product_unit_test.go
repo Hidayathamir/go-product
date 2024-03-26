@@ -111,3 +111,220 @@ func TestUnitProductSearch(t *testing.T) {
 		})
 	})
 }
+
+func TestUnitProductGetDetail(t *testing.T) {
+	t.Parallel()
+
+	t.Run("get detail by id success", func(t *testing.T) {
+		t.Parallel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		repoProduct := mockrepo.NewMockIProduct(ctrl)
+
+		p := &Product{
+			cfg:         config.Config{},
+			repoProduct: repoProduct,
+		}
+
+		req := goproduct.ReqProductDetail{
+			ID: 234,
+		}
+		expectedRes := goproduct.ResProductDetail{
+			ID:          234,
+			SKU:         "asfes",
+			Slug:        "gesges",
+			Name:        "sefes",
+			Description: "sfesf",
+			Stock:       3522,
+			CreatedAt:   time.Now(),
+			UpdatedAt:   time.Now(),
+		}
+
+		repoProduct.EXPECT().
+			GetDetailByID(context.Background(), req.ID).
+			Return(expectedRes, nil)
+
+		res, err := p.GetDetail(context.Background(), req)
+
+		require.NoError(t, err)
+		assert.Equal(t, expectedRes, res)
+	})
+	t.Run("get detail by id error should return error", func(t *testing.T) {
+		t.Parallel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		repoProduct := mockrepo.NewMockIProduct(ctrl)
+
+		p := &Product{
+			cfg:         config.Config{},
+			repoProduct: repoProduct,
+		}
+
+		req := goproduct.ReqProductDetail{
+			ID: 234,
+		}
+		expectedRes := goproduct.ResProductDetail{}
+
+		repoProduct.EXPECT().
+			GetDetailByID(context.Background(), req.ID).
+			Return(expectedRes, assert.AnError)
+
+		res, err := p.GetDetail(context.Background(), req)
+
+		assert.Equal(t, expectedRes, res)
+		require.Error(t, err)
+		require.ErrorIs(t, err, assert.AnError)
+	})
+	t.Run("get detail by sku success", func(t *testing.T) {
+		t.Parallel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		repoProduct := mockrepo.NewMockIProduct(ctrl)
+
+		p := &Product{
+			cfg:         config.Config{},
+			repoProduct: repoProduct,
+		}
+
+		req := goproduct.ReqProductDetail{
+			SKU: "asfes",
+		}
+		expectedRes := goproduct.ResProductDetail{
+			ID:          234,
+			SKU:         "asfes",
+			Slug:        "gesges",
+			Name:        "sefes",
+			Description: "sfesf",
+			Stock:       3522,
+			CreatedAt:   time.Now(),
+			UpdatedAt:   time.Now(),
+		}
+
+		repoProduct.EXPECT().
+			GetDetailBySKU(context.Background(), req.SKU).
+			Return(expectedRes, nil)
+
+		res, err := p.GetDetail(context.Background(), req)
+
+		require.NoError(t, err)
+		assert.Equal(t, expectedRes, res)
+	})
+	t.Run("get detail by sku error should return error", func(t *testing.T) {
+		t.Parallel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		repoProduct := mockrepo.NewMockIProduct(ctrl)
+
+		p := &Product{
+			cfg:         config.Config{},
+			repoProduct: repoProduct,
+		}
+
+		req := goproduct.ReqProductDetail{
+			SKU: "asfes",
+		}
+		expectedRes := goproduct.ResProductDetail{}
+
+		repoProduct.EXPECT().
+			GetDetailBySKU(context.Background(), req.SKU).
+			Return(expectedRes, assert.AnError)
+
+		res, err := p.GetDetail(context.Background(), req)
+
+		assert.Equal(t, expectedRes, res)
+		require.Error(t, err)
+		require.ErrorIs(t, err, assert.AnError)
+	})
+	t.Run("get detail by slug success", func(t *testing.T) {
+		t.Parallel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		repoProduct := mockrepo.NewMockIProduct(ctrl)
+
+		p := &Product{
+			cfg:         config.Config{},
+			repoProduct: repoProduct,
+		}
+
+		req := goproduct.ReqProductDetail{
+			Slug: "gesges",
+		}
+		expectedRes := goproduct.ResProductDetail{
+			ID:          234,
+			SKU:         "asfes",
+			Slug:        "gesges",
+			Name:        "sefes",
+			Description: "sfesf",
+			Stock:       3522,
+			CreatedAt:   time.Now(),
+			UpdatedAt:   time.Now(),
+		}
+
+		repoProduct.EXPECT().
+			GetDetailBySlug(context.Background(), req.Slug).
+			Return(expectedRes, nil)
+
+		res, err := p.GetDetail(context.Background(), req)
+
+		require.NoError(t, err)
+		assert.Equal(t, expectedRes, res)
+	})
+	t.Run("get detail by slug error should return error", func(t *testing.T) {
+		t.Parallel()
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		repoProduct := mockrepo.NewMockIProduct(ctrl)
+
+		p := &Product{
+			cfg:         config.Config{},
+			repoProduct: repoProduct,
+		}
+
+		req := goproduct.ReqProductDetail{
+			Slug: "gesges",
+		}
+		expectedRes := goproduct.ResProductDetail{}
+
+		repoProduct.EXPECT().
+			GetDetailBySlug(context.Background(), req.Slug).
+			Return(expectedRes, assert.AnError)
+
+		res, err := p.GetDetail(context.Background(), req)
+
+		assert.Equal(t, expectedRes, res)
+		require.Error(t, err)
+		require.ErrorIs(t, err, assert.AnError)
+	})
+	t.Run("request validate error should return error", func(t *testing.T) {
+		t.Parallel()
+
+		t.Run("id and sku and slug empty should return error", func(t *testing.T) {
+			t.Parallel()
+
+			p := &Product{
+				cfg: config.Config{},
+			}
+
+			req := goproduct.ReqProductDetail{}
+			expectedRes := goproduct.ResProductDetail{}
+
+			res, err := p.GetDetail(context.Background(), req)
+
+			assert.Equal(t, expectedRes, res)
+			require.Error(t, err)
+			require.ErrorIs(t, err, goproduct.ErrRequestInvalid)
+		})
+	})
+}
