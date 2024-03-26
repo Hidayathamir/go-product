@@ -8,11 +8,13 @@ import (
 	"github.com/Hidayathamir/go-product/config"
 	"github.com/Hidayathamir/go-product/internal/repo/db"
 	"github.com/Hidayathamir/go-product/internal/repo/db/entity/table"
+	"github.com/Hidayathamir/go-product/internal/repo/mockrepo"
 	"github.com/Hidayathamir/go-product/pkg/goproduct"
 	"github.com/jackc/pgx/v5"
 	"github.com/pashagolub/pgxmock/v3"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"go.uber.org/mock/gomock"
 )
 
 func TestUnitProductSearch(t *testing.T) {
@@ -131,11 +133,16 @@ func TestUnitProductSearch(t *testing.T) {
 func TestUnitProductGetDetailByID(t *testing.T) {
 	t.Parallel()
 
-	t.Run("get detail success", func(t *testing.T) {
+	t.Run("get detail success with cache", func(t *testing.T) {
 		t.Parallel()
 
 		mockpool, err := pgxmock.NewPool(pgxmock.QueryMatcherOption(pgxmock.QueryMatcherRegexp))
 		require.NoError(t, err)
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		cache := mockrepo.NewMockIProductCache(ctrl)
 
 		p := &Product{
 			cfg: config.Config{},
@@ -143,6 +150,7 @@ func TestUnitProductGetDetailByID(t *testing.T) {
 				Builder: builder,
 				Pool:    mockpool,
 			},
+			cache: cache,
 		}
 
 		p1 := goproduct.ResProductDetail{
@@ -156,6 +164,49 @@ func TestUnitProductGetDetailByID(t *testing.T) {
 			UpdatedAt:   time.Now(),
 		}
 
+		cache.EXPECT().
+			GetDetailByID(context.Background(), p1.ID).
+			Return(p1, nil)
+
+		res, err := p.GetDetailByID(context.Background(), p1.ID)
+		require.NoError(t, err)
+		assert.Equal(t, p1, res)
+	})
+	t.Run("get detail success", func(t *testing.T) {
+		t.Parallel()
+
+		mockpool, err := pgxmock.NewPool(pgxmock.QueryMatcherOption(pgxmock.QueryMatcherRegexp))
+		require.NoError(t, err)
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		cache := mockrepo.NewMockIProductCache(ctrl)
+
+		p := &Product{
+			cfg: config.Config{},
+			db: &db.Postgres{
+				Builder: builder,
+				Pool:    mockpool,
+			},
+			cache: cache,
+		}
+
+		p1 := goproduct.ResProductDetail{
+			ID:          2141,
+			SKU:         "sku",
+			Slug:        "slug",
+			Name:        "name",
+			Description: "desc",
+			Stock:       23,
+			CreatedAt:   time.Now(),
+			UpdatedAt:   time.Now(),
+		}
+
+		cache.EXPECT().
+			GetDetailByID(context.Background(), p1.ID).
+			Return(goproduct.ResProductDetail{}, assert.AnError)
+
 		mockpool.ExpectQuery("SELECT").WithArgs(p1.ID).
 			WillReturnRows(
 				pgxmock.NewRows([]string{
@@ -164,6 +215,10 @@ func TestUnitProductGetDetailByID(t *testing.T) {
 					table.Product.CreatedAt, table.Product.UpdatedAt,
 				}).AddRow(p1.ID, p1.SKU, p1.Slug, p1.Name, p1.Description, p1.Stock, p1.CreatedAt, p1.UpdatedAt),
 			)
+
+		cache.EXPECT().
+			SetDetailByID(context.Background(), p1).
+			Return(nil)
 
 		res, err := p.GetDetailByID(context.Background(), p1.ID)
 		require.NoError(t, err)
@@ -175,15 +230,25 @@ func TestUnitProductGetDetailByID(t *testing.T) {
 		mockpool, err := pgxmock.NewPool(pgxmock.QueryMatcherOption(pgxmock.QueryMatcherRegexp))
 		require.NoError(t, err)
 
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		cache := mockrepo.NewMockIProductCache(ctrl)
+
 		p := &Product{
 			cfg: config.Config{},
 			db: &db.Postgres{
 				Builder: builder,
 				Pool:    mockpool,
 			},
+			cache: cache,
 		}
 
 		id := int64(2342)
+
+		cache.EXPECT().
+			GetDetailByID(context.Background(), id).
+			Return(goproduct.ResProductDetail{}, assert.AnError)
 
 		mockpool.ExpectQuery("SELECT").WithArgs(id).WillReturnError(assert.AnError)
 
@@ -198,15 +263,25 @@ func TestUnitProductGetDetailByID(t *testing.T) {
 		mockpool, err := pgxmock.NewPool(pgxmock.QueryMatcherOption(pgxmock.QueryMatcherRegexp))
 		require.NoError(t, err)
 
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		cache := mockrepo.NewMockIProductCache(ctrl)
+
 		p := &Product{
 			cfg: config.Config{},
 			db: &db.Postgres{
 				Builder: builder,
 				Pool:    mockpool,
 			},
+			cache: cache,
 		}
 
 		id := int64(2342)
+
+		cache.EXPECT().
+			GetDetailByID(context.Background(), id).
+			Return(goproduct.ResProductDetail{}, assert.AnError)
 
 		mockpool.ExpectQuery("SELECT").WithArgs(id).WillReturnError(pgx.ErrNoRows)
 
@@ -220,11 +295,16 @@ func TestUnitProductGetDetailByID(t *testing.T) {
 func TestUnitProductGetDetailBySKU(t *testing.T) {
 	t.Parallel()
 
-	t.Run("get detail success", func(t *testing.T) {
+	t.Run("get detail success with cache", func(t *testing.T) {
 		t.Parallel()
 
 		mockpool, err := pgxmock.NewPool(pgxmock.QueryMatcherOption(pgxmock.QueryMatcherRegexp))
 		require.NoError(t, err)
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		cache := mockrepo.NewMockIProductCache(ctrl)
 
 		p := &Product{
 			cfg: config.Config{},
@@ -232,6 +312,7 @@ func TestUnitProductGetDetailBySKU(t *testing.T) {
 				Builder: builder,
 				Pool:    mockpool,
 			},
+			cache: cache,
 		}
 
 		p1 := goproduct.ResProductDetail{
@@ -245,6 +326,49 @@ func TestUnitProductGetDetailBySKU(t *testing.T) {
 			UpdatedAt:   time.Now(),
 		}
 
+		cache.EXPECT().
+			GetDetailBySKU(context.Background(), p1.SKU).
+			Return(p1, nil)
+
+		res, err := p.GetDetailBySKU(context.Background(), p1.SKU)
+		require.NoError(t, err)
+		assert.Equal(t, p1, res)
+	})
+	t.Run("get detail success", func(t *testing.T) {
+		t.Parallel()
+
+		mockpool, err := pgxmock.NewPool(pgxmock.QueryMatcherOption(pgxmock.QueryMatcherRegexp))
+		require.NoError(t, err)
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		cache := mockrepo.NewMockIProductCache(ctrl)
+
+		p := &Product{
+			cfg: config.Config{},
+			db: &db.Postgres{
+				Builder: builder,
+				Pool:    mockpool,
+			},
+			cache: cache,
+		}
+
+		p1 := goproduct.ResProductDetail{
+			ID:          2141,
+			SKU:         "sku",
+			Slug:        "slug",
+			Name:        "name",
+			Description: "desc",
+			Stock:       23,
+			CreatedAt:   time.Now(),
+			UpdatedAt:   time.Now(),
+		}
+
+		cache.EXPECT().
+			GetDetailBySKU(context.Background(), p1.SKU).
+			Return(goproduct.ResProductDetail{}, assert.AnError)
+
 		mockpool.ExpectQuery("SELECT").WithArgs(p1.SKU).
 			WillReturnRows(
 				pgxmock.NewRows([]string{
@@ -253,6 +377,10 @@ func TestUnitProductGetDetailBySKU(t *testing.T) {
 					table.Product.CreatedAt, table.Product.UpdatedAt,
 				}).AddRow(p1.ID, p1.SKU, p1.Slug, p1.Name, p1.Description, p1.Stock, p1.CreatedAt, p1.UpdatedAt),
 			)
+
+		cache.EXPECT().
+			SetDetailBySKU(context.Background(), p1).
+			Return(nil)
 
 		res, err := p.GetDetailBySKU(context.Background(), p1.SKU)
 		require.NoError(t, err)
@@ -264,15 +392,25 @@ func TestUnitProductGetDetailBySKU(t *testing.T) {
 		mockpool, err := pgxmock.NewPool(pgxmock.QueryMatcherOption(pgxmock.QueryMatcherRegexp))
 		require.NoError(t, err)
 
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		cache := mockrepo.NewMockIProductCache(ctrl)
+
 		p := &Product{
 			cfg: config.Config{},
 			db: &db.Postgres{
 				Builder: builder,
 				Pool:    mockpool,
 			},
+			cache: cache,
 		}
 
 		sku := "skutest"
+
+		cache.EXPECT().
+			GetDetailBySKU(context.Background(), sku).
+			Return(goproduct.ResProductDetail{}, assert.AnError)
 
 		mockpool.ExpectQuery("SELECT").WithArgs(sku).WillReturnError(assert.AnError)
 
@@ -287,15 +425,25 @@ func TestUnitProductGetDetailBySKU(t *testing.T) {
 		mockpool, err := pgxmock.NewPool(pgxmock.QueryMatcherOption(pgxmock.QueryMatcherRegexp))
 		require.NoError(t, err)
 
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		cache := mockrepo.NewMockIProductCache(ctrl)
+
 		p := &Product{
 			cfg: config.Config{},
 			db: &db.Postgres{
 				Builder: builder,
 				Pool:    mockpool,
 			},
+			cache: cache,
 		}
 
 		sku := "skutest"
+
+		cache.EXPECT().
+			GetDetailBySKU(context.Background(), sku).
+			Return(goproduct.ResProductDetail{}, assert.AnError)
 
 		mockpool.ExpectQuery("SELECT").WithArgs(sku).WillReturnError(pgx.ErrNoRows)
 
@@ -309,11 +457,16 @@ func TestUnitProductGetDetailBySKU(t *testing.T) {
 func TestUnitProductGetDetailBySlug(t *testing.T) {
 	t.Parallel()
 
-	t.Run("get detail success", func(t *testing.T) {
+	t.Run("get detail success with cache", func(t *testing.T) {
 		t.Parallel()
 
 		mockpool, err := pgxmock.NewPool(pgxmock.QueryMatcherOption(pgxmock.QueryMatcherRegexp))
 		require.NoError(t, err)
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		cache := mockrepo.NewMockIProductCache(ctrl)
 
 		p := &Product{
 			cfg: config.Config{},
@@ -321,6 +474,7 @@ func TestUnitProductGetDetailBySlug(t *testing.T) {
 				Builder: builder,
 				Pool:    mockpool,
 			},
+			cache: cache,
 		}
 
 		p1 := goproduct.ResProductDetail{
@@ -334,6 +488,49 @@ func TestUnitProductGetDetailBySlug(t *testing.T) {
 			UpdatedAt:   time.Now(),
 		}
 
+		cache.EXPECT().
+			GetDetailBySlug(context.Background(), p1.Slug).
+			Return(p1, nil)
+
+		res, err := p.GetDetailBySlug(context.Background(), p1.Slug)
+		require.NoError(t, err)
+		assert.Equal(t, p1, res)
+	})
+	t.Run("get detail success", func(t *testing.T) {
+		t.Parallel()
+
+		mockpool, err := pgxmock.NewPool(pgxmock.QueryMatcherOption(pgxmock.QueryMatcherRegexp))
+		require.NoError(t, err)
+
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		cache := mockrepo.NewMockIProductCache(ctrl)
+
+		p := &Product{
+			cfg: config.Config{},
+			db: &db.Postgres{
+				Builder: builder,
+				Pool:    mockpool,
+			},
+			cache: cache,
+		}
+
+		p1 := goproduct.ResProductDetail{
+			ID:          2141,
+			SKU:         "sku",
+			Slug:        "slug",
+			Name:        "name",
+			Description: "desc",
+			Stock:       23,
+			CreatedAt:   time.Now(),
+			UpdatedAt:   time.Now(),
+		}
+
+		cache.EXPECT().
+			GetDetailBySlug(context.Background(), p1.Slug).
+			Return(goproduct.ResProductDetail{}, assert.AnError)
+
 		mockpool.ExpectQuery("SELECT").WithArgs(p1.Slug).
 			WillReturnRows(
 				pgxmock.NewRows([]string{
@@ -342,6 +539,10 @@ func TestUnitProductGetDetailBySlug(t *testing.T) {
 					table.Product.CreatedAt, table.Product.UpdatedAt,
 				}).AddRow(p1.ID, p1.SKU, p1.Slug, p1.Name, p1.Description, p1.Stock, p1.CreatedAt, p1.UpdatedAt),
 			)
+
+		cache.EXPECT().
+			SetDetailBySlug(context.Background(), p1).
+			Return(nil)
 
 		res, err := p.GetDetailBySlug(context.Background(), p1.Slug)
 		require.NoError(t, err)
@@ -353,15 +554,25 @@ func TestUnitProductGetDetailBySlug(t *testing.T) {
 		mockpool, err := pgxmock.NewPool(pgxmock.QueryMatcherOption(pgxmock.QueryMatcherRegexp))
 		require.NoError(t, err)
 
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		cache := mockrepo.NewMockIProductCache(ctrl)
+
 		p := &Product{
 			cfg: config.Config{},
 			db: &db.Postgres{
 				Builder: builder,
 				Pool:    mockpool,
 			},
+			cache: cache,
 		}
 
 		slug := "slugtest"
+
+		cache.EXPECT().
+			GetDetailBySlug(context.Background(), slug).
+			Return(goproduct.ResProductDetail{}, assert.AnError)
 
 		mockpool.ExpectQuery("SELECT").WithArgs(slug).WillReturnError(assert.AnError)
 
@@ -376,15 +587,25 @@ func TestUnitProductGetDetailBySlug(t *testing.T) {
 		mockpool, err := pgxmock.NewPool(pgxmock.QueryMatcherOption(pgxmock.QueryMatcherRegexp))
 		require.NoError(t, err)
 
+		ctrl := gomock.NewController(t)
+		defer ctrl.Finish()
+
+		cache := mockrepo.NewMockIProductCache(ctrl)
+
 		p := &Product{
 			cfg: config.Config{},
 			db: &db.Postgres{
 				Builder: builder,
 				Pool:    mockpool,
 			},
+			cache: cache,
 		}
 
 		slug := "slugtest"
+
+		cache.EXPECT().
+			GetDetailBySlug(context.Background(), slug).
+			Return(goproduct.ResProductDetail{}, assert.AnError)
 
 		mockpool.ExpectQuery("SELECT").WithArgs(slug).WillReturnError(pgx.ErrNoRows)
 

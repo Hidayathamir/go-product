@@ -12,14 +12,13 @@ import (
 	"github.com/Hidayathamir/go-product/pkg/goproduct"
 	sq "github.com/Masterminds/squirrel"
 	"github.com/jackc/pgx/v5"
+	"github.com/sirupsen/logrus"
 )
 
 //go:generate mockgen -source=product.go -destination=mockrepo/product.go -package=mockrepo
 
-// IProduct contains abstraction of repo product.
-type IProduct interface {
-	// Search search product by name or description using keyword.
-	Search(ctx context.Context, keyword string) (goproduct.ResProductSearch, error)
+// IProductCacheGet contains abstraction of repo product cache get.
+type IProductCacheGet interface {
 	// GetDetailByID get product detail by id.
 	GetDetailByID(ctx context.Context, ID int64) (goproduct.ResProductDetail, error)
 	// GetDetailBySKU get product detail by sku.
@@ -28,19 +27,41 @@ type IProduct interface {
 	GetDetailBySlug(ctx context.Context, slug string) (goproduct.ResProductDetail, error)
 }
 
+// IProductCache contains abstraction of repo product cache.
+type IProductCache interface {
+	IProductCacheGet
+
+	// SetDetailByID get product detail by id.
+	SetDetailByID(ctx context.Context, data goproduct.ResProductDetail) error
+	// SetDetailBySKU get product detail by sku.
+	SetDetailBySKU(ctx context.Context, data goproduct.ResProductDetail) error
+	// SetDetailBySlug get product detail by slug.
+	SetDetailBySlug(ctx context.Context, data goproduct.ResProductDetail) error
+}
+
+// IProduct contains abstraction of repo product.
+type IProduct interface {
+	IProductCacheGet
+
+	// Search search product by name or description using keyword.
+	Search(ctx context.Context, keyword string) (goproduct.ResProductSearch, error)
+}
+
 // Product implement IProduct.
 type Product struct {
-	cfg config.Config
-	db  *db.Postgres
+	cfg   config.Config
+	db    *db.Postgres
+	cache IProductCache
 }
 
 var _ IProduct = &Product{}
 
 // NewProduct return *Product which implement repo.IProduct.
-func NewProduct(cfg config.Config, db *db.Postgres) *Product {
+func NewProduct(cfg config.Config, db *db.Postgres, cache IProductCache) *Product {
 	return &Product{
-		cfg: cfg,
-		db:  db,
+		cfg:   cfg,
+		db:    db,
+		cache: cache,
 	}
 }
 
@@ -88,6 +109,13 @@ func (p *Product) Search(ctx context.Context, keyword string) (goproduct.ResProd
 
 // GetDetailByID implements IProduct.
 func (p *Product) GetDetailByID(ctx context.Context, id int64) (goproduct.ResProductDetail, error) { //nolint:dupl
+	product, err := p.cache.GetDetailByID(ctx, id)
+	if err == nil {
+		return product, nil
+	}
+
+	logrus.Warnf("Product.cache.GetDetailByID: %v", err)
+
 	sql, args, err := p.db.Builder.
 		Select(
 			table.Product.Dot.ID, table.Product.Dot.SKU, table.Product.Dot.Slug,
@@ -101,7 +129,7 @@ func (p *Product) GetDetailByID(ctx context.Context, id int64) (goproduct.ResPro
 		return goproduct.ResProductDetail{}, fmt.Errorf("Product.db.Builder.ToSql: %w", err)
 	}
 
-	product := goproduct.ResProductDetail{}
+	product = goproduct.ResProductDetail{}
 	err = p.db.Pool.QueryRow(ctx, sql, args...).Scan(
 		&product.ID, &product.SKU, &product.Slug,
 		&product.Name, &product.Description, &product.Stock,
@@ -115,11 +143,23 @@ func (p *Product) GetDetailByID(ctx context.Context, id int64) (goproduct.ResPro
 		return goproduct.ResProductDetail{}, err
 	}
 
+	err = p.cache.SetDetailByID(ctx, product)
+	if err != nil {
+		logrus.Warnf("Product.cache.SetDetailByID: %v", err)
+	}
+
 	return product, nil
 }
 
 // GetDetailBySKU implements IProduct.
 func (p *Product) GetDetailBySKU(ctx context.Context, sku string) (goproduct.ResProductDetail, error) { //nolint:dupl
+	product, err := p.cache.GetDetailBySKU(ctx, sku)
+	if err == nil {
+		return product, nil
+	}
+
+	logrus.Warnf("Product.cache.GetDetailBySKU: %v", err)
+
 	sql, args, err := p.db.Builder.
 		Select(
 			table.Product.Dot.ID, table.Product.Dot.SKU, table.Product.Dot.Slug,
@@ -133,7 +173,7 @@ func (p *Product) GetDetailBySKU(ctx context.Context, sku string) (goproduct.Res
 		return goproduct.ResProductDetail{}, fmt.Errorf("Product.db.Builder.ToSql: %w", err)
 	}
 
-	product := goproduct.ResProductDetail{}
+	product = goproduct.ResProductDetail{}
 	err = p.db.Pool.QueryRow(ctx, sql, args...).Scan(
 		&product.ID, &product.SKU, &product.Slug,
 		&product.Name, &product.Description, &product.Stock,
@@ -147,11 +187,23 @@ func (p *Product) GetDetailBySKU(ctx context.Context, sku string) (goproduct.Res
 		return goproduct.ResProductDetail{}, err
 	}
 
+	err = p.cache.SetDetailBySKU(ctx, product)
+	if err != nil {
+		logrus.Warnf("Product.cache.SetDetailBySKU: %v", err)
+	}
+
 	return product, nil
 }
 
 // GetDetailBySlug implements IProduct.
 func (p *Product) GetDetailBySlug(ctx context.Context, slug string) (goproduct.ResProductDetail, error) { //nolint:dupl
+	product, err := p.cache.GetDetailBySlug(ctx, slug)
+	if err == nil {
+		return product, nil
+	}
+
+	logrus.Warnf("Product.cache.GetDetailBySlug: %v", err)
+
 	sql, args, err := p.db.Builder.
 		Select(
 			table.Product.Dot.ID, table.Product.Dot.SKU, table.Product.Dot.Slug,
@@ -165,7 +217,7 @@ func (p *Product) GetDetailBySlug(ctx context.Context, slug string) (goproduct.R
 		return goproduct.ResProductDetail{}, fmt.Errorf("Product.db.Builder.ToSql: %w", err)
 	}
 
-	product := goproduct.ResProductDetail{}
+	product = goproduct.ResProductDetail{}
 	err = p.db.Pool.QueryRow(ctx, sql, args...).Scan(
 		&product.ID, &product.SKU, &product.Slug,
 		&product.Name, &product.Description, &product.Stock,
@@ -177,6 +229,11 @@ func (p *Product) GetDetailBySlug(ctx context.Context, slug string) (goproduct.R
 			err = fmt.Errorf("%w: %w", goproduct.ErrProductNotFound, err)
 		}
 		return goproduct.ResProductDetail{}, err
+	}
+
+	err = p.cache.SetDetailBySlug(ctx, product)
+	if err != nil {
+		logrus.Warnf("Product.cache.SetDetailBySlug: %v", err)
 	}
 
 	return product, nil

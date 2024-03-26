@@ -8,7 +8,8 @@ import (
 )
 
 func injectionProduct(cfg config.Config, db *db.Postgres) *Product {
-	repoProduct := repo.NewProduct(cfg, db)
+	repoProductCache := repo.NewProductCache(cfg)
+	repoProduct := repo.NewProduct(cfg, db, repoProductCache)
 	usecaseProduct := usecase.NewProduct(cfg, repoProduct)
 	controllerProduct := newProduct(cfg, usecaseProduct)
 	return controllerProduct
