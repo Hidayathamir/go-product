@@ -177,3 +177,87 @@ func TestUnitProductCacheGetDetailBySKU(t *testing.T) {
 		require.ErrorContains(t, err, "json.Unmarshal")
 	})
 }
+
+func TestUnitProductCacheGetDetailBySlug(t *testing.T) {
+	t.Parallel()
+
+	t.Run("get detail by sku success", func(t *testing.T) {
+		t.Parallel()
+
+		s := miniredis.RunT(t)
+
+		rdb := redis.NewClient(&redis.Options{
+			Addr: s.Addr(),
+		})
+
+		p := &ProductCache{
+			cfg: config.Config{},
+			rdb: rdb,
+		}
+
+		expectedProduct := goproduct.ResProductDetail{
+			ID:          234231,
+			SKU:         "asdf",
+			Slug:        "aefsf",
+			Name:        "fsdfea",
+			Description: "asdfes",
+			Stock:       234,
+			CreatedAt:   time.Time{},
+			UpdatedAt:   time.Time{},
+		}
+
+		err := s.Set(p.keyDetailBySlug(expectedProduct.Slug), jutil.ToJSONString(expectedProduct))
+		require.NoError(t, err)
+
+		product, err := p.GetDetailBySlug(context.Background(), expectedProduct.Slug)
+
+		require.NoError(t, err)
+		assert.Equal(t, expectedProduct, product)
+	})
+	t.Run("key not found should return error", func(t *testing.T) {
+		t.Parallel()
+
+		s := miniredis.RunT(t)
+
+		rdb := redis.NewClient(&redis.Options{
+			Addr: s.Addr(),
+		})
+
+		p := &ProductCache{
+			cfg: config.Config{},
+			rdb: rdb,
+		}
+
+		slug := "jlkdfsd"
+
+		product, err := p.GetDetailBySlug(context.Background(), slug)
+
+		assert.Empty(t, product)
+		require.Error(t, err)
+		require.ErrorIs(t, err, redis.Nil)
+	})
+	t.Run("json marshal error should return error", func(t *testing.T) {
+		t.Parallel()
+
+		s := miniredis.RunT(t)
+
+		rdb := redis.NewClient(&redis.Options{
+			Addr: s.Addr(),
+		})
+
+		p := &ProductCache{
+			cfg: config.Config{},
+			rdb: rdb,
+		}
+
+		slug := "asdfes"
+		err := s.Set(p.keyDetailBySlug(slug), "plain string will error json unmarshal to struct")
+		require.NoError(t, err)
+
+		product, err := p.GetDetailBySlug(context.Background(), slug)
+
+		assert.Empty(t, product)
+		require.Error(t, err)
+		require.ErrorContains(t, err, "json.Unmarshal")
+	})
+}
