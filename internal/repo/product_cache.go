@@ -9,29 +9,10 @@ import (
 	"time"
 
 	"github.com/Hidayathamir/go-product/config"
+	"github.com/Hidayathamir/go-product/internal/interfaces"
 	"github.com/Hidayathamir/go-product/pkg/goproduct"
 	"github.com/redis/go-redis/v9"
 )
-
-//go:generate mockgen -source=product_cache.go -destination=mockrepo/product_cache.go -package=mockrepo
-
-// IProductCache contains abstraction of repo product cache.
-type IProductCache interface {
-	// GetDetailByID get product detail by id.
-	GetDetailByID(ctx context.Context, ID int64) (goproduct.ResProductDetail, error)
-	// SetDetailByID set product detail cache by id.
-	SetDetailByID(ctx context.Context, data goproduct.ResProductDetail, expire time.Duration) error
-
-	// GetDetailBySKU get product detail by sku.
-	GetDetailBySKU(ctx context.Context, SKU string) (goproduct.ResProductDetail, error)
-	// SetDetailBySKU get product detail cache by sku.
-	SetDetailBySKU(ctx context.Context, data goproduct.ResProductDetail, expire time.Duration) error
-
-	// GetDetailBySlug get product detail by slug.
-	GetDetailBySlug(ctx context.Context, slug string) (goproduct.ResProductDetail, error)
-	// SetDetailBySlug get product detail cache by slug.
-	SetDetailBySlug(ctx context.Context, data goproduct.ResProductDetail, expire time.Duration) error
-}
 
 // ProductCache implement IProductCache.
 type ProductCache struct {
@@ -39,7 +20,7 @@ type ProductCache struct {
 	rdb *redis.Client
 }
 
-var _ IProductCache = &ProductCache{}
+var _ interfaces.RepoProductCache = &ProductCache{}
 
 // NewProductCache return *ProductCache which implement repo.IProductCache.
 func NewProductCache(cfg config.Config, rdb *redis.Client) *ProductCache {

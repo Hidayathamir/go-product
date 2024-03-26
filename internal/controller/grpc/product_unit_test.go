@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/Hidayathamir/go-product/config"
-	"github.com/Hidayathamir/go-product/internal/usecase/mockusecase"
+	"github.com/Hidayathamir/go-product/internal/interfaces/mock"
 	"github.com/Hidayathamir/go-product/pkg/goproduct"
 	"github.com/Hidayathamir/go-product/pkg/goproductgrpc"
 	"github.com/stretchr/testify/assert"
@@ -24,7 +24,7 @@ func TestUnitProductSearch(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		usecaseProduct := mockusecase.NewMockIProduct(ctrl)
+		usecaseProduct := mock.NewMockUsecaseProduct(ctrl)
 
 		p := &Product{
 			cfg:            config.Config{},
@@ -101,7 +101,7 @@ func TestUnitProductSearch(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		usecaseProduct := mockusecase.NewMockIProduct(ctrl)
+		usecaseProduct := mock.NewMockUsecaseProduct(ctrl)
 
 		p := &Product{
 			cfg:            config.Config{},
@@ -137,7 +137,7 @@ func TestUnitProductGetDetail(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		usecaseProduct := mockusecase.NewMockIProduct(ctrl)
+		usecaseProduct := mock.NewMockUsecaseProduct(ctrl)
 
 		p := &Product{
 			cfg:            config.Config{},
@@ -183,7 +183,7 @@ func TestUnitProductGetDetail(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		usecaseProduct := mockusecase.NewMockIProduct(ctrl)
+		usecaseProduct := mock.NewMockUsecaseProduct(ctrl)
 
 		p := &Product{
 			cfg:            config.Config{},

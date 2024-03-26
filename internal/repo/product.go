@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	"github.com/Hidayathamir/go-product/config"
+	"github.com/Hidayathamir/go-product/internal/interfaces"
 	"github.com/Hidayathamir/go-product/internal/pkg/query"
 	"github.com/Hidayathamir/go-product/internal/repo/db"
 	"github.com/Hidayathamir/go-product/internal/repo/db/entity/table"
@@ -15,31 +16,17 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-//go:generate mockgen -source=product.go -destination=mockrepo/product.go -package=mockrepo
-
-// IProduct contains abstraction of repo product.
-type IProduct interface {
-	// GetDetailByID get product detail by id.
-	GetDetailByID(ctx context.Context, ID int64) (goproduct.ResProductDetail, error)
-	// GetDetailBySKU get product detail by sku.
-	GetDetailBySKU(ctx context.Context, SKU string) (goproduct.ResProductDetail, error)
-	// GetDetailBySlug get product detail by slug.
-	GetDetailBySlug(ctx context.Context, slug string) (goproduct.ResProductDetail, error)
-	// Search search product by name or description using keyword.
-	Search(ctx context.Context, keyword string) (goproduct.ResProductSearch, error)
-}
-
 // Product implement IProduct.
 type Product struct {
 	cfg   config.Config
 	db    *db.Postgres
-	cache IProductCache
+	cache interfaces.RepoProductCache
 }
 
-var _ IProduct = &Product{}
+var _ interfaces.RepoProduct = &Product{}
 
 // NewProduct return *Product which implement repo.IProduct.
-func NewProduct(cfg config.Config, db *db.Postgres, cache IProductCache) *Product {
+func NewProduct(cfg config.Config, db *db.Postgres, cache interfaces.RepoProductCache) *Product {
 	return &Product{
 		cfg:   cfg,
 		db:    db,

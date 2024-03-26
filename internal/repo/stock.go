@@ -5,21 +5,12 @@ import (
 	"fmt"
 
 	"github.com/Hidayathamir/go-product/config"
+	"github.com/Hidayathamir/go-product/internal/interfaces"
 	"github.com/Hidayathamir/go-product/internal/repo/db"
 	"github.com/Hidayathamir/go-product/internal/repo/db/entity/table"
 	sq "github.com/Masterminds/squirrel"
 	"github.com/jackc/pgx/v5"
 )
-
-//go:generate mockgen -source=stock.go -destination=mockrepo/stock.go -package=mockrepo
-
-// IStock contains abstraction of repo stock.
-type IStock interface {
-	// IncrementStock increment product stock.
-	IncrementStock(ctx context.Context, productID int64) error
-	// DecrementStock decrement product stock.
-	DecrementStock(ctx context.Context, productID int64) error
-}
 
 // Stock implement IStock.
 type Stock struct {
@@ -27,7 +18,7 @@ type Stock struct {
 	db  *db.Postgres
 }
 
-var _ IStock = &Stock{}
+var _ interfaces.RepoStock = &Stock{}
 
 // NewStock return *Stock which implement repo.IStock.
 func NewStock(cfg config.Config, db *db.Postgres) *Stock {

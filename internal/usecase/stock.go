@@ -5,30 +5,20 @@ import (
 	"fmt"
 
 	"github.com/Hidayathamir/go-product/config"
-	"github.com/Hidayathamir/go-product/internal/repo"
+	"github.com/Hidayathamir/go-product/internal/interfaces"
 	"github.com/Hidayathamir/go-product/pkg/goproduct"
 )
-
-//go:generate mockgen -source=stock.go -destination=mockusecase/stock.go -package=mockusecase
-
-// IStock contains abstraction of usecase stock.
-type IStock interface {
-	// IncrementStock increment product stock.
-	IncrementStock(ctx context.Context, req goproduct.ReqIncrementStock) error
-	// DecrementStock decrement product stock.
-	DecrementStock(ctx context.Context, req goproduct.ReqDecrementStock) error
-}
 
 // Stock implement IStock.
 type Stock struct {
 	cfg       config.Config
-	repoStock repo.IStock
+	repoStock interfaces.RepoStock
 }
 
-var _ IStock = &Stock{}
+var _ interfaces.UsecaseStock = &Stock{}
 
 // NewStock return *Stock which implement IStock.
-func NewStock(cfg config.Config, repoStock repo.IStock) *Stock {
+func NewStock(cfg config.Config, repoStock interfaces.RepoStock) *Stock {
 	return &Stock{
 		cfg:       cfg,
 		repoStock: repoStock,

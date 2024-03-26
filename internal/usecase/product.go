@@ -6,30 +6,20 @@ import (
 	"fmt"
 
 	"github.com/Hidayathamir/go-product/config"
-	"github.com/Hidayathamir/go-product/internal/repo"
+	"github.com/Hidayathamir/go-product/internal/interfaces"
 	"github.com/Hidayathamir/go-product/pkg/goproduct"
 )
-
-//go:generate mockgen -source=product.go -destination=mockusecase/product.go -package=mockusecase
-
-// IProduct contains abstraction of usecase product.
-type IProduct interface {
-	// Search search product by name or description using keyword.
-	Search(ctx context.Context, req goproduct.ReqProductSearch) (goproduct.ResProductSearch, error)
-	// GetDetail get product detail by id, or sku, or slug. With priority id > sku > slug.
-	GetDetail(ctx context.Context, req goproduct.ReqProductDetail) (goproduct.ResProductDetail, error)
-}
 
 // Product implement IProduct.
 type Product struct {
 	cfg         config.Config
-	repoProduct repo.IProduct
+	repoProduct interfaces.RepoProduct
 }
 
-var _ IProduct = &Product{}
+var _ interfaces.UsecaseProduct = &Product{}
 
 // NewProduct return *Product which implement IProduct.
-func NewProduct(cfg config.Config, repoProduct repo.IProduct) *Product {
+func NewProduct(cfg config.Config, repoProduct interfaces.RepoProduct) *Product {
 	return &Product{
 		cfg:         cfg,
 		repoProduct: repoProduct,

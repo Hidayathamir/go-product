@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/Hidayathamir/go-product/config"
-	"github.com/Hidayathamir/go-product/internal/usecase/mockusecase"
+	"github.com/Hidayathamir/go-product/internal/interfaces/mock"
 	"github.com/Hidayathamir/go-product/pkg/goproduct"
 	"github.com/Hidayathamir/go-product/pkg/goproductgrpc"
 	"github.com/stretchr/testify/assert"
@@ -22,7 +22,7 @@ func TestUnitStockIncrementStock(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		usecaseStock := mockusecase.NewMockIStock(ctrl)
+		usecaseStock := mock.NewMockUsecaseStock(ctrl)
 
 		s := &Stock{
 			cfg:          config.Config{},
@@ -46,7 +46,7 @@ func TestUnitStockIncrementStock(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		usecaseStock := mockusecase.NewMockIStock(ctrl)
+		usecaseStock := mock.NewMockUsecaseStock(ctrl)
 
 		s := &Stock{
 			cfg:          config.Config{},
@@ -76,7 +76,7 @@ func TestUnitStockDecrementStock(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		usecaseStock := mockusecase.NewMockIStock(ctrl)
+		usecaseStock := mock.NewMockUsecaseStock(ctrl)
 
 		s := &Stock{
 			cfg:          config.Config{},
@@ -100,7 +100,7 @@ func TestUnitStockDecrementStock(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		usecaseStock := mockusecase.NewMockIStock(ctrl)
+		usecaseStock := mock.NewMockUsecaseStock(ctrl)
 
 		s := &Stock{
 			cfg:          config.Config{},

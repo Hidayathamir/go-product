@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/Hidayathamir/go-product/config"
-	"github.com/Hidayathamir/go-product/internal/repo/mockrepo"
+	"github.com/Hidayathamir/go-product/internal/interfaces/mock"
 	"github.com/Hidayathamir/go-product/pkg/goproduct"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -21,7 +21,7 @@ func TestUnitStockIncrementStock(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		repoStock := mockrepo.NewMockIStock(ctrl)
+		repoStock := mock.NewMockRepoStock(ctrl)
 
 		s := &Stock{
 			cfg:       config.Config{},
@@ -46,7 +46,7 @@ func TestUnitStockIncrementStock(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		repoStock := mockrepo.NewMockIStock(ctrl)
+		repoStock := mock.NewMockRepoStock(ctrl)
 
 		s := &Stock{
 			cfg:       config.Config{},
@@ -95,7 +95,7 @@ func TestUnitStockDecrementStock(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		repoStock := mockrepo.NewMockIStock(ctrl)
+		repoStock := mock.NewMockRepoStock(ctrl)
 
 		s := &Stock{
 			cfg:       config.Config{},
@@ -120,7 +120,7 @@ func TestUnitStockDecrementStock(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		repoStock := mockrepo.NewMockIStock(ctrl)
+		repoStock := mock.NewMockRepoStock(ctrl)
 
 		s := &Stock{
 			cfg:       config.Config{},

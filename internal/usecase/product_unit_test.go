@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/Hidayathamir/go-product/config"
-	"github.com/Hidayathamir/go-product/internal/repo/mockrepo"
+	"github.com/Hidayathamir/go-product/internal/interfaces/mock"
 	"github.com/Hidayathamir/go-product/pkg/goproduct"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -22,7 +22,7 @@ func TestUnitProductSearch(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		repoProduct := mockrepo.NewMockIProduct(ctrl)
+		repoProduct := mock.NewMockRepoProduct(ctrl)
 
 		p := &Product{
 			cfg:         config.Config{},
@@ -70,7 +70,7 @@ func TestUnitProductSearch(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		repoProduct := mockrepo.NewMockIProduct(ctrl)
+		repoProduct := mock.NewMockRepoProduct(ctrl)
 
 		p := &Product{
 			cfg:         config.Config{},
@@ -121,7 +121,7 @@ func TestUnitProductGetDetail(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		repoProduct := mockrepo.NewMockIProduct(ctrl)
+		repoProduct := mock.NewMockRepoProduct(ctrl)
 
 		p := &Product{
 			cfg:         config.Config{},
@@ -157,7 +157,7 @@ func TestUnitProductGetDetail(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		repoProduct := mockrepo.NewMockIProduct(ctrl)
+		repoProduct := mock.NewMockRepoProduct(ctrl)
 
 		p := &Product{
 			cfg:         config.Config{},
@@ -185,7 +185,7 @@ func TestUnitProductGetDetail(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		repoProduct := mockrepo.NewMockIProduct(ctrl)
+		repoProduct := mock.NewMockRepoProduct(ctrl)
 
 		p := &Product{
 			cfg:         config.Config{},
@@ -221,7 +221,7 @@ func TestUnitProductGetDetail(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		repoProduct := mockrepo.NewMockIProduct(ctrl)
+		repoProduct := mock.NewMockRepoProduct(ctrl)
 
 		p := &Product{
 			cfg:         config.Config{},
@@ -249,7 +249,7 @@ func TestUnitProductGetDetail(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		repoProduct := mockrepo.NewMockIProduct(ctrl)
+		repoProduct := mock.NewMockRepoProduct(ctrl)
 
 		p := &Product{
 			cfg:         config.Config{},
@@ -285,7 +285,7 @@ func TestUnitProductGetDetail(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		repoProduct := mockrepo.NewMockIProduct(ctrl)
+		repoProduct := mock.NewMockRepoProduct(ctrl)
 
 		p := &Product{
 			cfg:         config.Config{},
