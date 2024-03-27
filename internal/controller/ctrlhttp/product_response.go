@@ -1,4 +1,4 @@
-package http
+package ctrlhttp
 
 import "github.com/Hidayathamir/go-product/pkg/goproduct"
 

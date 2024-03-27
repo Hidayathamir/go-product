@@ -1,4 +1,4 @@
-package http
+package ctrlhttp
 
 // ResError -.
 type ResError struct {
