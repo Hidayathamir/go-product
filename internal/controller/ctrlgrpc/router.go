@@ -1,7 +1,7 @@
 package ctrlgrpc
 
 import (
-	"github.com/Hidayathamir/go-product/config"
+	"github.com/Hidayathamir/go-product/internal/config"
 	"github.com/Hidayathamir/go-product/internal/repo/repopostgres/db"
 	"github.com/Hidayathamir/go-product/pkg/goproductgrpc"
 	"github.com/redis/go-redis/v9"

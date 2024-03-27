@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/Hidayathamir/go-product/config"
+	"github.com/Hidayathamir/go-product/internal/config"
 	"github.com/Hidayathamir/go-product/internal/repo/repopostgres/db"
 	"github.com/pashagolub/pgxmock/v3"
 	"github.com/stretchr/testify/assert"

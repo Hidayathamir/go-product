@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Hidayathamir/go-product/config"
+	"github.com/Hidayathamir/go-product/internal/config"
 	"github.com/Hidayathamir/go-product/internal/repo/repopostgres/db"
 	"github.com/Hidayathamir/go-product/internal/repo/repopostgres/db/entity/table"
 	"github.com/Hidayathamir/go-product/internal/usecase/interfaces/mock"

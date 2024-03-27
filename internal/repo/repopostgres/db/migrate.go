@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/Hidayathamir/go-product/config"
+	"github.com/Hidayathamir/go-product/internal/config"
 	_ "github.com/jackc/pgx/v5/stdlib" // don't really understand, remove if you know what you do, i just following this article about pgx to sql.DB. https://github.com/jackc/pgx/wiki/Getting-started-with-pgx-through-database-sql#hello-world-from-postgresql
 	migrate "github.com/rubenv/sql-migrate"
 	"github.com/sirupsen/logrus"
