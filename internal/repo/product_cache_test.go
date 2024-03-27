@@ -96,6 +96,56 @@ func TestUnitProductCacheGetDetailByID(t *testing.T) {
 	})
 }
 
+func TestUnitProductCacheSetDetailByID(t *testing.T) {
+	t.Parallel()
+
+	t.Run("set detail by id success", func(t *testing.T) {
+		t.Parallel()
+
+		s := miniredis.RunT(t)
+
+		rdb := redis.NewClient(&redis.Options{
+			Addr: s.Addr(),
+		})
+
+		p := &ProductCache{
+			cfg: config.Config{},
+			rdb: rdb,
+		}
+
+		product := goproduct.ResProductDetail{
+			ID:          234,
+			SKU:         "asdfads",
+			Slug:        "fese",
+			Name:        "fssda",
+			Description: "aesfs",
+			Stock:       234,
+			CreatedAt:   time.Time{},
+			UpdatedAt:   time.Time{},
+		}
+
+		expire := time.Hour
+
+		err := p.SetDetailByID(context.Background(), product, expire)
+		require.NoError(t, err)
+
+		t.Run("after set to redis, should able to get, and the value is equal with expected", func(t *testing.T) {
+			product2, err := p.GetDetailByID(context.Background(), product.ID)
+			require.NoError(t, err)
+
+			assert.Equal(t, product, product2)
+		})
+		s.FastForward(expire + time.Second)
+		t.Run("after expire, should not able to get", func(t *testing.T) {
+			product2, err := p.GetDetailByID(context.Background(), product.ID)
+
+			assert.Empty(t, product2)
+			require.Error(t, err)
+			require.ErrorIs(t, err, redis.Nil)
+		})
+	})
+}
+
 func TestUnitProductCacheGetDetailBySKU(t *testing.T) {
 	t.Parallel()
 
@@ -175,6 +225,56 @@ func TestUnitProductCacheGetDetailBySKU(t *testing.T) {
 		assert.Empty(t, product)
 		require.Error(t, err)
 		require.ErrorContains(t, err, "json.Unmarshal")
+	})
+}
+
+func TestUnitProductCacheSetDetailBySKU(t *testing.T) {
+	t.Parallel()
+
+	t.Run("set detail by sku success", func(t *testing.T) {
+		t.Parallel()
+
+		s := miniredis.RunT(t)
+
+		rdb := redis.NewClient(&redis.Options{
+			Addr: s.Addr(),
+		})
+
+		p := &ProductCache{
+			cfg: config.Config{},
+			rdb: rdb,
+		}
+
+		product := goproduct.ResProductDetail{
+			ID:          234,
+			SKU:         "asdfads",
+			Slug:        "fese",
+			Name:        "fssda",
+			Description: "aesfs",
+			Stock:       234,
+			CreatedAt:   time.Time{},
+			UpdatedAt:   time.Time{},
+		}
+
+		expire := time.Hour
+
+		err := p.SetDetailBySKU(context.Background(), product, expire)
+		require.NoError(t, err)
+
+		t.Run("after set to redis, should able to get, and the value is equal with expected", func(t *testing.T) {
+			product2, err := p.GetDetailBySKU(context.Background(), product.SKU)
+			require.NoError(t, err)
+
+			assert.Equal(t, product, product2)
+		})
+		s.FastForward(expire + time.Second)
+		t.Run("after expire, should not able to get", func(t *testing.T) {
+			product2, err := p.GetDetailBySKU(context.Background(), product.SKU)
+
+			assert.Empty(t, product2)
+			require.Error(t, err)
+			require.ErrorIs(t, err, redis.Nil)
+		})
 	})
 }
 
@@ -259,5 +359,55 @@ func TestUnitProductCacheGetDetailBySlug(t *testing.T) {
 		assert.Empty(t, product)
 		require.Error(t, err)
 		require.ErrorContains(t, err, "json.Unmarshal")
+	})
+}
+
+func TestUnitProductCacheSetDetailBySlug(t *testing.T) {
+	t.Parallel()
+
+	t.Run("set detail by sku success", func(t *testing.T) {
+		t.Parallel()
+
+		s := miniredis.RunT(t)
+
+		rdb := redis.NewClient(&redis.Options{
+			Addr: s.Addr(),
+		})
+
+		p := &ProductCache{
+			cfg: config.Config{},
+			rdb: rdb,
+		}
+
+		product := goproduct.ResProductDetail{
+			ID:          234,
+			SKU:         "asdfads",
+			Slug:        "fese",
+			Name:        "fssda",
+			Description: "aesfs",
+			Stock:       234,
+			CreatedAt:   time.Time{},
+			UpdatedAt:   time.Time{},
+		}
+
+		expire := time.Hour
+
+		err := p.SetDetailBySlug(context.Background(), product, expire)
+		require.NoError(t, err)
+
+		t.Run("after set to redis, should able to get, and the value is equal with expected", func(t *testing.T) {
+			product2, err := p.GetDetailBySlug(context.Background(), product.Slug)
+			require.NoError(t, err)
+
+			assert.Equal(t, product, product2)
+		})
+		s.FastForward(expire + time.Second)
+		t.Run("after expire, should not able to get", func(t *testing.T) {
+			product2, err := p.GetDetailBySlug(context.Background(), product.Slug)
+
+			assert.Empty(t, product2)
+			require.Error(t, err)
+			require.ErrorIs(t, err, redis.Nil)
+		})
 	})
 }
