@@ -1,4 +1,4 @@
-package repopostgres
+package reporedis
 
 import (
 	"context"

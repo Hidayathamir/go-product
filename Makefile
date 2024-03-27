@@ -28,12 +28,7 @@ air:
 # Run test unit.
 go-test-unit:
 	go clean -testcache && \
-	go test -v ./internal/controller/ctrlgrpc -run TestUnit && \
-	go test -v ./internal/usecase -run TestUnit && \
-	go test -v ./internal/repo/repopostgres -run TestUnit && \
-	go test -cover ./internal/controller/ctrlgrpc -run TestUnit && \
-	go test -cover ./internal/usecase -run TestUnit && \
-	go test -cover ./internal/repo/repopostgres -run TestUnit
+	go test -cover ./internal/... -run TestUnit
 
 ###################################
 

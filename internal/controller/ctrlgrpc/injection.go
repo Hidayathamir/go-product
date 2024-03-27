@@ -4,12 +4,13 @@ import (
 	"github.com/Hidayathamir/go-product/internal/config"
 	"github.com/Hidayathamir/go-product/internal/repo/repopostgres"
 	"github.com/Hidayathamir/go-product/internal/repo/repopostgres/dbpostgres"
+	"github.com/Hidayathamir/go-product/internal/repo/reporedis"
 	"github.com/Hidayathamir/go-product/internal/usecase"
 	"github.com/redis/go-redis/v9"
 )
 
 func injectionProduct(cfg config.Config, db *dbpostgres.Postgres, rdb *redis.Client) *Product {
-	repoProductCache := repopostgres.NewProductCache(cfg, rdb)
+	repoProductCache := reporedis.NewProductCache(cfg, rdb)
 	repoProduct := repopostgres.NewProduct(cfg, db, repoProductCache)
 	usecaseProduct := usecase.NewProduct(cfg, repoProduct)
 	controllerProduct := newProduct(cfg, usecaseProduct)
