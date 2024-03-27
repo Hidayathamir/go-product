@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/Hidayathamir/go-product/internal/config"
-	"github.com/Hidayathamir/go-product/internal/repo/repopostgres/db"
+	"github.com/Hidayathamir/go-product/internal/repo/repopostgres/dbpostgres"
 	"github.com/pashagolub/pgxmock/v3"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -22,7 +22,7 @@ func TestUnitStockIncrementStock(t *testing.T) {
 
 		s := &Stock{
 			cfg: config.Config{},
-			db: &db.Postgres{
+			db: &dbpostgres.Postgres{
 				Builder: builder,
 				Pool:    mockpool,
 			},
@@ -45,7 +45,7 @@ func TestUnitStockIncrementStock(t *testing.T) {
 
 		s := &Stock{
 			cfg: config.Config{},
-			db: &db.Postgres{
+			db: &dbpostgres.Postgres{
 				Builder: builder,
 				Pool:    mockpool,
 			},
@@ -69,7 +69,7 @@ func TestUnitStockIncrementStock(t *testing.T) {
 
 		s := &Stock{
 			cfg: config.Config{},
-			db: &db.Postgres{
+			db: &dbpostgres.Postgres{
 				Builder: builder,
 				Pool:    mockpool,
 			},
@@ -97,7 +97,7 @@ func TestUnitStockDecrementStock(t *testing.T) {
 
 		s := &Stock{
 			cfg: config.Config{},
-			db: &db.Postgres{
+			db: &dbpostgres.Postgres{
 				Builder: builder,
 				Pool:    mockpool,
 			},
@@ -120,7 +120,7 @@ func TestUnitStockDecrementStock(t *testing.T) {
 
 		s := &Stock{
 			cfg: config.Config{},
-			db: &db.Postgres{
+			db: &dbpostgres.Postgres{
 				Builder: builder,
 				Pool:    mockpool,
 			},
@@ -144,7 +144,7 @@ func TestUnitStockDecrementStock(t *testing.T) {
 
 		s := &Stock{
 			cfg: config.Config{},
-			db: &db.Postgres{
+			db: &dbpostgres.Postgres{
 				Builder: builder,
 				Pool:    mockpool,
 			},

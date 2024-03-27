@@ -5,8 +5,8 @@ import (
 	"fmt"
 
 	"github.com/Hidayathamir/go-product/internal/config"
-	"github.com/Hidayathamir/go-product/internal/repo/repopostgres/db"
-	"github.com/Hidayathamir/go-product/internal/repo/repopostgres/db/entity/table"
+	"github.com/Hidayathamir/go-product/internal/repo/repopostgres/dbpostgres"
+	"github.com/Hidayathamir/go-product/internal/repo/repopostgres/dbpostgres/entity/table"
 	"github.com/Hidayathamir/go-product/internal/usecase/interfaces"
 	sq "github.com/Masterminds/squirrel"
 	"github.com/jackc/pgx/v5"
@@ -15,13 +15,13 @@ import (
 // Stock implement IStock.
 type Stock struct {
 	cfg config.Config
-	db  *db.Postgres
+	db  *dbpostgres.Postgres
 }
 
 var _ interfaces.RepoStock = &Stock{}
 
 // NewStock return *Stock which implement repo.IStock.
-func NewStock(cfg config.Config, db *db.Postgres) *Stock {
+func NewStock(cfg config.Config, db *dbpostgres.Postgres) *Stock {
 	return &Stock{
 		cfg: cfg,
 		db:  db,

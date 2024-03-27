@@ -7,8 +7,8 @@ import (
 
 	"github.com/Hidayathamir/go-product/internal/config"
 	"github.com/Hidayathamir/go-product/internal/pkg/query"
-	"github.com/Hidayathamir/go-product/internal/repo/repopostgres/db"
-	"github.com/Hidayathamir/go-product/internal/repo/repopostgres/db/entity/table"
+	"github.com/Hidayathamir/go-product/internal/repo/repopostgres/dbpostgres"
+	"github.com/Hidayathamir/go-product/internal/repo/repopostgres/dbpostgres/entity/table"
 	"github.com/Hidayathamir/go-product/internal/usecase/interfaces"
 	"github.com/Hidayathamir/go-product/pkg/goproduct"
 	sq "github.com/Masterminds/squirrel"
@@ -19,14 +19,14 @@ import (
 // Product implement IProduct.
 type Product struct {
 	cfg   config.Config
-	db    *db.Postgres
+	db    *dbpostgres.Postgres
 	cache interfaces.RepoProductCache
 }
 
 var _ interfaces.RepoProduct = &Product{}
 
 // NewProduct return *Product which implement repo.IProduct.
-func NewProduct(cfg config.Config, db *db.Postgres, cache interfaces.RepoProductCache) *Product {
+func NewProduct(cfg config.Config, db *dbpostgres.Postgres, cache interfaces.RepoProductCache) *Product {
 	return &Product{
 		cfg:   cfg,
 		db:    db,
