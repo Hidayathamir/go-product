@@ -1,11 +1,11 @@
-package repo
+package repopostgres
 
 import (
 	"context"
 	"testing"
 
 	"github.com/Hidayathamir/go-product/config"
-	"github.com/Hidayathamir/go-product/internal/repo/db"
+	"github.com/Hidayathamir/go-product/internal/repo/repopostgres/db"
 	"github.com/pashagolub/pgxmock/v3"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

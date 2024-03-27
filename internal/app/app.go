@@ -3,7 +3,7 @@ package app
 
 import (
 	"github.com/Hidayathamir/go-product/config"
-	"github.com/Hidayathamir/go-product/internal/repo/db"
+	"github.com/Hidayathamir/go-product/internal/repo/repopostgres/db"
 	"github.com/sirupsen/logrus"
 )
 

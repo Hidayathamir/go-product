@@ -2,7 +2,7 @@ package grpc
 
 import (
 	"github.com/Hidayathamir/go-product/config"
-	"github.com/Hidayathamir/go-product/internal/repo/db"
+	"github.com/Hidayathamir/go-product/internal/repo/repopostgres/db"
 	"github.com/Hidayathamir/go-product/pkg/goproductgrpc"
 	"github.com/redis/go-redis/v9"
 	"google.golang.org/grpc"

@@ -1,4 +1,4 @@
-package repo
+package repopostgres
 
 import (
 	"context"
@@ -6,8 +6,8 @@ import (
 
 	"github.com/Hidayathamir/go-product/config"
 	"github.com/Hidayathamir/go-product/internal/interfaces"
-	"github.com/Hidayathamir/go-product/internal/repo/db"
-	"github.com/Hidayathamir/go-product/internal/repo/db/entity/table"
+	"github.com/Hidayathamir/go-product/internal/repo/repopostgres/db"
+	"github.com/Hidayathamir/go-product/internal/repo/repopostgres/db/entity/table"
 	sq "github.com/Masterminds/squirrel"
 	"github.com/jackc/pgx/v5"
 )

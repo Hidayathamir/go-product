@@ -1,4 +1,4 @@
-package repo
+package repopostgres
 
 import "github.com/Masterminds/squirrel"
 
