@@ -6,7 +6,7 @@ import (
 
 	"github.com/Hidayathamir/go-product/internal/config"
 	"github.com/Hidayathamir/go-product/internal/repo/repopostgres/dbpostgres"
-	"github.com/Hidayathamir/go-product/internal/repo/repopostgres/dbpostgres/entity/table"
+	"github.com/Hidayathamir/go-product/internal/repo/repopostgres/dbpostgres/table"
 	"github.com/Hidayathamir/go-product/internal/usecase/interfaces"
 	sq "github.com/Masterminds/squirrel"
 	"github.com/jackc/pgx/v5"

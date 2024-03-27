@@ -8,7 +8,7 @@ import (
 	"github.com/Hidayathamir/go-product/internal/config"
 	"github.com/Hidayathamir/go-product/internal/pkg/query"
 	"github.com/Hidayathamir/go-product/internal/repo/repopostgres/dbpostgres"
-	"github.com/Hidayathamir/go-product/internal/repo/repopostgres/dbpostgres/entity/table"
+	"github.com/Hidayathamir/go-product/internal/repo/repopostgres/dbpostgres/table"
 	"github.com/Hidayathamir/go-product/internal/usecase/interfaces"
 	"github.com/Hidayathamir/go-product/pkg/goproduct"
 	sq "github.com/Masterminds/squirrel"
