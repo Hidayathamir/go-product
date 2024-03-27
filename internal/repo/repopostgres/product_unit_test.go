@@ -6,9 +6,9 @@ import (
 	"time"
 
 	"github.com/Hidayathamir/go-product/config"
-	"github.com/Hidayathamir/go-product/internal/interfaces/mock"
 	"github.com/Hidayathamir/go-product/internal/repo/repopostgres/db"
 	"github.com/Hidayathamir/go-product/internal/repo/repopostgres/db/entity/table"
+	"github.com/Hidayathamir/go-product/internal/usecase/interfaces/mock"
 	"github.com/Hidayathamir/go-product/pkg/goproduct"
 	"github.com/jackc/pgx/v5"
 	"github.com/pashagolub/pgxmock/v3"

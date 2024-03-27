@@ -6,10 +6,10 @@ import (
 	"fmt"
 
 	"github.com/Hidayathamir/go-product/config"
-	"github.com/Hidayathamir/go-product/internal/interfaces"
 	"github.com/Hidayathamir/go-product/internal/pkg/query"
 	"github.com/Hidayathamir/go-product/internal/repo/repopostgres/db"
 	"github.com/Hidayathamir/go-product/internal/repo/repopostgres/db/entity/table"
+	"github.com/Hidayathamir/go-product/internal/usecase/interfaces"
 	"github.com/Hidayathamir/go-product/pkg/goproduct"
 	sq "github.com/Masterminds/squirrel"
 	"github.com/jackc/pgx/v5"

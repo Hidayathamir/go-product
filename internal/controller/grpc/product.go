@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/Hidayathamir/go-product/config"
-	"github.com/Hidayathamir/go-product/internal/interfaces"
+	"github.com/Hidayathamir/go-product/internal/usecase/interfaces"
 	"github.com/Hidayathamir/go-product/pkg/goproduct"
 	"github.com/Hidayathamir/go-product/pkg/goproductgrpc"
 	"google.golang.org/protobuf/types/known/timestamppb"
