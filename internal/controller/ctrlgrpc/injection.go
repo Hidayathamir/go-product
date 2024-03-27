@@ -1,4 +1,4 @@
-package grpc
+package ctrlgrpc
 
 import (
 	"github.com/Hidayathamir/go-product/config"
