@@ -28,8 +28,8 @@ type Postgres struct {
 	Pool    IPgxPool // use IPgxPool instead *pgxpool.Pool
 }
 
-// NewPGPoolConn return postgres pool connection.
-func NewPGPoolConn(cfg config.Config) (*Postgres, error) {
+// NewPoolConn return postgres pool connection.
+func NewPoolConn(cfg config.Config) (*Postgres, error) {
 	url := fmt.Sprintf(
 		"postgres://%s:%s@%s:%d/%s",
 		cfg.PG.Username, cfg.PG.Password, cfg.PG.Host, cfg.PG.Port, cfg.PG.DBName,
