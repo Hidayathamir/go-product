@@ -2,7 +2,7 @@ package ctrlgrpc
 
 import (
 	"github.com/Hidayathamir/go-product/internal/config"
-	"github.com/Hidayathamir/go-product/internal/repo/repopostgres/dbpostgres"
+	"github.com/Hidayathamir/go-product/internal/repo/sqldb/repopostgres/db"
 	"github.com/Hidayathamir/go-product/pkg/goproductgrpc"
 	"github.com/redis/go-redis/v9"
 	"google.golang.org/grpc"
@@ -10,7 +10,7 @@ import (
 
 // This file contains all available servers.
 
-func registerServer(cfg config.Config, grpcServer *grpc.Server, db *dbpostgres.Postgres, rdb *redis.Client) {
+func registerServer(cfg config.Config, grpcServer *grpc.Server, db *db.Postgres, rdb *redis.Client) {
 	cProduct := injectionProduct(cfg, db, rdb)
 	cStock := injectionStock(cfg, db)
 

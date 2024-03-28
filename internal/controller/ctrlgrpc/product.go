@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/Hidayathamir/go-product/internal/config"
-	"github.com/Hidayathamir/go-product/internal/usecase/interfaces"
+	"github.com/Hidayathamir/go-product/internal/usecase/usecaseinterfaces"
 	"github.com/Hidayathamir/go-product/pkg/goproduct"
 	"github.com/Hidayathamir/go-product/pkg/goproductgrpc"
 	"google.golang.org/protobuf/types/known/timestamppb"
@@ -16,12 +16,12 @@ type Product struct {
 	goproductgrpc.UnimplementedProductServer
 
 	cfg            config.Config
-	usecaseProduct interfaces.UsecaseProduct
+	usecaseProduct usecaseinterfaces.UsecaseProduct
 }
 
 var _ goproductgrpc.ProductServer = &Product{}
 
-func newProduct(cfg config.Config, usecaseProduct interfaces.UsecaseProduct) *Product {
+func newProduct(cfg config.Config, usecaseProduct usecaseinterfaces.UsecaseProduct) *Product {
 	return &Product{
 		cfg:            cfg,
 		usecaseProduct: usecaseProduct,

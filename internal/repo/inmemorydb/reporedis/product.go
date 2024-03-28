@@ -9,22 +9,22 @@ import (
 	"time"
 
 	"github.com/Hidayathamir/go-product/internal/config"
-	"github.com/Hidayathamir/go-product/internal/usecase/interfaces"
+	"github.com/Hidayathamir/go-product/internal/repo/repointerfaces"
 	"github.com/Hidayathamir/go-product/pkg/goproduct"
 	"github.com/redis/go-redis/v9"
 )
 
-// ProductCache implement IProductCache.
-type ProductCache struct {
+// Product implement IProductCache.
+type Product struct {
 	cfg config.Config
 	rdb *redis.Client
 }
 
-var _ interfaces.RepoProductCache = &ProductCache{}
+var _ repointerfaces.ProductInMemoryDB = &Product{}
 
 // NewProductCache return *ProductCache which implement repo.IProductCache.
-func NewProductCache(cfg config.Config, rdb *redis.Client) *ProductCache {
-	return &ProductCache{
+func NewProductCache(cfg config.Config, rdb *redis.Client) *Product {
+	return &Product{
 		cfg: cfg,
 		rdb: rdb,
 	}
@@ -34,17 +34,17 @@ func NewProductCache(cfg config.Config, rdb *redis.Client) *ProductCache {
 
 const productRedisKeyPrefix = "product"
 
-func (p *ProductCache) keyDetailByID(id int64) string {
+func (p *Product) keyDetailByID(id int64) string {
 	keyList := []string{p.cfg.App.Name, productRedisKeyPrefix, "DetailByID", strconv.FormatInt(id, 10)}
 	return strings.Join(keyList, ":")
 }
 
-func (p *ProductCache) keyDetailBySKU(sku string) string {
+func (p *Product) keyDetailBySKU(sku string) string {
 	keyList := []string{p.cfg.App.Name, productRedisKeyPrefix, "DetailBySKU", sku}
 	return strings.Join(keyList, ":")
 }
 
-func (p *ProductCache) keyDetailBySlug(slug string) string {
+func (p *Product) keyDetailBySlug(slug string) string {
 	keyList := []string{p.cfg.App.Name, productRedisKeyPrefix, "DetailBySlug", slug}
 	return strings.Join(keyList, ":")
 }
@@ -52,7 +52,7 @@ func (p *ProductCache) keyDetailBySlug(slug string) string {
 ///////////////////////////////// redis cache key /////////////////////////////////
 
 // GetDetailByID implements IProductCache.
-func (p *ProductCache) GetDetailByID(ctx context.Context, id int64) (goproduct.ResProductDetail, error) {
+func (p *Product) GetDetailByID(ctx context.Context, id int64) (goproduct.ResProductDetail, error) {
 	val, err := p.rdb.Get(ctx, p.keyDetailByID(id)).Result()
 	if err != nil {
 		return goproduct.ResProductDetail{}, fmt.Errorf("ProductCache.rdb.Get: %w", err)
@@ -75,7 +75,7 @@ func (p *ProductCache) GetDetailByID(ctx context.Context, id int64) (goproduct.R
 }
 
 // SetDetailByID implements IProductCache.
-func (p *ProductCache) SetDetailByID(ctx context.Context, product goproduct.ResProductDetail, expire time.Duration) error {
+func (p *Product) SetDetailByID(ctx context.Context, product goproduct.ResProductDetail, expire time.Duration) error {
 	jsonByte, err := json.Marshal(product)
 	if err != nil {
 		return fmt.Errorf("json.Marshal: %w", err)
@@ -90,7 +90,7 @@ func (p *ProductCache) SetDetailByID(ctx context.Context, product goproduct.ResP
 }
 
 // GetDetailBySKU implements IProductCache.
-func (p *ProductCache) GetDetailBySKU(ctx context.Context, sku string) (goproduct.ResProductDetail, error) {
+func (p *Product) GetDetailBySKU(ctx context.Context, sku string) (goproduct.ResProductDetail, error) {
 	val, err := p.rdb.Get(ctx, p.keyDetailBySKU(sku)).Result()
 	if err != nil {
 		return goproduct.ResProductDetail{}, fmt.Errorf("ProductCache.rdb.Get: %w", err)
@@ -113,7 +113,7 @@ func (p *ProductCache) GetDetailBySKU(ctx context.Context, sku string) (goproduc
 }
 
 // SetDetailBySKU implements IProductCache.
-func (p *ProductCache) SetDetailBySKU(ctx context.Context, product goproduct.ResProductDetail, expire time.Duration) error {
+func (p *Product) SetDetailBySKU(ctx context.Context, product goproduct.ResProductDetail, expire time.Duration) error {
 	jsonByte, err := json.Marshal(product)
 	if err != nil {
 		return fmt.Errorf("json.Marshal: %w", err)
@@ -128,7 +128,7 @@ func (p *ProductCache) SetDetailBySKU(ctx context.Context, product goproduct.Res
 }
 
 // GetDetailBySlug implements IProductCache.
-func (p *ProductCache) GetDetailBySlug(ctx context.Context, slug string) (goproduct.ResProductDetail, error) {
+func (p *Product) GetDetailBySlug(ctx context.Context, slug string) (goproduct.ResProductDetail, error) {
 	val, err := p.rdb.Get(ctx, p.keyDetailBySlug(slug)).Result()
 	if err != nil {
 		return goproduct.ResProductDetail{}, fmt.Errorf("ProductCache.rdb.Get: %w", err)
@@ -151,7 +151,7 @@ func (p *ProductCache) GetDetailBySlug(ctx context.Context, slug string) (goprod
 }
 
 // SetDetailBySlug implements IProductCache.
-func (p *ProductCache) SetDetailBySlug(ctx context.Context, product goproduct.ResProductDetail, expire time.Duration) error {
+func (p *Product) SetDetailBySlug(ctx context.Context, product goproduct.ResProductDetail, expire time.Duration) error {
 	jsonByte, err := json.Marshal(product)
 	if err != nil {
 		return fmt.Errorf("json.Marshal: %w", err)

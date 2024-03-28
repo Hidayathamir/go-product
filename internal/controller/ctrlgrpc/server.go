@@ -6,14 +6,14 @@ import (
 	"strconv"
 
 	"github.com/Hidayathamir/go-product/internal/config"
-	"github.com/Hidayathamir/go-product/internal/repo/repopostgres/dbpostgres"
+	"github.com/Hidayathamir/go-product/internal/repo/sqldb/repopostgres/db"
 	"github.com/redis/go-redis/v9"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 )
 
 // RunServer run grpc server.
-func RunServer(cfg config.Config, db *dbpostgres.Postgres, rdb *redis.Client) error {
+func RunServer(cfg config.Config, db *db.Postgres, rdb *redis.Client) error {
 	grpcServer := grpc.NewServer()
 
 	registerServer(cfg, grpcServer, db, rdb)

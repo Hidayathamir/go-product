@@ -7,9 +7,10 @@ import (
 
 	"github.com/Hidayathamir/go-product/internal/config"
 	"github.com/Hidayathamir/go-product/internal/pkg/query"
-	"github.com/Hidayathamir/go-product/internal/repo/repopostgres/dbpostgres"
-	"github.com/Hidayathamir/go-product/internal/repo/repopostgres/dbpostgres/table"
-	"github.com/Hidayathamir/go-product/internal/usecase/interfaces"
+	"github.com/Hidayathamir/go-product/internal/repo/repointerfaces"
+	"github.com/Hidayathamir/go-product/internal/repo/sqldb/repopostgres/db"
+	"github.com/Hidayathamir/go-product/internal/repo/sqldb/repopostgres/db/table"
+	"github.com/Hidayathamir/go-product/internal/usecase/usecaseinterfaces"
 	"github.com/Hidayathamir/go-product/pkg/goproduct"
 	sq "github.com/Masterminds/squirrel"
 	"github.com/jackc/pgx/v5"
@@ -19,14 +20,14 @@ import (
 // Product implement IProduct.
 type Product struct {
 	cfg   config.Config
-	db    *dbpostgres.Postgres
-	cache interfaces.RepoProductCache
+	db    *db.Postgres
+	cache repointerfaces.ProductInMemoryDB
 }
 
-var _ interfaces.RepoProduct = &Product{}
+var _ usecaseinterfaces.RepoProduct = &Product{}
 
 // NewProduct return *Product which implement repo.IProduct.
-func NewProduct(cfg config.Config, db *dbpostgres.Postgres, cache interfaces.RepoProductCache) *Product {
+func NewProduct(cfg config.Config, db *db.Postgres, cache repointerfaces.ProductInMemoryDB) *Product {
 	return &Product{
 		cfg:   cfg,
 		db:    db,

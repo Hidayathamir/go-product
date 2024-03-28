@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/Hidayathamir/go-product/internal/config"
-	"github.com/Hidayathamir/go-product/internal/usecase/interfaces/mock"
+	"github.com/Hidayathamir/go-product/internal/usecase/usecaseinterfaces/mock"
 	"github.com/Hidayathamir/go-product/pkg/goproduct"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"

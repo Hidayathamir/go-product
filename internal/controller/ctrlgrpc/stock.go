@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/Hidayathamir/go-product/internal/config"
-	"github.com/Hidayathamir/go-product/internal/usecase/interfaces"
+	"github.com/Hidayathamir/go-product/internal/usecase/usecaseinterfaces"
 	"github.com/Hidayathamir/go-product/pkg/goproduct"
 	"github.com/Hidayathamir/go-product/pkg/goproductgrpc"
 )
@@ -15,12 +15,12 @@ type Stock struct {
 	goproductgrpc.UnimplementedStockServer
 
 	cfg          config.Config
-	usecaseStock interfaces.UsecaseStock
+	usecaseStock usecaseinterfaces.UsecaseStock
 }
 
 var _ goproductgrpc.StockServer = &Stock{}
 
-func newStock(cfg config.Config, usecaseStock interfaces.UsecaseStock) *Stock {
+func newStock(cfg config.Config, usecaseStock usecaseinterfaces.UsecaseStock) *Stock {
 	return &Stock{
 		cfg:          cfg,
 		usecaseStock: usecaseStock,

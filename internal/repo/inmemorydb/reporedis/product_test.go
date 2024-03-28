@@ -26,7 +26,7 @@ func TestUnitProductCacheGetDetailByID(t *testing.T) {
 			Addr: s.Addr(),
 		})
 
-		p := &ProductCache{
+		p := &Product{
 			cfg: config.Config{},
 			rdb: rdb,
 		}
@@ -59,7 +59,7 @@ func TestUnitProductCacheGetDetailByID(t *testing.T) {
 			Addr: s.Addr(),
 		})
 
-		p := &ProductCache{
+		p := &Product{
 			cfg: config.Config{},
 			rdb: rdb,
 		}
@@ -79,7 +79,7 @@ func TestUnitProductCacheGetDetailByID(t *testing.T) {
 			Addr: s.Addr(),
 		})
 
-		p := &ProductCache{
+		p := &Product{
 			cfg: config.Config{},
 			rdb: rdb,
 		}
@@ -108,7 +108,7 @@ func TestUnitProductCacheSetDetailByID(t *testing.T) {
 			Addr: s.Addr(),
 		})
 
-		p := &ProductCache{
+		p := &Product{
 			cfg: config.Config{},
 			rdb: rdb,
 		}
@@ -158,7 +158,7 @@ func TestUnitProductCacheGetDetailBySKU(t *testing.T) {
 			Addr: s.Addr(),
 		})
 
-		p := &ProductCache{
+		p := &Product{
 			cfg: config.Config{},
 			rdb: rdb,
 		}
@@ -191,7 +191,7 @@ func TestUnitProductCacheGetDetailBySKU(t *testing.T) {
 			Addr: s.Addr(),
 		})
 
-		p := &ProductCache{
+		p := &Product{
 			cfg: config.Config{},
 			rdb: rdb,
 		}
@@ -211,7 +211,7 @@ func TestUnitProductCacheGetDetailBySKU(t *testing.T) {
 			Addr: s.Addr(),
 		})
 
-		p := &ProductCache{
+		p := &Product{
 			cfg: config.Config{},
 			rdb: rdb,
 		}
@@ -240,7 +240,7 @@ func TestUnitProductCacheSetDetailBySKU(t *testing.T) {
 			Addr: s.Addr(),
 		})
 
-		p := &ProductCache{
+		p := &Product{
 			cfg: config.Config{},
 			rdb: rdb,
 		}
@@ -290,7 +290,7 @@ func TestUnitProductCacheGetDetailBySlug(t *testing.T) {
 			Addr: s.Addr(),
 		})
 
-		p := &ProductCache{
+		p := &Product{
 			cfg: config.Config{},
 			rdb: rdb,
 		}
@@ -323,7 +323,7 @@ func TestUnitProductCacheGetDetailBySlug(t *testing.T) {
 			Addr: s.Addr(),
 		})
 
-		p := &ProductCache{
+		p := &Product{
 			cfg: config.Config{},
 			rdb: rdb,
 		}
@@ -345,7 +345,7 @@ func TestUnitProductCacheGetDetailBySlug(t *testing.T) {
 			Addr: s.Addr(),
 		})
 
-		p := &ProductCache{
+		p := &Product{
 			cfg: config.Config{},
 			rdb: rdb,
 		}
@@ -374,7 +374,7 @@ func TestUnitProductCacheSetDetailBySlug(t *testing.T) {
 			Addr: s.Addr(),
 		})
 
-		p := &ProductCache{
+		p := &Product{
 			cfg: config.Config{},
 			rdb: rdb,
 		}

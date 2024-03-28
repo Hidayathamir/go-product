@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/Hidayathamir/go-product/internal/config"
-	"github.com/Hidayathamir/go-product/internal/usecase/interfaces/mock"
+	"github.com/Hidayathamir/go-product/internal/usecase/usecaseinterfaces/mock"
 	"github.com/Hidayathamir/go-product/pkg/goproduct"
 	"github.com/Hidayathamir/go-product/pkg/goproductgrpc"
 	"github.com/stretchr/testify/assert"

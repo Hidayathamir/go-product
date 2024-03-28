@@ -1,0 +1,2 @@
+// Package repoelasticsearch -.
+package repoelasticsearch

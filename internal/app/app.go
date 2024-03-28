@@ -3,7 +3,7 @@ package app
 
 import (
 	"github.com/Hidayathamir/go-product/internal/config"
-	"github.com/Hidayathamir/go-product/internal/repo/repopostgres/dbpostgres"
+	"github.com/Hidayathamir/go-product/internal/repo/sqldb/repopostgres/db"
 	"github.com/sirupsen/logrus"
 )
 
@@ -18,8 +18,8 @@ func Run() {
 	newDBPostgres(cfg)
 }
 
-func newDBPostgres(cfg config.Config) *dbpostgres.Postgres {
-	db, err := dbpostgres.NewPoolConn(cfg)
+func newDBPostgres(cfg config.Config) *db.Postgres {
+	db, err := db.NewPoolConn(cfg)
 	if err != nil {
 		logrus.Fatalf("db.NewPostgresPoolConnection: %v", err)
 	}

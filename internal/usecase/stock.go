@@ -5,20 +5,20 @@ import (
 	"fmt"
 
 	"github.com/Hidayathamir/go-product/internal/config"
-	"github.com/Hidayathamir/go-product/internal/usecase/interfaces"
+	"github.com/Hidayathamir/go-product/internal/usecase/usecaseinterfaces"
 	"github.com/Hidayathamir/go-product/pkg/goproduct"
 )
 
 // Stock implement IStock.
 type Stock struct {
 	cfg       config.Config
-	repoStock interfaces.RepoStock
+	repoStock usecaseinterfaces.RepoStock
 }
 
-var _ interfaces.UsecaseStock = &Stock{}
+var _ usecaseinterfaces.UsecaseStock = &Stock{}
 
 // NewStock return *Stock which implement IStock.
-func NewStock(cfg config.Config, repoStock interfaces.RepoStock) *Stock {
+func NewStock(cfg config.Config, repoStock usecaseinterfaces.RepoStock) *Stock {
 	return &Stock{
 		cfg:       cfg,
 		repoStock: repoStock,

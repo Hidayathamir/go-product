@@ -6,9 +6,9 @@ import (
 	"time"
 
 	"github.com/Hidayathamir/go-product/internal/config"
-	"github.com/Hidayathamir/go-product/internal/repo/repopostgres/dbpostgres"
-	"github.com/Hidayathamir/go-product/internal/repo/repopostgres/dbpostgres/table"
-	"github.com/Hidayathamir/go-product/internal/usecase/interfaces/mock"
+	"github.com/Hidayathamir/go-product/internal/repo/sqldb/repopostgres/db"
+	"github.com/Hidayathamir/go-product/internal/repo/sqldb/repopostgres/db/table"
+	"github.com/Hidayathamir/go-product/internal/usecase/usecaseinterfaces/mock"
 	"github.com/Hidayathamir/go-product/pkg/goproduct"
 	"github.com/jackc/pgx/v5"
 	"github.com/pashagolub/pgxmock/v3"
@@ -28,7 +28,7 @@ func TestUnitProductSearch(t *testing.T) {
 
 		p := &Product{
 			cfg: config.Config{},
-			db: &dbpostgres.Postgres{
+			db: &db.Postgres{
 				Builder: builder,
 				Pool:    mockpool,
 			},
@@ -84,7 +84,7 @@ func TestUnitProductSearch(t *testing.T) {
 
 		p := &Product{
 			cfg: config.Config{},
-			db: &dbpostgres.Postgres{
+			db: &db.Postgres{
 				Builder: builder,
 				Pool:    mockpool,
 			},
@@ -110,7 +110,7 @@ func TestUnitProductSearch(t *testing.T) {
 
 		p := &Product{
 			cfg: config.Config{},
-			db: &dbpostgres.Postgres{
+			db: &db.Postgres{
 				Builder: builder,
 				Pool:    mockpool,
 			},
@@ -146,7 +146,7 @@ func TestUnitProductGetDetailByID(t *testing.T) {
 
 		p := &Product{
 			cfg: config.Config{},
-			db: &dbpostgres.Postgres{
+			db: &db.Postgres{
 				Builder: builder,
 				Pool:    mockpool,
 			},
@@ -185,7 +185,7 @@ func TestUnitProductGetDetailByID(t *testing.T) {
 
 		p := &Product{
 			cfg: config.Config{},
-			db: &dbpostgres.Postgres{
+			db: &db.Postgres{
 				Builder: builder,
 				Pool:    mockpool,
 			},
@@ -237,7 +237,7 @@ func TestUnitProductGetDetailByID(t *testing.T) {
 
 		p := &Product{
 			cfg: config.Config{},
-			db: &dbpostgres.Postgres{
+			db: &db.Postgres{
 				Builder: builder,
 				Pool:    mockpool,
 			},
@@ -270,7 +270,7 @@ func TestUnitProductGetDetailByID(t *testing.T) {
 
 		p := &Product{
 			cfg: config.Config{},
-			db: &dbpostgres.Postgres{
+			db: &db.Postgres{
 				Builder: builder,
 				Pool:    mockpool,
 			},
@@ -308,7 +308,7 @@ func TestUnitProductGetDetailBySKU(t *testing.T) {
 
 		p := &Product{
 			cfg: config.Config{},
-			db: &dbpostgres.Postgres{
+			db: &db.Postgres{
 				Builder: builder,
 				Pool:    mockpool,
 			},
@@ -347,7 +347,7 @@ func TestUnitProductGetDetailBySKU(t *testing.T) {
 
 		p := &Product{
 			cfg: config.Config{},
-			db: &dbpostgres.Postgres{
+			db: &db.Postgres{
 				Builder: builder,
 				Pool:    mockpool,
 			},
@@ -399,7 +399,7 @@ func TestUnitProductGetDetailBySKU(t *testing.T) {
 
 		p := &Product{
 			cfg: config.Config{},
-			db: &dbpostgres.Postgres{
+			db: &db.Postgres{
 				Builder: builder,
 				Pool:    mockpool,
 			},
@@ -432,7 +432,7 @@ func TestUnitProductGetDetailBySKU(t *testing.T) {
 
 		p := &Product{
 			cfg: config.Config{},
-			db: &dbpostgres.Postgres{
+			db: &db.Postgres{
 				Builder: builder,
 				Pool:    mockpool,
 			},
@@ -470,7 +470,7 @@ func TestUnitProductGetDetailBySlug(t *testing.T) {
 
 		p := &Product{
 			cfg: config.Config{},
-			db: &dbpostgres.Postgres{
+			db: &db.Postgres{
 				Builder: builder,
 				Pool:    mockpool,
 			},
@@ -509,7 +509,7 @@ func TestUnitProductGetDetailBySlug(t *testing.T) {
 
 		p := &Product{
 			cfg: config.Config{},
-			db: &dbpostgres.Postgres{
+			db: &db.Postgres{
 				Builder: builder,
 				Pool:    mockpool,
 			},
@@ -561,7 +561,7 @@ func TestUnitProductGetDetailBySlug(t *testing.T) {
 
 		p := &Product{
 			cfg: config.Config{},
-			db: &dbpostgres.Postgres{
+			db: &db.Postgres{
 				Builder: builder,
 				Pool:    mockpool,
 			},
@@ -594,7 +594,7 @@ func TestUnitProductGetDetailBySlug(t *testing.T) {
 
 		p := &Product{
 			cfg: config.Config{},
-			db: &dbpostgres.Postgres{
+			db: &db.Postgres{
 				Builder: builder,
 				Pool:    mockpool,
 			},

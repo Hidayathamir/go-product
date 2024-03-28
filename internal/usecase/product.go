@@ -6,20 +6,20 @@ import (
 	"fmt"
 
 	"github.com/Hidayathamir/go-product/internal/config"
-	"github.com/Hidayathamir/go-product/internal/usecase/interfaces"
+	"github.com/Hidayathamir/go-product/internal/usecase/usecaseinterfaces"
 	"github.com/Hidayathamir/go-product/pkg/goproduct"
 )
 
 // Product implement IProduct.
 type Product struct {
 	cfg         config.Config
-	repoProduct interfaces.RepoProduct
+	repoProduct usecaseinterfaces.RepoProduct
 }
 
-var _ interfaces.UsecaseProduct = &Product{}
+var _ usecaseinterfaces.UsecaseProduct = &Product{}
 
 // NewProduct return *Product which implement IProduct.
-func NewProduct(cfg config.Config, repoProduct interfaces.RepoProduct) *Product {
+func NewProduct(cfg config.Config, repoProduct usecaseinterfaces.RepoProduct) *Product {
 	return &Product{
 		cfg:         cfg,
 		repoProduct: repoProduct,

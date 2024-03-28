@@ -1,0 +1,2 @@
+// Package usecaseinterfaces -.
+package usecaseinterfaces
