@@ -3,12 +3,12 @@ package app
 import (
 	"path/filepath"
 
-	"github.com/Hidayathamir/go-product/config"
+	"github.com/Hidayathamir/go-product/internal/config"
 	"github.com/sirupsen/logrus"
 )
 
 func initConfig(arg cliArg) config.Config {
-	yamlPath := filepath.Join("config", "config.yml")
+	yamlPath := filepath.Join("internal", "config", "config.yml")
 
 	var cfgLoader config.Loader
 	if arg.isLoadEnv {

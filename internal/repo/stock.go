@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/Hidayathamir/go-product/config"
+	"github.com/Hidayathamir/go-product/internal/config"
 	"github.com/Hidayathamir/go-product/internal/repo/db"
 	"github.com/Hidayathamir/go-product/internal/repo/db/entity/table"
 	sq "github.com/Masterminds/squirrel"

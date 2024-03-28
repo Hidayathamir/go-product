@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/Hidayathamir/go-product/config"
+	"github.com/Hidayathamir/go-product/internal/config"
 	"github.com/Hidayathamir/go-product/internal/pkg/jutil"
 	"github.com/Hidayathamir/go-product/pkg/goproduct"
 	"github.com/alicebob/miniredis/v2"

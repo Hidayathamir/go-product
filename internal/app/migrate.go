@@ -3,7 +3,7 @@ package app
 import (
 	"path/filepath"
 
-	"github.com/Hidayathamir/go-product/config"
+	"github.com/Hidayathamir/go-product/internal/config"
 	"github.com/Hidayathamir/go-product/internal/repo/db"
 	"github.com/sirupsen/logrus"
 )

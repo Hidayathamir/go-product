@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/Hidayathamir/go-product/config"
+	"github.com/Hidayathamir/go-product/internal/config"
 	"github.com/Hidayathamir/go-product/internal/repo/mockrepo"
 	"github.com/Hidayathamir/go-product/pkg/goproduct"
 	"github.com/stretchr/testify/assert"

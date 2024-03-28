@@ -3,7 +3,7 @@ package app
 import (
 	"flag"
 
-	"github.com/Hidayathamir/go-product/config"
+	"github.com/Hidayathamir/go-product/internal/config"
 	"github.com/ilyakaznacheev/cleanenv"
 )
 
