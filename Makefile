@@ -10,12 +10,12 @@ clear-none-docker-images:
 
 ###################################
 
-# Run postgres container.
-compose-up-postgres:
-	docker compose up -d go-profile-db-postgres
+# Run postgres and redis container.
+compose-up-postgres-redis:
+	docker compose up -d go-profile-db-postgres go-profile-redis
 
-compose-down-postgres:
-	docker compose down go-profile-db-postgres
+compose-down-postgres-redis:
+	docker compose down go-profile-db-postgres go-profile-redis
 
 # Run go app.
 go-run:
@@ -35,6 +35,9 @@ go-test-unit:
 # For deployment. Run postgres container also build and run go app container.
 deploy:
 	docker compose up --build
+
+undeploy:
+	docker compose down
 
 ###################################
 

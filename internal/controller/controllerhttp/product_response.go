@@ -1,4 +1,4 @@
-package http
+package controllerhttp
 
 import "github.com/Hidayathamir/go-product/pkg/goproduct"
 

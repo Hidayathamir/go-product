@@ -6,7 +6,7 @@ import (
 	"strconv"
 
 	"github.com/Hidayathamir/go-product/internal/config"
-	controllerHRPC "github.com/Hidayathamir/go-product/internal/controller/grpc"
+	"github.com/Hidayathamir/go-product/internal/controller/controllergrpc"
 	"github.com/Hidayathamir/go-product/internal/repo"
 	"github.com/Hidayathamir/go-product/internal/repo/cache"
 	"github.com/Hidayathamir/go-product/internal/repo/db"
@@ -17,8 +17,7 @@ import (
 	"google.golang.org/grpc"
 )
 
-// RunGRPCServer run grpc server.
-func RunGRPCServer(cfg config.Config, db *db.Postgres, rdb *redis.Client) error {
+func runGRPCServer(cfg config.Config, db *db.Postgres, rdb *redis.Client) error {
 	grpcServer := grpc.NewServer()
 
 	registerServer(cfg, grpcServer, db, rdb)
@@ -39,24 +38,24 @@ func RunGRPCServer(cfg config.Config, db *db.Postgres, rdb *redis.Client) error 
 }
 
 func registerServer(cfg config.Config, grpcServer *grpc.Server, db *db.Postgres, rdb *redis.Client) {
-	cProduct := injectionProduct(cfg, db, rdb)
-	cStock := injectionStock(cfg, db)
+	cProduct := injectionProductGRPC(cfg, db, rdb)
+	cStock := injectionStockGRPC(cfg, db)
 
 	goproductgrpc.RegisterProductServer(grpcServer, cProduct)
 	goproductgrpc.RegisterStockServer(grpcServer, cStock)
 }
 
-func injectionProduct(cfg config.Config, db *db.Postgres, rdb *redis.Client) *controllerHRPC.Product {
+func injectionProductGRPC(cfg config.Config, db *db.Postgres, rdb *redis.Client) *controllergrpc.Product {
 	repoProductCache := cache.NewProductCache(cfg, rdb)
 	repoProduct := repo.NewProduct(cfg, db, repoProductCache)
 	usecaseProduct := usecase.NewProduct(cfg, repoProduct)
-	controllerProduct := controllerHRPC.NewProduct(cfg, usecaseProduct)
+	controllerProduct := controllergrpc.NewProduct(cfg, usecaseProduct)
 	return controllerProduct
 }
 
-func injectionStock(cfg config.Config, db *db.Postgres) *controllerHRPC.Stock {
+func injectionStockGRPC(cfg config.Config, db *db.Postgres) *controllergrpc.Stock {
 	repoStock := repo.NewStock(cfg, db)
 	usecaseStock := usecase.NewStock(cfg, repoStock)
-	controllerStock := controllerHRPC.NewStock(cfg, usecaseStock)
+	controllerStock := controllergrpc.NewStock(cfg, usecaseStock)
 	return controllerStock
 }

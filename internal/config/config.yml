@@ -22,6 +22,10 @@ postgres:
   port: 5010
   db_name: "playground"
 
+redis:
+  host: "localhost"
+  port: 6010
+
 jwt:
   expire_hour: 36
   signed_key: "2e1f352a-533b-42f6-2224-a4e2efe31de4"

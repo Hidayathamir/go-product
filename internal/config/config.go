@@ -36,6 +36,7 @@ type Config struct {
 	GRPC   GRPC   `yaml:"grpc"     env-required:"true" env-prefix:"GRPC_"`
 	Logger logger `yaml:"logger"   env-required:"true" env-prefix:"LOGGER_"`
 	PG     PG     `yaml:"postgres" env-required:"true" env-prefix:"POSTGRES_"`
+	Redis  Redis  `yaml:"redis"    env-required:"true" env-prefix:"REDIS_"`
 	JWT    JWT    `yaml:"jwt"      env-required:"true" env-prefix:"JWT_"`
 }
 
@@ -113,6 +114,12 @@ type PG struct {
 	Host     string `yaml:"host"     env-required:"true" env:"HOST"     env-description:"postgres host"`
 	Port     int    `yaml:"port"     env-required:"true" env:"PORT"     env-description:"postgres port"`
 	DBName   string `yaml:"db_name"  env-required:"true" env:"DB_NAME"  env-description:"postgres database name"`
+}
+
+// Redis -.
+type Redis struct {
+	Host string `yaml:"host"     env-required:"true" env:"HOST"     env-description:"redis host"`
+	Port int    `yaml:"port"     env-required:"true" env:"PORT"     env-description:"redis port"`
 }
 
 // JWT hold JWT configuration.

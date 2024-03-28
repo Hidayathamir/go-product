@@ -1,4 +1,4 @@
-package grpc
+package controllergrpc
 
 import (
 	"context"
@@ -20,6 +20,7 @@ type Stock struct {
 
 var _ goproductgrpc.StockServer = &Stock{}
 
+// NewStock -.
 func NewStock(cfg config.Config, usecaseStock usecase.IStock) *Stock {
 	return &Stock{
 		cfg:          cfg,

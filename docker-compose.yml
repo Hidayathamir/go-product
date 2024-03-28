@@ -33,3 +33,10 @@ services:
       - go-profile
     ports:
       - "5010:5432"
+  go-profile-redis:
+    image: redis:7.2.4
+    container_name: go-profile-redis-container
+    networks:
+      - go-profile
+    ports:
+      - "6010:6379"
