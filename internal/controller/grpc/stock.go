@@ -20,7 +20,7 @@ type Stock struct {
 
 var _ goproductgrpc.StockServer = &Stock{}
 
-func newStock(cfg config.Config, usecaseStock usecase.IStock) *Stock {
+func NewStock(cfg config.Config, usecaseStock usecase.IStock) *Stock {
 	return &Stock{
 		cfg:          cfg,
 		usecaseStock: usecaseStock,

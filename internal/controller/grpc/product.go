@@ -21,7 +21,8 @@ type Product struct {
 
 var _ goproductgrpc.ProductServer = &Product{}
 
-func newProduct(cfg config.Config, usecaseProduct usecase.IProduct) *Product {
+// NewProduct -.
+func NewProduct(cfg config.Config, usecaseProduct usecase.IProduct) *Product {
 	return &Product{
 		cfg:            cfg,
 		usecaseProduct: usecaseProduct,
