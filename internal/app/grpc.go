@@ -6,7 +6,7 @@ import (
 	"strconv"
 
 	"github.com/Hidayathamir/go-product/internal/config"
-	"github.com/Hidayathamir/go-product/internal/controller/controllergrpc"
+	controllergrpc "github.com/Hidayathamir/go-product/internal/controller/grpc"
 	"github.com/Hidayathamir/go-product/internal/repo"
 	"github.com/Hidayathamir/go-product/internal/repo/cache"
 	"github.com/Hidayathamir/go-product/internal/repo/db"
