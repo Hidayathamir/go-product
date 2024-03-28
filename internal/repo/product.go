@@ -7,6 +7,7 @@ import (
 
 	"github.com/Hidayathamir/go-product/config"
 	"github.com/Hidayathamir/go-product/internal/pkg/query"
+	"github.com/Hidayathamir/go-product/internal/repo/cache"
 	"github.com/Hidayathamir/go-product/internal/repo/db"
 	"github.com/Hidayathamir/go-product/internal/repo/db/entity/table"
 	"github.com/Hidayathamir/go-product/pkg/goproduct"
@@ -33,13 +34,13 @@ type IProduct interface {
 type Product struct {
 	cfg   config.Config
 	db    *db.Postgres
-	cache IProductCache
+	cache cache.IProduct
 }
 
 var _ IProduct = &Product{}
 
 // NewProduct return *Product which implement repo.IProduct.
-func NewProduct(cfg config.Config, db *db.Postgres, cache IProductCache) *Product {
+func NewProduct(cfg config.Config, db *db.Postgres, cache cache.IProduct) *Product {
 	return &Product{
 		cfg:   cfg,
 		db:    db,

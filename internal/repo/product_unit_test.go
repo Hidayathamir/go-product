@@ -6,9 +6,9 @@ import (
 	"time"
 
 	"github.com/Hidayathamir/go-product/config"
+	"github.com/Hidayathamir/go-product/internal/repo/cache/mockcache"
 	"github.com/Hidayathamir/go-product/internal/repo/db"
 	"github.com/Hidayathamir/go-product/internal/repo/db/entity/table"
-	"github.com/Hidayathamir/go-product/internal/repo/mockrepo"
 	"github.com/Hidayathamir/go-product/pkg/goproduct"
 	"github.com/jackc/pgx/v5"
 	"github.com/pashagolub/pgxmock/v3"
@@ -142,7 +142,7 @@ func TestUnitProductGetDetailByID(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		cache := mockrepo.NewMockIProductCache(ctrl)
+		cache := mockcache.NewMockIProduct(ctrl)
 
 		p := &Product{
 			cfg: config.Config{},
@@ -181,7 +181,7 @@ func TestUnitProductGetDetailByID(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		cache := mockrepo.NewMockIProductCache(ctrl)
+		cache := mockcache.NewMockIProduct(ctrl)
 
 		p := &Product{
 			cfg: config.Config{},
@@ -233,7 +233,7 @@ func TestUnitProductGetDetailByID(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		cache := mockrepo.NewMockIProductCache(ctrl)
+		cache := mockcache.NewMockIProduct(ctrl)
 
 		p := &Product{
 			cfg: config.Config{},
@@ -266,7 +266,7 @@ func TestUnitProductGetDetailByID(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		cache := mockrepo.NewMockIProductCache(ctrl)
+		cache := mockcache.NewMockIProduct(ctrl)
 
 		p := &Product{
 			cfg: config.Config{},
@@ -304,7 +304,7 @@ func TestUnitProductGetDetailBySKU(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		cache := mockrepo.NewMockIProductCache(ctrl)
+		cache := mockcache.NewMockIProduct(ctrl)
 
 		p := &Product{
 			cfg: config.Config{},
@@ -343,7 +343,7 @@ func TestUnitProductGetDetailBySKU(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		cache := mockrepo.NewMockIProductCache(ctrl)
+		cache := mockcache.NewMockIProduct(ctrl)
 
 		p := &Product{
 			cfg: config.Config{},
@@ -395,7 +395,7 @@ func TestUnitProductGetDetailBySKU(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		cache := mockrepo.NewMockIProductCache(ctrl)
+		cache := mockcache.NewMockIProduct(ctrl)
 
 		p := &Product{
 			cfg: config.Config{},
@@ -428,7 +428,7 @@ func TestUnitProductGetDetailBySKU(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		cache := mockrepo.NewMockIProductCache(ctrl)
+		cache := mockcache.NewMockIProduct(ctrl)
 
 		p := &Product{
 			cfg: config.Config{},
@@ -466,7 +466,7 @@ func TestUnitProductGetDetailBySlug(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		cache := mockrepo.NewMockIProductCache(ctrl)
+		cache := mockcache.NewMockIProduct(ctrl)
 
 		p := &Product{
 			cfg: config.Config{},
@@ -505,7 +505,7 @@ func TestUnitProductGetDetailBySlug(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		cache := mockrepo.NewMockIProductCache(ctrl)
+		cache := mockcache.NewMockIProduct(ctrl)
 
 		p := &Product{
 			cfg: config.Config{},
@@ -557,7 +557,7 @@ func TestUnitProductGetDetailBySlug(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		cache := mockrepo.NewMockIProductCache(ctrl)
+		cache := mockcache.NewMockIProduct(ctrl)
 
 		p := &Product{
 			cfg: config.Config{},
@@ -590,7 +590,7 @@ func TestUnitProductGetDetailBySlug(t *testing.T) {
 		ctrl := gomock.NewController(t)
 		defer ctrl.Finish()
 
-		cache := mockrepo.NewMockIProductCache(ctrl)
+		cache := mockcache.NewMockIProduct(ctrl)
 
 		p := &Product{
 			cfg: config.Config{},
