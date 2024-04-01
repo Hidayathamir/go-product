@@ -6,7 +6,7 @@ import (
 
 	"github.com/Hidayathamir/go-product/internal/config"
 	"github.com/Hidayathamir/go-product/internal/repo/db"
-	"github.com/Hidayathamir/go-product/internal/repo/db/entity/table"
+	"github.com/Hidayathamir/go-product/internal/repo/db/table"
 	sq "github.com/Masterminds/squirrel"
 	"github.com/jackc/pgx/v5"
 )

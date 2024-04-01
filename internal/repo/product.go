@@ -9,7 +9,7 @@ import (
 	"github.com/Hidayathamir/go-product/internal/pkg/query"
 	"github.com/Hidayathamir/go-product/internal/repo/cache"
 	"github.com/Hidayathamir/go-product/internal/repo/db"
-	"github.com/Hidayathamir/go-product/internal/repo/db/entity/table"
+	"github.com/Hidayathamir/go-product/internal/repo/db/table"
 	"github.com/Hidayathamir/go-product/pkg/goproduct"
 	sq "github.com/Masterminds/squirrel"
 	"github.com/jackc/pgx/v5"

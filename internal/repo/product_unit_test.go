@@ -8,7 +8,7 @@ import (
 	"github.com/Hidayathamir/go-product/internal/config"
 	"github.com/Hidayathamir/go-product/internal/repo/cache/mockcache"
 	"github.com/Hidayathamir/go-product/internal/repo/db"
-	"github.com/Hidayathamir/go-product/internal/repo/db/entity/table"
+	"github.com/Hidayathamir/go-product/internal/repo/db/table"
 	"github.com/Hidayathamir/go-product/pkg/goproduct"
 	"github.com/jackc/pgx/v5"
 	"github.com/pashagolub/pgxmock/v3"
