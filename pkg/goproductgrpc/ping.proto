@@ -5,10 +5,10 @@ option go_package = "github.com/Hidayathamir/gouser/pkg/goproductgrpc";
 package goproductgrpc;
 
 service Ping {
-  rpc Ping(PingEmpty) returns (ResPing) {}
+  rpc Ping(PingVoid) returns (ResPing) {}
 }
 
-message PingEmpty {}
+message PingVoid {}
 
 message ResPing {
   string message = 1;

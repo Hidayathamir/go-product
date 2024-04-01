@@ -29,7 +29,7 @@ func NewStock(cfg config.Config, usecaseStock usecase.IStock) *Stock {
 }
 
 // IncrementStock implements goproductgrpc.StockServer.
-func (s *Stock) IncrementStock(c context.Context, r *goproductgrpc.ReqIncrementStock) (*goproductgrpc.StockEmpty, error) {
+func (s *Stock) IncrementStock(c context.Context, r *goproductgrpc.ReqIncrementStock) (*goproductgrpc.StockVoid, error) {
 	req := goproduct.ReqIncrementStock{
 		ProductID: r.GetProductId(),
 	}
@@ -39,13 +39,13 @@ func (s *Stock) IncrementStock(c context.Context, r *goproductgrpc.ReqIncrementS
 		return nil, fmt.Errorf("Stock.usecaseStock.IncrementStock: %w", err)
 	}
 
-	res := &goproductgrpc.StockEmpty{}
+	res := &goproductgrpc.StockVoid{}
 
 	return res, nil
 }
 
 // DecrementStock implements goproductgrpc.StockServer.
-func (s *Stock) DecrementStock(c context.Context, r *goproductgrpc.ReqDecrementStock) (*goproductgrpc.StockEmpty, error) {
+func (s *Stock) DecrementStock(c context.Context, r *goproductgrpc.ReqDecrementStock) (*goproductgrpc.StockVoid, error) {
 	req := goproduct.ReqDecrementStock{
 		ProductID: r.GetProductId(),
 	}
@@ -55,7 +55,7 @@ func (s *Stock) DecrementStock(c context.Context, r *goproductgrpc.ReqDecrementS
 		return nil, fmt.Errorf("Stock.usecaseStock.DecrementStock: %w", err)
 	}
 
-	res := &goproductgrpc.StockEmpty{}
+	res := &goproductgrpc.StockVoid{}
 
 	return res, nil
 }

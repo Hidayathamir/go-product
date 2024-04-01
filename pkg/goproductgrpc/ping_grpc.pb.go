@@ -22,7 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type PingClient interface {
-	Ping(ctx context.Context, in *PingEmpty, opts ...grpc.CallOption) (*ResPing, error)
+	Ping(ctx context.Context, in *PingVoid, opts ...grpc.CallOption) (*ResPing, error)
 }
 
 type pingClient struct {
@@ -33,7 +33,7 @@ func NewPingClient(cc grpc.ClientConnInterface) PingClient {
 	return &pingClient{cc}
 }
 
-func (c *pingClient) Ping(ctx context.Context, in *PingEmpty, opts ...grpc.CallOption) (*ResPing, error) {
+func (c *pingClient) Ping(ctx context.Context, in *PingVoid, opts ...grpc.CallOption) (*ResPing, error) {
 	out := new(ResPing)
 	err := c.cc.Invoke(ctx, "/goproductgrpc.Ping/Ping", in, out, opts...)
 	if err != nil {
@@ -46,7 +46,7 @@ func (c *pingClient) Ping(ctx context.Context, in *PingEmpty, opts ...grpc.CallO
 // All implementations must embed UnimplementedPingServer
 // for forward compatibility
 type PingServer interface {
-	Ping(context.Context, *PingEmpty) (*ResPing, error)
+	Ping(context.Context, *PingVoid) (*ResPing, error)
 	mustEmbedUnimplementedPingServer()
 }
 
@@ -54,7 +54,7 @@ type PingServer interface {
 type UnimplementedPingServer struct {
 }
 
-func (UnimplementedPingServer) Ping(context.Context, *PingEmpty) (*ResPing, error) {
+func (UnimplementedPingServer) Ping(context.Context, *PingVoid) (*ResPing, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Ping not implemented")
 }
 func (UnimplementedPingServer) mustEmbedUnimplementedPingServer() {}
@@ -71,7 +71,7 @@ func RegisterPingServer(s grpc.ServiceRegistrar, srv PingServer) {
 }
 
 func _Ping_Ping_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PingEmpty)
+	in := new(PingVoid)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -83,7 +83,7 @@ func _Ping_Ping_Handler(srv interface{}, ctx context.Context, dec func(interface
 		FullMethod: "/goproductgrpc.Ping/Ping",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PingServer).Ping(ctx, req.(*PingEmpty))
+		return srv.(PingServer).Ping(ctx, req.(*PingVoid))
 	}
 	return interceptor(ctx, in, info, handler)
 }

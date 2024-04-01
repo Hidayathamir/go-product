@@ -5,11 +5,11 @@ option go_package = "github.com/Hidayathamir/gouser/pkg/goproductgrpc";
 package goproductgrpc;
 
 service Stock {
-  rpc IncrementStock(ReqIncrementStock) returns (StockEmpty) {}
-  rpc DecrementStock(ReqDecrementStock) returns (StockEmpty) {}
+  rpc IncrementStock(ReqIncrementStock) returns (StockVoid) {}
+  rpc DecrementStock(ReqDecrementStock) returns (StockVoid) {}
 }
 
-message StockEmpty {}
+message StockVoid {}
 
 message ReqIncrementStock {
     int64 product_id = 1;

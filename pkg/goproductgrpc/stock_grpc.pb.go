@@ -22,8 +22,8 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type StockClient interface {
-	IncrementStock(ctx context.Context, in *ReqIncrementStock, opts ...grpc.CallOption) (*StockEmpty, error)
-	DecrementStock(ctx context.Context, in *ReqDecrementStock, opts ...grpc.CallOption) (*StockEmpty, error)
+	IncrementStock(ctx context.Context, in *ReqIncrementStock, opts ...grpc.CallOption) (*StockVoid, error)
+	DecrementStock(ctx context.Context, in *ReqDecrementStock, opts ...grpc.CallOption) (*StockVoid, error)
 }
 
 type stockClient struct {
@@ -34,8 +34,8 @@ func NewStockClient(cc grpc.ClientConnInterface) StockClient {
 	return &stockClient{cc}
 }
 
-func (c *stockClient) IncrementStock(ctx context.Context, in *ReqIncrementStock, opts ...grpc.CallOption) (*StockEmpty, error) {
-	out := new(StockEmpty)
+func (c *stockClient) IncrementStock(ctx context.Context, in *ReqIncrementStock, opts ...grpc.CallOption) (*StockVoid, error) {
+	out := new(StockVoid)
 	err := c.cc.Invoke(ctx, "/goproductgrpc.Stock/IncrementStock", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -43,8 +43,8 @@ func (c *stockClient) IncrementStock(ctx context.Context, in *ReqIncrementStock,
 	return out, nil
 }
 
-func (c *stockClient) DecrementStock(ctx context.Context, in *ReqDecrementStock, opts ...grpc.CallOption) (*StockEmpty, error) {
-	out := new(StockEmpty)
+func (c *stockClient) DecrementStock(ctx context.Context, in *ReqDecrementStock, opts ...grpc.CallOption) (*StockVoid, error) {
+	out := new(StockVoid)
 	err := c.cc.Invoke(ctx, "/goproductgrpc.Stock/DecrementStock", in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -56,8 +56,8 @@ func (c *stockClient) DecrementStock(ctx context.Context, in *ReqDecrementStock,
 // All implementations must embed UnimplementedStockServer
 // for forward compatibility
 type StockServer interface {
-	IncrementStock(context.Context, *ReqIncrementStock) (*StockEmpty, error)
-	DecrementStock(context.Context, *ReqDecrementStock) (*StockEmpty, error)
+	IncrementStock(context.Context, *ReqIncrementStock) (*StockVoid, error)
+	DecrementStock(context.Context, *ReqDecrementStock) (*StockVoid, error)
 	mustEmbedUnimplementedStockServer()
 }
 
@@ -65,10 +65,10 @@ type StockServer interface {
 type UnimplementedStockServer struct {
 }
 
-func (UnimplementedStockServer) IncrementStock(context.Context, *ReqIncrementStock) (*StockEmpty, error) {
+func (UnimplementedStockServer) IncrementStock(context.Context, *ReqIncrementStock) (*StockVoid, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method IncrementStock not implemented")
 }
-func (UnimplementedStockServer) DecrementStock(context.Context, *ReqDecrementStock) (*StockEmpty, error) {
+func (UnimplementedStockServer) DecrementStock(context.Context, *ReqDecrementStock) (*StockVoid, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DecrementStock not implemented")
 }
 func (UnimplementedStockServer) mustEmbedUnimplementedStockServer() {}
