@@ -9,6 +9,7 @@ package goproductgrpc;
 service Product {
   rpc Search(ReqProductSearch) returns (ResProductSearch) {}
   rpc GetDetail(ReqProductDetail) returns (ResProductDetail) {}
+  rpc Add(ReqProductAdd) returns (ResProductAdd) {}
 }
 
 message ReqProductSearch {
@@ -34,4 +35,16 @@ message ResProductDetail {
     int32 stock = 6;
     google.protobuf.Timestamp created_at = 7;
     google.protobuf.Timestamp updated_at = 8;
+}
+
+message ReqProductAdd {
+    string sku = 1;
+    string slug = 2;
+    string name = 3;
+    string description = 4;
+    int32 stock = 5;
+}
+
+message ResProductAdd {
+    int64 id = 1;
 }

@@ -90,3 +90,26 @@ func (p *Product) GetDetail(c context.Context, r *goproductgrpc.ReqProductDetail
 
 	return res, nil
 }
+
+// Add implements goproductgrpc.ProductServer.
+func (p *Product) Add(c context.Context, r *goproductgrpc.ReqProductAdd) (*goproductgrpc.ResProductAdd, error) {
+	req := goproductdto.ReqProductAdd{
+		SKU:         r.GetSku(),
+		Slug:        r.GetSlug(),
+		Name:        r.GetName(),
+		Description: r.GetDescription(),
+		Stock:       r.GetStock(),
+	}
+
+	resAdd, err := p.usecaseProduct.Add(c, req)
+	if err != nil {
+		err := fmt.Errorf("Product.usecaseProduct.Add: %w", err)
+		return nil, err
+	}
+
+	res := &goproductgrpc.ResProductAdd{
+		Id: resAdd.ID,
+	}
+
+	return res, nil
+}

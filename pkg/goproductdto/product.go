@@ -58,3 +58,25 @@ type ReqProductAdd struct {
 	Description string `json:"description"`
 	Stock       int32  `json:"stock"`
 }
+
+// Validate -.
+func (r ReqProductAdd) Validate() error {
+	if r.SKU == "" {
+		return errors.New("sku can not be empty")
+	}
+	if r.Slug == "" {
+		return errors.New("slug can not be empty")
+	}
+	if r.Name == "" {
+		return errors.New("name can not be empty")
+	}
+	if r.Description == "" {
+		return errors.New("description can not be empty")
+	}
+	return nil
+}
+
+// ResProductAdd -.
+type ResProductAdd struct {
+	ID int64 `json:"id"`
+}

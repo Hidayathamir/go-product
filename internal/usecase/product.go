@@ -19,6 +19,8 @@ type IProduct interface {
 	Search(ctx context.Context, req goproductdto.ReqProductSearch) (goproductdto.ResProductSearch, error)
 	// GetDetail get product detail by id, or sku, or slug. With priority id > sku > slug.
 	GetDetail(ctx context.Context, req goproductdto.ReqProductDetail) (goproductdto.ResProductDetail, error)
+	// Add adds product to database.
+	Add(ctx context.Context, req goproductdto.ReqProductAdd) (goproductdto.ResProductAdd, error)
 }
 
 // Product implement IProduct.
@@ -87,4 +89,24 @@ func (p *Product) GetDetail(ctx context.Context, req goproductdto.ReqProductDeta
 
 	err = errors.New("request invalid, in theory it's imposible to got this error since it's already handle in req.Validate()")
 	return goproductdto.ResProductDetail{}, err
+}
+
+// Add implements IProduct.
+func (p *Product) Add(ctx context.Context, req goproductdto.ReqProductAdd) (goproductdto.ResProductAdd, error) {
+	err := req.Validate()
+	if err != nil {
+		err := fmt.Errorf("goproductdto.ReqProductAdd.Validate: %w", err)
+		return goproductdto.ResProductAdd{}, fmt.Errorf("%w: %w", goproducterror.ErrRequestInvalid, err)
+	}
+
+	productID, err := p.repoProduct.Add(ctx, req)
+	if err != nil {
+		return goproductdto.ResProductAdd{}, fmt.Errorf("Product.repoProduct.Add: %w", err)
+	}
+
+	res := goproductdto.ResProductAdd{
+		ID: productID,
+	}
+
+	return res, nil
 }

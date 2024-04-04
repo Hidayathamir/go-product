@@ -24,6 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 type ProductClient interface {
 	Search(ctx context.Context, in *ReqProductSearch, opts ...grpc.CallOption) (*ResProductSearch, error)
 	GetDetail(ctx context.Context, in *ReqProductDetail, opts ...grpc.CallOption) (*ResProductDetail, error)
+	Add(ctx context.Context, in *ReqProductAdd, opts ...grpc.CallOption) (*ResProductAdd, error)
 }
 
 type productClient struct {
@@ -52,12 +53,22 @@ func (c *productClient) GetDetail(ctx context.Context, in *ReqProductDetail, opt
 	return out, nil
 }
 
+func (c *productClient) Add(ctx context.Context, in *ReqProductAdd, opts ...grpc.CallOption) (*ResProductAdd, error) {
+	out := new(ResProductAdd)
+	err := c.cc.Invoke(ctx, "/goproductgrpc.Product/Add", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ProductServer is the server API for Product service.
 // All implementations must embed UnimplementedProductServer
 // for forward compatibility
 type ProductServer interface {
 	Search(context.Context, *ReqProductSearch) (*ResProductSearch, error)
 	GetDetail(context.Context, *ReqProductDetail) (*ResProductDetail, error)
+	Add(context.Context, *ReqProductAdd) (*ResProductAdd, error)
 	mustEmbedUnimplementedProductServer()
 }
 
@@ -70,6 +81,9 @@ func (UnimplementedProductServer) Search(context.Context, *ReqProductSearch) (*R
 }
 func (UnimplementedProductServer) GetDetail(context.Context, *ReqProductDetail) (*ResProductDetail, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetDetail not implemented")
+}
+func (UnimplementedProductServer) Add(context.Context, *ReqProductAdd) (*ResProductAdd, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Add not implemented")
 }
 func (UnimplementedProductServer) mustEmbedUnimplementedProductServer() {}
 
@@ -120,6 +134,24 @@ func _Product_GetDetail_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Product_Add_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReqProductAdd)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ProductServer).Add(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/goproductgrpc.Product/Add",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ProductServer).Add(ctx, req.(*ReqProductAdd))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Product_ServiceDesc is the grpc.ServiceDesc for Product service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -134,6 +166,10 @@ var Product_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetDetail",
 			Handler:    _Product_GetDetail_Handler,
+		},
+		{
+			MethodName: "Add",
+			Handler:    _Product_Add_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
