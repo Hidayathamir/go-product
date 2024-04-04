@@ -7,3 +7,8 @@ import "fmt"
 func JoinOnEqual(table, column1, column2 string) string {
 	return fmt.Sprintf("%s ON %s = %s", table, column1, column2)
 }
+
+// Returning return sql query string RETURNING column.
+func Returning(column string) string {
+	return "RETURNING " + column
+}

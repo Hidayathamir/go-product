@@ -7,7 +7,7 @@ import (
 
 	"github.com/Hidayathamir/go-product/internal/config"
 	"github.com/Hidayathamir/go-product/internal/pkg/jutil"
-	"github.com/Hidayathamir/go-product/pkg/goproduct"
+	"github.com/Hidayathamir/go-product/pkg/goproductdto"
 	"github.com/alicebob/miniredis/v2"
 	"github.com/redis/go-redis/v9"
 	"github.com/stretchr/testify/assert"
@@ -26,12 +26,12 @@ func TestUnitProductCacheGetDetailByID(t *testing.T) {
 			Addr: s.Addr(),
 		})
 
-		p := &ProductCache{
+		p := &Redis{
 			cfg: config.Config{},
 			rdb: rdb,
 		}
 
-		expectedProduct := goproduct.ResProductDetail{
+		expectedProduct := goproductdto.ResProductDetail{
 			ID:          234231,
 			SKU:         "asdf",
 			Slug:        "aefsf",
@@ -59,7 +59,7 @@ func TestUnitProductCacheGetDetailByID(t *testing.T) {
 			Addr: s.Addr(),
 		})
 
-		p := &ProductCache{
+		p := &Redis{
 			cfg: config.Config{},
 			rdb: rdb,
 		}
@@ -79,7 +79,7 @@ func TestUnitProductCacheGetDetailByID(t *testing.T) {
 			Addr: s.Addr(),
 		})
 
-		p := &ProductCache{
+		p := &Redis{
 			cfg: config.Config{},
 			rdb: rdb,
 		}
@@ -108,12 +108,12 @@ func TestUnitProductCacheGetDetailBySKU(t *testing.T) {
 			Addr: s.Addr(),
 		})
 
-		p := &ProductCache{
+		p := &Redis{
 			cfg: config.Config{},
 			rdb: rdb,
 		}
 
-		expectedProduct := goproduct.ResProductDetail{
+		expectedProduct := goproductdto.ResProductDetail{
 			ID:          234231,
 			SKU:         "asdf",
 			Slug:        "aefsf",
@@ -141,7 +141,7 @@ func TestUnitProductCacheGetDetailBySKU(t *testing.T) {
 			Addr: s.Addr(),
 		})
 
-		p := &ProductCache{
+		p := &Redis{
 			cfg: config.Config{},
 			rdb: rdb,
 		}
@@ -161,7 +161,7 @@ func TestUnitProductCacheGetDetailBySKU(t *testing.T) {
 			Addr: s.Addr(),
 		})
 
-		p := &ProductCache{
+		p := &Redis{
 			cfg: config.Config{},
 			rdb: rdb,
 		}

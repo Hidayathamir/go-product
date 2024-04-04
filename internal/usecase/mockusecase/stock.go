@@ -13,7 +13,7 @@ import (
 	context "context"
 	reflect "reflect"
 
-	goproduct "github.com/Hidayathamir/go-product/pkg/goproduct"
+	goproductdto "github.com/Hidayathamir/go-product/pkg/goproductdto"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -41,7 +41,7 @@ func (m *MockIStock) EXPECT() *MockIStockMockRecorder {
 }
 
 // DecrementStock mocks base method.
-func (m *MockIStock) DecrementStock(ctx context.Context, req goproduct.ReqDecrementStock) error {
+func (m *MockIStock) DecrementStock(ctx context.Context, req goproductdto.ReqDecrementStock) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "DecrementStock", ctx, req)
 	ret0, _ := ret[0].(error)
@@ -55,7 +55,7 @@ func (mr *MockIStockMockRecorder) DecrementStock(ctx, req any) *gomock.Call {
 }
 
 // IncrementStock mocks base method.
-func (m *MockIStock) IncrementStock(ctx context.Context, req goproduct.ReqIncrementStock) error {
+func (m *MockIStock) IncrementStock(ctx context.Context, req goproductdto.ReqIncrementStock) error {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "IncrementStock", ctx, req)
 	ret0, _ := ret[0].(error)

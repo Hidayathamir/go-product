@@ -21,6 +21,7 @@ type stock struct {
 type stockConstraint struct {
 	StockPk        string
 	StockProductFk string
+	StockUnique    string
 }
 
 func (s *stock) String() string {
@@ -39,6 +40,7 @@ func initTableStock() {
 		Constraint: stockConstraint{
 			StockPk:        "stock_pk",
 			StockProductFk: "stock_product_fk",
+			StockUnique:    "stock_unique",
 		},
 		ID:        "id",
 		ProductID: "product_id",
@@ -53,6 +55,7 @@ func initTableStock() {
 		Constraint: stockConstraint{
 			StockPk:        Stock.Constraint.StockPk,
 			StockProductFk: Stock.Constraint.StockProductFk,
+			StockUnique:    Stock.Constraint.StockUnique,
 		},
 		ID:        Stock.tableName + "." + Stock.ID,
 		ProductID: Stock.tableName + "." + Stock.ProductID,

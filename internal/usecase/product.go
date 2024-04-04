@@ -7,7 +7,8 @@ import (
 
 	"github.com/Hidayathamir/go-product/internal/config"
 	"github.com/Hidayathamir/go-product/internal/repo"
-	"github.com/Hidayathamir/go-product/pkg/goproduct"
+	"github.com/Hidayathamir/go-product/pkg/goproductdto"
+	"github.com/Hidayathamir/go-product/pkg/goproducterror"
 )
 
 //go:generate mockgen -source=product.go -destination=mockusecase/product.go -package=mockusecase
@@ -15,9 +16,9 @@ import (
 // IProduct contains abstraction of usecase product.
 type IProduct interface {
 	// Search search product by name or description using keyword.
-	Search(ctx context.Context, req goproduct.ReqProductSearch) (goproduct.ResProductSearch, error)
+	Search(ctx context.Context, req goproductdto.ReqProductSearch) (goproductdto.ResProductSearch, error)
 	// GetDetail get product detail by id, or sku, or slug. With priority id > sku > slug.
-	GetDetail(ctx context.Context, req goproduct.ReqProductDetail) (goproduct.ResProductDetail, error)
+	GetDetail(ctx context.Context, req goproductdto.ReqProductDetail) (goproductdto.ResProductDetail, error)
 }
 
 // Product implement IProduct.
@@ -37,33 +38,33 @@ func NewProduct(cfg config.Config, repoProduct repo.IProduct) *Product {
 }
 
 // Search implements IProduct.
-func (p *Product) Search(ctx context.Context, req goproduct.ReqProductSearch) (goproduct.ResProductSearch, error) {
+func (p *Product) Search(ctx context.Context, req goproductdto.ReqProductSearch) (goproductdto.ResProductSearch, error) {
 	err := req.Validate()
 	if err != nil {
-		err := fmt.Errorf("goproduct.ReqProductSearch.Validate: %w", err)
-		return goproduct.ResProductSearch{}, fmt.Errorf("%w: %w", goproduct.ErrRequestInvalid, err)
+		err := fmt.Errorf("goproductdto.ReqProductSearch.Validate: %w", err)
+		return goproductdto.ResProductSearch{}, fmt.Errorf("%w: %w", goproducterror.ErrRequestInvalid, err)
 	}
 
 	products, err := p.repoProduct.Search(ctx, req.Keyword)
 	if err != nil {
-		return goproduct.ResProductSearch{}, fmt.Errorf("Product.repoProduct.Search: %w", err)
+		return goproductdto.ResProductSearch{}, fmt.Errorf("Product.repoProduct.Search: %w", err)
 	}
 
 	return products, nil
 }
 
 // GetDetail implements IProduct.
-func (p *Product) GetDetail(ctx context.Context, req goproduct.ReqProductDetail) (goproduct.ResProductDetail, error) {
+func (p *Product) GetDetail(ctx context.Context, req goproductdto.ReqProductDetail) (goproductdto.ResProductDetail, error) {
 	err := req.Validate()
 	if err != nil {
-		err := fmt.Errorf("goproduct.ReqProductDetail.Validate: %w", err)
-		return goproduct.ResProductDetail{}, fmt.Errorf("%w: %w", goproduct.ErrRequestInvalid, err)
+		err := fmt.Errorf("goproductdto.ReqProductDetail.Validate: %w", err)
+		return goproductdto.ResProductDetail{}, fmt.Errorf("%w: %w", goproducterror.ErrRequestInvalid, err)
 	}
 
 	if req.ID != 0 {
 		product, err := p.repoProduct.GetDetailByID(ctx, req.ID)
 		if err != nil {
-			return goproduct.ResProductDetail{}, fmt.Errorf("Product.repoProduct.GetDetailByID: %w", err)
+			return goproductdto.ResProductDetail{}, fmt.Errorf("Product.repoProduct.GetDetailByID: %w", err)
 		}
 		return product, nil
 	}
@@ -71,7 +72,7 @@ func (p *Product) GetDetail(ctx context.Context, req goproduct.ReqProductDetail)
 	if req.SKU != "" {
 		product, err := p.repoProduct.GetDetailBySKU(ctx, req.SKU)
 		if err != nil {
-			return goproduct.ResProductDetail{}, fmt.Errorf("Product.repoProduct.GetDetailBySKU: %w", err)
+			return goproductdto.ResProductDetail{}, fmt.Errorf("Product.repoProduct.GetDetailBySKU: %w", err)
 		}
 		return product, nil
 	}
@@ -79,11 +80,11 @@ func (p *Product) GetDetail(ctx context.Context, req goproduct.ReqProductDetail)
 	if req.Slug != "" {
 		product, err := p.repoProduct.GetDetailBySlug(ctx, req.Slug)
 		if err != nil {
-			return goproduct.ResProductDetail{}, fmt.Errorf("Product.repoProduct.GetDetailBySlug: %w", err)
+			return goproductdto.ResProductDetail{}, fmt.Errorf("Product.repoProduct.GetDetailBySlug: %w", err)
 		}
 		return product, nil
 	}
 
 	err = errors.New("request invalid, in theory it's imposible to got this error since it's already handle in req.Validate()")
-	return goproduct.ResProductDetail{}, err
+	return goproductdto.ResProductDetail{}, err
 }

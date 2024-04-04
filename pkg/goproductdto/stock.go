@@ -1,4 +1,4 @@
-package goproduct
+package goproductdto
 
 import "errors"
 

@@ -20,7 +20,10 @@ type IPgxPool interface {
 	Query(ctx context.Context, sql string, args ...any) (pgx.Rows, error)
 	Exec(ctx context.Context, sql string, arguments ...any) (pgconn.CommandTag, error)
 	QueryRow(ctx context.Context, sql string, args ...any) pgx.Row
+	Begin(ctx context.Context) (pgx.Tx, error)
 }
+
+var _ IPgxPool = &pgxpool.Pool{}
 
 // Postgres -.
 type Postgres struct {

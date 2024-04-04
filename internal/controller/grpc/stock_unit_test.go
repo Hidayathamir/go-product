@@ -6,7 +6,7 @@ import (
 
 	"github.com/Hidayathamir/go-product/internal/config"
 	"github.com/Hidayathamir/go-product/internal/usecase/mockusecase"
-	"github.com/Hidayathamir/go-product/pkg/goproduct"
+	"github.com/Hidayathamir/go-product/pkg/goproductdto"
 	"github.com/Hidayathamir/go-product/pkg/goproductgrpc"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -29,7 +29,7 @@ func TestUnitStockIncrementStock(t *testing.T) {
 			usecaseStock: usecaseStock,
 		}
 
-		reqUsecase := goproduct.ReqIncrementStock{ProductID: 123123}
+		reqUsecase := goproductdto.ReqIncrementStock{ProductID: 123123}
 
 		usecaseStock.EXPECT().IncrementStock(context.Background(), reqUsecase).Return(nil)
 
@@ -53,7 +53,7 @@ func TestUnitStockIncrementStock(t *testing.T) {
 			usecaseStock: usecaseStock,
 		}
 
-		reqUsecase := goproduct.ReqIncrementStock{ProductID: 123123}
+		reqUsecase := goproductdto.ReqIncrementStock{ProductID: 123123}
 
 		usecaseStock.EXPECT().IncrementStock(context.Background(), reqUsecase).Return(assert.AnError)
 
@@ -83,7 +83,7 @@ func TestUnitStockDecrementStock(t *testing.T) {
 			usecaseStock: usecaseStock,
 		}
 
-		reqUsecase := goproduct.ReqDecrementStock{ProductID: 23423}
+		reqUsecase := goproductdto.ReqDecrementStock{ProductID: 23423}
 
 		usecaseStock.EXPECT().DecrementStock(context.Background(), reqUsecase).Return(nil)
 
@@ -107,7 +107,7 @@ func TestUnitStockDecrementStock(t *testing.T) {
 			usecaseStock: usecaseStock,
 		}
 
-		reqUsecase := goproduct.ReqDecrementStock{ProductID: 23423}
+		reqUsecase := goproductdto.ReqDecrementStock{ProductID: 23423}
 
 		usecaseStock.EXPECT().DecrementStock(context.Background(), reqUsecase).Return(assert.AnError)
 

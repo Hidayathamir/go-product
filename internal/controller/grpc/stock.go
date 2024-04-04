@@ -6,7 +6,7 @@ import (
 
 	"github.com/Hidayathamir/go-product/internal/config"
 	"github.com/Hidayathamir/go-product/internal/usecase"
-	"github.com/Hidayathamir/go-product/pkg/goproduct"
+	"github.com/Hidayathamir/go-product/pkg/goproductdto"
 	"github.com/Hidayathamir/go-product/pkg/goproductgrpc"
 )
 
@@ -30,7 +30,7 @@ func NewStock(cfg config.Config, usecaseStock usecase.IStock) *Stock {
 
 // IncrementStock implements goproductgrpc.StockServer.
 func (s *Stock) IncrementStock(c context.Context, r *goproductgrpc.ReqIncrementStock) (*goproductgrpc.StockVoid, error) {
-	req := goproduct.ReqIncrementStock{
+	req := goproductdto.ReqIncrementStock{
 		ProductID: r.GetProductId(),
 	}
 
@@ -46,7 +46,7 @@ func (s *Stock) IncrementStock(c context.Context, r *goproductgrpc.ReqIncrementS
 
 // DecrementStock implements goproductgrpc.StockServer.
 func (s *Stock) DecrementStock(c context.Context, r *goproductgrpc.ReqDecrementStock) (*goproductgrpc.StockVoid, error) {
-	req := goproduct.ReqDecrementStock{
+	req := goproductdto.ReqDecrementStock{
 		ProductID: r.GetProductId(),
 	}
 

@@ -6,7 +6,8 @@ import (
 
 	"github.com/Hidayathamir/go-product/internal/config"
 	"github.com/Hidayathamir/go-product/internal/repo"
-	"github.com/Hidayathamir/go-product/pkg/goproduct"
+	"github.com/Hidayathamir/go-product/pkg/goproductdto"
+	"github.com/Hidayathamir/go-product/pkg/goproducterror"
 )
 
 //go:generate mockgen -source=stock.go -destination=mockusecase/stock.go -package=mockusecase
@@ -14,9 +15,9 @@ import (
 // IStock contains abstraction of usecase stock.
 type IStock interface {
 	// IncrementStock increment product stock.
-	IncrementStock(ctx context.Context, req goproduct.ReqIncrementStock) error
+	IncrementStock(ctx context.Context, req goproductdto.ReqIncrementStock) error
 	// DecrementStock decrement product stock.
-	DecrementStock(ctx context.Context, req goproduct.ReqDecrementStock) error
+	DecrementStock(ctx context.Context, req goproductdto.ReqDecrementStock) error
 }
 
 // Stock implement IStock.
@@ -36,11 +37,11 @@ func NewStock(cfg config.Config, repoStock repo.IStock) *Stock {
 }
 
 // IncrementStock implements IStock.
-func (s *Stock) IncrementStock(ctx context.Context, req goproduct.ReqIncrementStock) error {
+func (s *Stock) IncrementStock(ctx context.Context, req goproductdto.ReqIncrementStock) error {
 	err := req.Validate()
 	if err != nil {
-		err := fmt.Errorf("goproduct.ReqIncrementStock.Validate: %w", err)
-		return fmt.Errorf("%w: %w", goproduct.ErrRequestInvalid, err)
+		err := fmt.Errorf("goproductdto.ReqIncrementStock.Validate: %w", err)
+		return fmt.Errorf("%w: %w", goproducterror.ErrRequestInvalid, err)
 	}
 
 	err = s.repoStock.IncrementStock(ctx, req.ProductID)
@@ -52,11 +53,11 @@ func (s *Stock) IncrementStock(ctx context.Context, req goproduct.ReqIncrementSt
 }
 
 // DecrementStock implements IStock.
-func (s *Stock) DecrementStock(ctx context.Context, req goproduct.ReqDecrementStock) error {
+func (s *Stock) DecrementStock(ctx context.Context, req goproductdto.ReqDecrementStock) error {
 	err := req.Validate()
 	if err != nil {
-		err := fmt.Errorf("goproduct.ReqDecrementStock.Validate: %w", err)
-		return fmt.Errorf("%w: %w", goproduct.ErrRequestInvalid, err)
+		err := fmt.Errorf("goproductdto.ReqDecrementStock.Validate: %w", err)
+		return fmt.Errorf("%w: %w", goproducterror.ErrRequestInvalid, err)
 	}
 
 	err = s.repoStock.DecrementStock(ctx, req.ProductID)

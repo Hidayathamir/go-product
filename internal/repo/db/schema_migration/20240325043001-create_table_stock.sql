@@ -6,7 +6,8 @@ CREATE TABLE stock (
     created_at timestamptz NOT NULL,
     updated_at timestamptz NOT NULL,
     CONSTRAINT stock_pk PRIMARY KEY (id),
-    CONSTRAINT stock_product_fk FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE
+    CONSTRAINT stock_product_fk FOREIGN KEY (product_id) REFERENCES product(id) ON DELETE CASCADE,
+    CONSTRAINT stock_unique UNIQUE (product_id)
 );
 
 -- +migrate Down

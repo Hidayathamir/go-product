@@ -1,4 +1,4 @@
-package goproduct
+package goproductdto
 
 import (
 	"errors"
@@ -48,4 +48,13 @@ type ResProductDetail struct {
 	Stock       int32     `json:"stock"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
+}
+
+// ReqProductAdd -.
+type ReqProductAdd struct {
+	SKU         string `json:"sku"`
+	Slug        string `json:"slug"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Stock       int32  `json:"stock"`
 }

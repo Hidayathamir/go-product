@@ -7,7 +7,9 @@ import (
 
 	"github.com/Hidayathamir/go-product/internal/config"
 	"github.com/Hidayathamir/go-product/internal/repo/mockrepo"
-	"github.com/Hidayathamir/go-product/pkg/goproduct"
+	"github.com/Hidayathamir/go-product/pkg/goproductdto"
+	"github.com/Hidayathamir/go-product/pkg/goproducterror"
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
@@ -29,25 +31,25 @@ func TestUnitProductSearch(t *testing.T) {
 			repoProduct: repoProduct,
 		}
 
-		req := goproduct.ReqProductSearch{Keyword: "iphone12"}
-		expectedRes := goproduct.ResProductSearch{
-			Products: []goproduct.ResProductDetail{
+		req := goproductdto.ReqProductSearch{Keyword: uuid.NewString()}
+		expectedRes := goproductdto.ResProductSearch{
+			Products: []goproductdto.ResProductDetail{
 				{
 					ID:          23423,
-					SKU:         "asdf",
-					Slug:        "fesfes",
-					Name:        "asfesf",
-					Description: "sefsd",
+					SKU:         uuid.NewString(),
+					Slug:        uuid.NewString(),
+					Name:        uuid.NewString(),
+					Description: uuid.NewString(),
 					Stock:       234,
 					CreatedAt:   time.Now(),
 					UpdatedAt:   time.Now(),
 				},
 				{
 					ID:          32432,
-					SKU:         "asdfes",
-					Slug:        "fesfs",
-					Name:        "fesfs",
-					Description: "efsefq",
+					SKU:         uuid.NewString(),
+					Slug:        uuid.NewString(),
+					Name:        uuid.NewString(),
+					Description: uuid.NewString(),
 					Stock:       23422,
 					CreatedAt:   time.Now(),
 					UpdatedAt:   time.Now(),
@@ -77,8 +79,8 @@ func TestUnitProductSearch(t *testing.T) {
 			repoProduct: repoProduct,
 		}
 
-		req := goproduct.ReqProductSearch{Keyword: "iphone12"}
-		expectedRes := goproduct.ResProductSearch{}
+		req := goproductdto.ReqProductSearch{Keyword: uuid.NewString()}
+		expectedRes := goproductdto.ResProductSearch{}
 
 		repoProduct.EXPECT().
 			Search(context.Background(), req.Keyword).
@@ -100,14 +102,14 @@ func TestUnitProductSearch(t *testing.T) {
 				cfg: config.Config{},
 			}
 
-			req := goproduct.ReqProductSearch{Keyword: ""}
-			expectedRes := goproduct.ResProductSearch{}
+			req := goproductdto.ReqProductSearch{Keyword: ""}
+			expectedRes := goproductdto.ResProductSearch{}
 
 			res, err := p.Search(context.Background(), req)
 
 			assert.Equal(t, expectedRes, res)
 			require.Error(t, err)
-			require.ErrorIs(t, err, goproduct.ErrRequestInvalid)
+			require.ErrorIs(t, err, goproducterror.ErrRequestInvalid)
 		})
 	})
 }
@@ -128,15 +130,15 @@ func TestUnitProductGetDetail(t *testing.T) {
 			repoProduct: repoProduct,
 		}
 
-		req := goproduct.ReqProductDetail{
+		req := goproductdto.ReqProductDetail{
 			ID: 234,
 		}
-		expectedRes := goproduct.ResProductDetail{
+		expectedRes := goproductdto.ResProductDetail{
 			ID:          234,
-			SKU:         "asfes",
-			Slug:        "gesges",
-			Name:        "sefes",
-			Description: "sfesf",
+			SKU:         uuid.NewString(),
+			Slug:        uuid.NewString(),
+			Name:        uuid.NewString(),
+			Description: uuid.NewString(),
 			Stock:       3522,
 			CreatedAt:   time.Now(),
 			UpdatedAt:   time.Now(),
@@ -164,10 +166,10 @@ func TestUnitProductGetDetail(t *testing.T) {
 			repoProduct: repoProduct,
 		}
 
-		req := goproduct.ReqProductDetail{
+		req := goproductdto.ReqProductDetail{
 			ID: 234,
 		}
-		expectedRes := goproduct.ResProductDetail{}
+		expectedRes := goproductdto.ResProductDetail{}
 
 		repoProduct.EXPECT().
 			GetDetailByID(context.Background(), req.ID).
@@ -192,15 +194,15 @@ func TestUnitProductGetDetail(t *testing.T) {
 			repoProduct: repoProduct,
 		}
 
-		req := goproduct.ReqProductDetail{
+		req := goproductdto.ReqProductDetail{
 			SKU: "asfes",
 		}
-		expectedRes := goproduct.ResProductDetail{
+		expectedRes := goproductdto.ResProductDetail{
 			ID:          234,
-			SKU:         "asfes",
-			Slug:        "gesges",
-			Name:        "sefes",
-			Description: "sfesf",
+			SKU:         uuid.NewString(),
+			Slug:        uuid.NewString(),
+			Name:        uuid.NewString(),
+			Description: uuid.NewString(),
 			Stock:       3522,
 			CreatedAt:   time.Now(),
 			UpdatedAt:   time.Now(),
@@ -228,10 +230,10 @@ func TestUnitProductGetDetail(t *testing.T) {
 			repoProduct: repoProduct,
 		}
 
-		req := goproduct.ReqProductDetail{
-			SKU: "asfes",
+		req := goproductdto.ReqProductDetail{
+			SKU: uuid.NewString(),
 		}
-		expectedRes := goproduct.ResProductDetail{}
+		expectedRes := goproductdto.ResProductDetail{}
 
 		repoProduct.EXPECT().
 			GetDetailBySKU(context.Background(), req.SKU).
@@ -256,10 +258,10 @@ func TestUnitProductGetDetail(t *testing.T) {
 			repoProduct: repoProduct,
 		}
 
-		req := goproduct.ReqProductDetail{
+		req := goproductdto.ReqProductDetail{
 			Slug: "gesges",
 		}
-		expectedRes := goproduct.ResProductDetail{
+		expectedRes := goproductdto.ResProductDetail{
 			ID:          234,
 			SKU:         "asfes",
 			Slug:        "gesges",
@@ -292,10 +294,10 @@ func TestUnitProductGetDetail(t *testing.T) {
 			repoProduct: repoProduct,
 		}
 
-		req := goproduct.ReqProductDetail{
-			Slug: "gesges",
+		req := goproductdto.ReqProductDetail{
+			Slug: uuid.NewString(),
 		}
-		expectedRes := goproduct.ResProductDetail{}
+		expectedRes := goproductdto.ResProductDetail{}
 
 		repoProduct.EXPECT().
 			GetDetailBySlug(context.Background(), req.Slug).
@@ -317,14 +319,14 @@ func TestUnitProductGetDetail(t *testing.T) {
 				cfg: config.Config{},
 			}
 
-			req := goproduct.ReqProductDetail{}
-			expectedRes := goproduct.ResProductDetail{}
+			req := goproductdto.ReqProductDetail{}
+			expectedRes := goproductdto.ResProductDetail{}
 
 			res, err := p.GetDetail(context.Background(), req)
 
 			assert.Equal(t, expectedRes, res)
 			require.Error(t, err)
-			require.ErrorIs(t, err, goproduct.ErrRequestInvalid)
+			require.ErrorIs(t, err, goproducterror.ErrRequestInvalid)
 		})
 	})
 }

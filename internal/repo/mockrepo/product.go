@@ -13,7 +13,7 @@ import (
 	context "context"
 	reflect "reflect"
 
-	goproduct "github.com/Hidayathamir/go-product/pkg/goproduct"
+	goproductdto "github.com/Hidayathamir/go-product/pkg/goproductdto"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -40,11 +40,26 @@ func (m *MockIProduct) EXPECT() *MockIProductMockRecorder {
 	return m.recorder
 }
 
+// Add mocks base method.
+func (m *MockIProduct) Add(ctx context.Context, req goproductdto.ReqProductAdd) (int64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Add", ctx, req)
+	ret0, _ := ret[0].(int64)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Add indicates an expected call of Add.
+func (mr *MockIProductMockRecorder) Add(ctx, req any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Add", reflect.TypeOf((*MockIProduct)(nil).Add), ctx, req)
+}
+
 // GetDetailByID mocks base method.
-func (m *MockIProduct) GetDetailByID(ctx context.Context, ID int64) (goproduct.ResProductDetail, error) {
+func (m *MockIProduct) GetDetailByID(ctx context.Context, ID int64) (goproductdto.ResProductDetail, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetDetailByID", ctx, ID)
-	ret0, _ := ret[0].(goproduct.ResProductDetail)
+	ret0, _ := ret[0].(goproductdto.ResProductDetail)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -56,10 +71,10 @@ func (mr *MockIProductMockRecorder) GetDetailByID(ctx, ID any) *gomock.Call {
 }
 
 // GetDetailBySKU mocks base method.
-func (m *MockIProduct) GetDetailBySKU(ctx context.Context, SKU string) (goproduct.ResProductDetail, error) {
+func (m *MockIProduct) GetDetailBySKU(ctx context.Context, SKU string) (goproductdto.ResProductDetail, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetDetailBySKU", ctx, SKU)
-	ret0, _ := ret[0].(goproduct.ResProductDetail)
+	ret0, _ := ret[0].(goproductdto.ResProductDetail)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -71,10 +86,10 @@ func (mr *MockIProductMockRecorder) GetDetailBySKU(ctx, SKU any) *gomock.Call {
 }
 
 // GetDetailBySlug mocks base method.
-func (m *MockIProduct) GetDetailBySlug(ctx context.Context, slug string) (goproduct.ResProductDetail, error) {
+func (m *MockIProduct) GetDetailBySlug(ctx context.Context, slug string) (goproductdto.ResProductDetail, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetDetailBySlug", ctx, slug)
-	ret0, _ := ret[0].(goproduct.ResProductDetail)
+	ret0, _ := ret[0].(goproductdto.ResProductDetail)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -86,10 +101,10 @@ func (mr *MockIProductMockRecorder) GetDetailBySlug(ctx, slug any) *gomock.Call 
 }
 
 // Search mocks base method.
-func (m *MockIProduct) Search(ctx context.Context, keyword string) (goproduct.ResProductSearch, error) {
+func (m *MockIProduct) Search(ctx context.Context, keyword string) (goproductdto.ResProductSearch, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Search", ctx, keyword)
-	ret0, _ := ret[0].(goproduct.ResProductSearch)
+	ret0, _ := ret[0].(goproductdto.ResProductSearch)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

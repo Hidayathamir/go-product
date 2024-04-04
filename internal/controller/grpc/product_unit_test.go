@@ -7,8 +7,9 @@ import (
 
 	"github.com/Hidayathamir/go-product/internal/config"
 	"github.com/Hidayathamir/go-product/internal/usecase/mockusecase"
-	"github.com/Hidayathamir/go-product/pkg/goproduct"
+	"github.com/Hidayathamir/go-product/pkg/goproductdto"
 	"github.com/Hidayathamir/go-product/pkg/goproductgrpc"
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
@@ -31,33 +32,33 @@ func TestUnitProductSearch(t *testing.T) {
 			usecaseProduct: usecaseProduct,
 		}
 
-		reqUsecase := goproduct.ReqProductSearch{
-			Keyword: "iphone13",
+		reqUsecase := goproductdto.ReqProductSearch{
+			Keyword: uuid.NewString(),
 		}
 
 		timeNow := time.Now()
-		resUsecaseProduct1 := goproduct.ResProductDetail{
+		resUsecaseProduct1 := goproductdto.ResProductDetail{
 			ID:          2342,
-			SKU:         "asdfasd",
-			Slug:        "afesfes",
-			Name:        "sefes",
-			Description: "sefesa",
+			SKU:         uuid.NewString(),
+			Slug:        uuid.NewString(),
+			Name:        uuid.NewString(),
+			Description: uuid.NewString(),
 			Stock:       2342,
 			CreatedAt:   timeNow,
 			UpdatedAt:   timeNow,
 		}
-		resUsecaseProduct2 := goproduct.ResProductDetail{
+		resUsecaseProduct2 := goproductdto.ResProductDetail{
 			ID:          232,
-			SKU:         "fasefv",
-			Slug:        "esreq",
-			Name:        "eefqadf",
-			Description: "weqerqwer",
+			SKU:         uuid.NewString(),
+			Slug:        uuid.NewString(),
+			Name:        uuid.NewString(),
+			Description: uuid.NewString(),
 			Stock:       234,
 			CreatedAt:   timeNow,
 			UpdatedAt:   timeNow,
 		}
-		resUsecaseProductSearch := goproduct.ResProductSearch{
-			Products: []goproduct.ResProductDetail{resUsecaseProduct1, resUsecaseProduct2},
+		resUsecaseProductSearch := goproductdto.ResProductSearch{
+			Products: []goproductdto.ResProductDetail{resUsecaseProduct1, resUsecaseProduct2},
 		}
 
 		usecaseProduct.EXPECT().
@@ -108,11 +109,11 @@ func TestUnitProductSearch(t *testing.T) {
 			usecaseProduct: usecaseProduct,
 		}
 
-		reqUsecase := goproduct.ReqProductSearch{
-			Keyword: "iphone13",
+		reqUsecase := goproductdto.ReqProductSearch{
+			Keyword: uuid.NewString(),
 		}
 
-		resUsecaseProductSearch := goproduct.ResProductSearch{}
+		resUsecaseProductSearch := goproductdto.ResProductSearch{}
 
 		usecaseProduct.EXPECT().
 			Search(context.Background(), reqUsecase).
@@ -144,13 +145,13 @@ func TestUnitProductGetDetail(t *testing.T) {
 			usecaseProduct: usecaseProduct,
 		}
 
-		reqUsecase := goproduct.ReqProductDetail{ID: 23423}
-		resUsecase := goproduct.ResProductDetail{
+		reqUsecase := goproductdto.ReqProductDetail{ID: 23423}
+		resUsecase := goproductdto.ResProductDetail{
 			ID:          23423,
-			SKU:         "asdfaesf",
-			Slug:        "fsefsae",
-			Name:        "sefaef",
-			Description: "aefax",
+			SKU:         uuid.NewString(),
+			Slug:        uuid.NewString(),
+			Name:        uuid.NewString(),
+			Description: uuid.NewString(),
 			Stock:       23423,
 			CreatedAt:   time.Now(),
 			UpdatedAt:   time.Now(),
@@ -190,8 +191,8 @@ func TestUnitProductGetDetail(t *testing.T) {
 			usecaseProduct: usecaseProduct,
 		}
 
-		reqUsecase := goproduct.ReqProductDetail{ID: 23423}
-		resUsecase := goproduct.ResProductDetail{}
+		reqUsecase := goproductdto.ReqProductDetail{ID: 23423}
+		resUsecase := goproductdto.ResProductDetail{}
 
 		usecaseProduct.EXPECT().
 			GetDetail(context.Background(), reqUsecase).

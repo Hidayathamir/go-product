@@ -6,7 +6,8 @@ import (
 
 	"github.com/Hidayathamir/go-product/internal/config"
 	"github.com/Hidayathamir/go-product/internal/repo/mockrepo"
-	"github.com/Hidayathamir/go-product/pkg/goproduct"
+	"github.com/Hidayathamir/go-product/pkg/goproductdto"
+	"github.com/Hidayathamir/go-product/pkg/goproducterror"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
@@ -28,7 +29,7 @@ func TestUnitStockIncrementStock(t *testing.T) {
 			repoStock: repoStock,
 		}
 
-		req := goproduct.ReqIncrementStock{
+		req := goproductdto.ReqIncrementStock{
 			ProductID: 23432,
 		}
 
@@ -53,7 +54,7 @@ func TestUnitStockIncrementStock(t *testing.T) {
 			repoStock: repoStock,
 		}
 
-		req := goproduct.ReqIncrementStock{
+		req := goproductdto.ReqIncrementStock{
 			ProductID: 23432,
 		}
 
@@ -76,12 +77,12 @@ func TestUnitStockIncrementStock(t *testing.T) {
 				cfg: config.Config{},
 			}
 
-			req := goproduct.ReqIncrementStock{}
+			req := goproductdto.ReqIncrementStock{}
 
 			err := s.IncrementStock(context.Background(), req)
 
 			require.Error(t, err)
-			require.ErrorIs(t, err, goproduct.ErrRequestInvalid)
+			require.ErrorIs(t, err, goproducterror.ErrRequestInvalid)
 		})
 	})
 }
@@ -102,7 +103,7 @@ func TestUnitStockDecrementStock(t *testing.T) {
 			repoStock: repoStock,
 		}
 
-		req := goproduct.ReqDecrementStock{
+		req := goproductdto.ReqDecrementStock{
 			ProductID: 2342,
 		}
 
@@ -127,7 +128,7 @@ func TestUnitStockDecrementStock(t *testing.T) {
 			repoStock: repoStock,
 		}
 
-		req := goproduct.ReqDecrementStock{
+		req := goproductdto.ReqDecrementStock{
 			ProductID: 2342,
 		}
 
@@ -150,12 +151,12 @@ func TestUnitStockDecrementStock(t *testing.T) {
 				cfg: config.Config{},
 			}
 
-			req := goproduct.ReqDecrementStock{}
+			req := goproductdto.ReqDecrementStock{}
 
 			err := s.DecrementStock(context.Background(), req)
 
 			require.Error(t, err)
-			require.ErrorIs(t, err, goproduct.ErrRequestInvalid)
+			require.ErrorIs(t, err, goproducterror.ErrRequestInvalid)
 		})
 	})
 }

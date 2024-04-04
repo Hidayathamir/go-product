@@ -6,7 +6,7 @@ import (
 
 	"github.com/Hidayathamir/go-product/internal/config"
 	"github.com/Hidayathamir/go-product/internal/usecase"
-	"github.com/Hidayathamir/go-product/pkg/goproduct"
+	"github.com/Hidayathamir/go-product/pkg/goproductdto"
 	"github.com/Hidayathamir/go-product/pkg/goproductgrpc"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
@@ -31,7 +31,7 @@ func NewProduct(cfg config.Config, usecaseProduct usecase.IProduct) *Product {
 
 // Search implements goproductgrpc.ProductServer.
 func (p *Product) Search(c context.Context, r *goproductgrpc.ReqProductSearch) (*goproductgrpc.ResProductSearch, error) {
-	req := goproduct.ReqProductSearch{
+	req := goproductdto.ReqProductSearch{
 		Keyword: r.GetKeyword(),
 	}
 
@@ -65,7 +65,7 @@ func (p *Product) Search(c context.Context, r *goproductgrpc.ReqProductSearch) (
 
 // GetDetail implements goproductgrpc.ProductServer.
 func (p *Product) GetDetail(c context.Context, r *goproductgrpc.ReqProductDetail) (*goproductgrpc.ResProductDetail, error) {
-	req := goproduct.ReqProductDetail{
+	req := goproductdto.ReqProductDetail{
 		ID:   r.GetId(),
 		SKU:  r.GetSku(),
 		Slug: r.GetSlug(),

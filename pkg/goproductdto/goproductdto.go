@@ -1,0 +1,2 @@
+// Package goproductdto -.
+package goproductdto

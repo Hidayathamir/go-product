@@ -10,6 +10,9 @@ import (
 	"github.com/Hidayathamir/go-product/internal/repo/db"
 	"github.com/Hidayathamir/go-product/internal/repo/db/table"
 	"github.com/Hidayathamir/go-product/pkg/goproduct"
+	"github.com/Hidayathamir/go-product/pkg/goproductdto"
+	"github.com/Hidayathamir/go-product/pkg/goproducterror"
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"github.com/pashagolub/pgxmock/v3"
 	"github.com/stretchr/testify/assert"
@@ -34,30 +37,30 @@ func TestUnitProductSearch(t *testing.T) {
 			},
 		}
 
-		p1 := goproduct.ResProductDetail{
+		p1 := goproductdto.ResProductDetail{
 			ID:          234,
-			SKU:         "sku1",
-			Slug:        "slug1",
-			Name:        "name1",
-			Description: "desc1",
+			SKU:         uuid.NewString(),
+			Slug:        uuid.NewString(),
+			Name:        uuid.NewString(),
+			Description: uuid.NewString(),
 			Stock:       123,
 			CreatedAt:   time.Now(),
 			UpdatedAt:   time.Now(),
 		}
-		p2 := goproduct.ResProductDetail{
+		p2 := goproductdto.ResProductDetail{
 			ID:          23,
-			SKU:         "sku2",
-			Slug:        "slug2",
-			Name:        "name2",
-			Description: "desc2",
+			SKU:         uuid.NewString(),
+			Slug:        uuid.NewString(),
+			Name:        uuid.NewString(),
+			Description: uuid.NewString(),
 			Stock:       323,
 			CreatedAt:   time.Now(),
 			UpdatedAt:   time.Now(),
 		}
-		expectedProducts := []goproduct.ResProductDetail{p1, p2}
-		expectedRes := goproduct.ResProductSearch{Products: expectedProducts}
+		expectedProducts := []goproductdto.ResProductDetail{p1, p2}
+		expectedRes := goproductdto.ResProductSearch{Products: expectedProducts}
 
-		keyword := "iphone"
+		keyword := uuid.NewString()
 		keywordIlike := "%" + keyword + "%"
 
 		mockpool.ExpectQuery("SELECT").WithArgs(keywordIlike, keywordIlike).
@@ -90,7 +93,7 @@ func TestUnitProductSearch(t *testing.T) {
 			},
 		}
 
-		keyword := "iphone"
+		keyword := uuid.NewString()
 		keywordIlike := "%" + keyword + "%"
 
 		mockpool.ExpectQuery("SELECT").WithArgs(keywordIlike, keywordIlike).
@@ -116,7 +119,7 @@ func TestUnitProductSearch(t *testing.T) {
 			},
 		}
 
-		keyword := "iphone"
+		keyword := uuid.NewString()
 		keywordIlike := "%" + keyword + "%"
 
 		mockpool.ExpectQuery("SELECT").WithArgs(keywordIlike, keywordIlike).
@@ -153,12 +156,12 @@ func TestUnitProductGetDetailByID(t *testing.T) {
 			cache: cache,
 		}
 
-		p1 := goproduct.ResProductDetail{
+		p1 := goproductdto.ResProductDetail{
 			ID:          2141,
-			SKU:         "sku",
-			Slug:        "slug",
-			Name:        "name",
-			Description: "desc",
+			SKU:         uuid.NewString(),
+			Slug:        uuid.NewString(),
+			Name:        uuid.NewString(),
+			Description: uuid.NewString(),
 			Stock:       23,
 			CreatedAt:   time.Now(),
 			UpdatedAt:   time.Now(),
@@ -192,12 +195,12 @@ func TestUnitProductGetDetailByID(t *testing.T) {
 			cache: cache,
 		}
 
-		p1 := goproduct.ResProductDetail{
+		p1 := goproductdto.ResProductDetail{
 			ID:          2141,
-			SKU:         "sku",
-			Slug:        "slug",
-			Name:        "name",
-			Description: "desc",
+			SKU:         uuid.NewString(),
+			Slug:        uuid.NewString(),
+			Name:        uuid.NewString(),
+			Description: uuid.NewString(),
 			Stock:       23,
 			CreatedAt:   time.Now(),
 			UpdatedAt:   time.Now(),
@@ -205,7 +208,7 @@ func TestUnitProductGetDetailByID(t *testing.T) {
 
 		cache.EXPECT().
 			GetDetailByID(context.Background(), p1.ID).
-			Return(goproduct.ResProductDetail{}, assert.AnError)
+			Return(goproductdto.ResProductDetail{}, assert.AnError)
 
 		mockpool.ExpectQuery("SELECT").WithArgs(p1.ID).
 			WillReturnRows(
@@ -248,7 +251,7 @@ func TestUnitProductGetDetailByID(t *testing.T) {
 
 		cache.EXPECT().
 			GetDetailByID(context.Background(), id).
-			Return(goproduct.ResProductDetail{}, assert.AnError)
+			Return(goproductdto.ResProductDetail{}, assert.AnError)
 
 		mockpool.ExpectQuery("SELECT").WithArgs(id).WillReturnError(assert.AnError)
 
@@ -281,14 +284,14 @@ func TestUnitProductGetDetailByID(t *testing.T) {
 
 		cache.EXPECT().
 			GetDetailByID(context.Background(), id).
-			Return(goproduct.ResProductDetail{}, assert.AnError)
+			Return(goproductdto.ResProductDetail{}, assert.AnError)
 
 		mockpool.ExpectQuery("SELECT").WithArgs(id).WillReturnError(pgx.ErrNoRows)
 
 		res, err := p.GetDetailByID(context.Background(), id)
 		assert.Empty(t, res)
 		require.Error(t, err)
-		require.ErrorIs(t, err, goproduct.ErrProductNotFound)
+		require.ErrorIs(t, err, goproducterror.ErrProductNotFound)
 	})
 }
 
@@ -315,12 +318,12 @@ func TestUnitProductGetDetailBySKU(t *testing.T) {
 			cache: cache,
 		}
 
-		p1 := goproduct.ResProductDetail{
+		p1 := goproductdto.ResProductDetail{
 			ID:          2141,
-			SKU:         "sku",
-			Slug:        "slug",
-			Name:        "name",
-			Description: "desc",
+			SKU:         uuid.NewString(),
+			Slug:        uuid.NewString(),
+			Name:        uuid.NewString(),
+			Description: uuid.NewString(),
 			Stock:       23,
 			CreatedAt:   time.Now(),
 			UpdatedAt:   time.Now(),
@@ -354,12 +357,12 @@ func TestUnitProductGetDetailBySKU(t *testing.T) {
 			cache: cache,
 		}
 
-		p1 := goproduct.ResProductDetail{
+		p1 := goproductdto.ResProductDetail{
 			ID:          2141,
-			SKU:         "sku",
-			Slug:        "slug",
-			Name:        "name",
-			Description: "desc",
+			SKU:         uuid.NewString(),
+			Slug:        uuid.NewString(),
+			Name:        uuid.NewString(),
+			Description: uuid.NewString(),
 			Stock:       23,
 			CreatedAt:   time.Now(),
 			UpdatedAt:   time.Now(),
@@ -367,7 +370,7 @@ func TestUnitProductGetDetailBySKU(t *testing.T) {
 
 		cache.EXPECT().
 			GetDetailBySKU(context.Background(), p1.SKU).
-			Return(goproduct.ResProductDetail{}, assert.AnError)
+			Return(goproductdto.ResProductDetail{}, assert.AnError)
 
 		mockpool.ExpectQuery("SELECT").WithArgs(p1.SKU).
 			WillReturnRows(
@@ -406,11 +409,11 @@ func TestUnitProductGetDetailBySKU(t *testing.T) {
 			cache: cache,
 		}
 
-		sku := "skutest"
+		sku := uuid.NewString()
 
 		cache.EXPECT().
 			GetDetailBySKU(context.Background(), sku).
-			Return(goproduct.ResProductDetail{}, assert.AnError)
+			Return(goproductdto.ResProductDetail{}, assert.AnError)
 
 		mockpool.ExpectQuery("SELECT").WithArgs(sku).WillReturnError(assert.AnError)
 
@@ -439,18 +442,18 @@ func TestUnitProductGetDetailBySKU(t *testing.T) {
 			cache: cache,
 		}
 
-		sku := "skutest"
+		sku := uuid.NewString()
 
 		cache.EXPECT().
 			GetDetailBySKU(context.Background(), sku).
-			Return(goproduct.ResProductDetail{}, assert.AnError)
+			Return(goproductdto.ResProductDetail{}, assert.AnError)
 
 		mockpool.ExpectQuery("SELECT").WithArgs(sku).WillReturnError(pgx.ErrNoRows)
 
 		res, err := p.GetDetailBySKU(context.Background(), sku)
 		assert.Empty(t, res)
 		require.Error(t, err)
-		require.ErrorIs(t, err, goproduct.ErrProductNotFound)
+		require.ErrorIs(t, err, goproducterror.ErrProductNotFound)
 	})
 }
 
@@ -477,12 +480,12 @@ func TestUnitProductGetDetailBySlug(t *testing.T) {
 			cache: cache,
 		}
 
-		p1 := goproduct.ResProductDetail{
+		p1 := goproductdto.ResProductDetail{
 			ID:          2141,
-			SKU:         "sku",
-			Slug:        "slug",
-			Name:        "name",
-			Description: "desc",
+			SKU:         uuid.NewString(),
+			Slug:        uuid.NewString(),
+			Name:        uuid.NewString(),
+			Description: uuid.NewString(),
 			Stock:       23,
 			CreatedAt:   time.Now(),
 			UpdatedAt:   time.Now(),
@@ -516,12 +519,12 @@ func TestUnitProductGetDetailBySlug(t *testing.T) {
 			cache: cache,
 		}
 
-		p1 := goproduct.ResProductDetail{
+		p1 := goproductdto.ResProductDetail{
 			ID:          2141,
-			SKU:         "sku",
-			Slug:        "slug",
-			Name:        "name",
-			Description: "desc",
+			SKU:         uuid.NewString(),
+			Slug:        uuid.NewString(),
+			Name:        uuid.NewString(),
+			Description: uuid.NewString(),
 			Stock:       23,
 			CreatedAt:   time.Now(),
 			UpdatedAt:   time.Now(),
@@ -529,7 +532,7 @@ func TestUnitProductGetDetailBySlug(t *testing.T) {
 
 		cache.EXPECT().
 			GetDetailBySlug(context.Background(), p1.Slug).
-			Return(goproduct.ResProductDetail{}, assert.AnError)
+			Return(goproductdto.ResProductDetail{}, assert.AnError)
 
 		mockpool.ExpectQuery("SELECT").WithArgs(p1.Slug).
 			WillReturnRows(
@@ -568,11 +571,11 @@ func TestUnitProductGetDetailBySlug(t *testing.T) {
 			cache: cache,
 		}
 
-		slug := "slugtest"
+		slug := uuid.NewString()
 
 		cache.EXPECT().
 			GetDetailBySlug(context.Background(), slug).
-			Return(goproduct.ResProductDetail{}, assert.AnError)
+			Return(goproductdto.ResProductDetail{}, assert.AnError)
 
 		mockpool.ExpectQuery("SELECT").WithArgs(slug).WillReturnError(assert.AnError)
 
@@ -601,17 +604,17 @@ func TestUnitProductGetDetailBySlug(t *testing.T) {
 			cache: cache,
 		}
 
-		slug := "slugtest"
+		slug := uuid.NewString()
 
 		cache.EXPECT().
 			GetDetailBySlug(context.Background(), slug).
-			Return(goproduct.ResProductDetail{}, assert.AnError)
+			Return(goproductdto.ResProductDetail{}, assert.AnError)
 
 		mockpool.ExpectQuery("SELECT").WithArgs(slug).WillReturnError(pgx.ErrNoRows)
 
 		res, err := p.GetDetailBySlug(context.Background(), slug)
 		assert.Empty(t, res)
 		require.Error(t, err)
-		require.ErrorIs(t, err, goproduct.ErrProductNotFound)
+		require.ErrorIs(t, err, goproducterror.ErrProductNotFound)
 	})
 }

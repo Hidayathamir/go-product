@@ -13,7 +13,7 @@ import (
 	context "context"
 	reflect "reflect"
 
-	goproduct "github.com/Hidayathamir/go-product/pkg/goproduct"
+	goproductdto "github.com/Hidayathamir/go-product/pkg/goproductdto"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -41,10 +41,10 @@ func (m *MockIProduct) EXPECT() *MockIProductMockRecorder {
 }
 
 // GetDetail mocks base method.
-func (m *MockIProduct) GetDetail(ctx context.Context, req goproduct.ReqProductDetail) (goproduct.ResProductDetail, error) {
+func (m *MockIProduct) GetDetail(ctx context.Context, req goproductdto.ReqProductDetail) (goproductdto.ResProductDetail, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetDetail", ctx, req)
-	ret0, _ := ret[0].(goproduct.ResProductDetail)
+	ret0, _ := ret[0].(goproductdto.ResProductDetail)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -56,10 +56,10 @@ func (mr *MockIProductMockRecorder) GetDetail(ctx, req any) *gomock.Call {
 }
 
 // Search mocks base method.
-func (m *MockIProduct) Search(ctx context.Context, req goproduct.ReqProductSearch) (goproduct.ResProductSearch, error) {
+func (m *MockIProduct) Search(ctx context.Context, req goproductdto.ReqProductSearch) (goproductdto.ResProductSearch, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Search", ctx, req)
-	ret0, _ := ret[0].(goproduct.ResProductSearch)
+	ret0, _ := ret[0].(goproductdto.ResProductSearch)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

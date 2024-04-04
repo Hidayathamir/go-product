@@ -11,7 +11,7 @@ func Init(cfgLoader Loader) (Config, error) {
 
 	err := cfgLoader.loadConfig(&cfg)
 	if err != nil {
-		return Config{}, fmt.Errorf("ConfigLoader.loadConfig: %w", err)
+		return Config{}, fmt.Errorf("Loader.loadConfig: %w", err)
 	}
 
 	err = cfg.validate()
@@ -43,12 +43,12 @@ type Config struct {
 func (c *Config) validate() error {
 	err := c.App.Environment.validate()
 	if err != nil {
-		return fmt.Errorf("config.app.Environment.validate: %w", err)
+		return fmt.Errorf("Config.app.Environment.validate: %w", err)
 	}
 
 	err = c.Logger.LogLevel.validate()
 	if err != nil {
-		return fmt.Errorf("config.logger.LogLevel.validate: %w", err)
+		return fmt.Errorf("Config.logger.LogLevel.validate: %w", err)
 	}
 
 	return nil

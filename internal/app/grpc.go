@@ -12,15 +12,14 @@ import (
 	"github.com/Hidayathamir/go-product/internal/repo/db"
 	"github.com/Hidayathamir/go-product/internal/usecase"
 	"github.com/Hidayathamir/go-product/pkg/goproductgrpc"
-	"github.com/redis/go-redis/v9"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 )
 
-func runGRPCServer(cfg config.Config, db *db.Postgres, rdb *redis.Client) error {
+func runGRPCServer(cfg config.Config, db *db.Postgres, cache cache.IProduct) error {
 	grpcServer := grpc.NewServer()
 
-	registerServer(cfg, grpcServer, db, rdb)
+	registerServer(cfg, grpcServer, db, cache)
 
 	addr := net.JoinHostPort(cfg.GRPC.Host, strconv.Itoa(cfg.GRPC.Port))
 	lis, err := net.Listen("tcp", addr)
@@ -37,17 +36,16 @@ func runGRPCServer(cfg config.Config, db *db.Postgres, rdb *redis.Client) error 
 	return nil
 }
 
-func registerServer(cfg config.Config, grpcServer *grpc.Server, db *db.Postgres, rdb *redis.Client) {
-	cProduct := injectionProductGRPC(cfg, db, rdb)
+func registerServer(cfg config.Config, grpcServer *grpc.Server, db *db.Postgres, cache cache.IProduct) {
+	cProduct := injectionProductGRPC(cfg, db, cache)
 	cStock := injectionStockGRPC(cfg, db)
 
 	goproductgrpc.RegisterProductServer(grpcServer, cProduct)
 	goproductgrpc.RegisterStockServer(grpcServer, cStock)
 }
 
-func injectionProductGRPC(cfg config.Config, db *db.Postgres, rdb *redis.Client) *controllergrpc.Product {
-	repoProductCache := cache.NewProductCache(cfg, rdb)
-	repoProduct := repo.NewProduct(cfg, db, repoProductCache)
+func injectionProductGRPC(cfg config.Config, db *db.Postgres, cache cache.IProduct) *controllergrpc.Product {
+	repoProduct := repo.NewProduct(cfg, db, cache)
 	usecaseProduct := usecase.NewProduct(cfg, repoProduct)
 	controllerProduct := controllergrpc.NewProduct(cfg, usecaseProduct)
 	return controllerProduct

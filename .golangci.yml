@@ -148,6 +148,9 @@ linters-settings:
         list-mode: lax
         files:
           - "!**/internal/repo/**"
+          - "!**/internal/pkg/**"
         deny:
           - pkg: github.com/jackc/pgx
             desc: "pgx should only be used in repo layer"
+          - pkg: github.com/redis/go-redis
+            desc: "redis should only be used in repo layer"
