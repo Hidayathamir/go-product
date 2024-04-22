@@ -59,7 +59,7 @@ func TestUnitStockIncrementStock(t *testing.T) {
 		err = s.IncrementStock(context.Background(), productID)
 
 		require.Error(t, err)
-		require.ErrorContains(t, err, "pgconn.CommandTag.RowsAffected == 0")
+		require.ErrorContains(t, err, "rows affected == 0")
 	})
 	t.Run("exec error should return error", func(t *testing.T) {
 		t.Parallel()
@@ -134,7 +134,7 @@ func TestUnitStockDecrementStock(t *testing.T) {
 		err = s.DecrementStock(context.Background(), productID)
 
 		require.Error(t, err)
-		require.ErrorContains(t, err, "pgconn.CommandTag.RowsAffected == 0")
+		require.ErrorContains(t, err, "rows affected == 0")
 	})
 	t.Run("exec error should return error", func(t *testing.T) {
 		t.Parallel()

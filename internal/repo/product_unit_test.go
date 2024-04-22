@@ -129,7 +129,7 @@ func TestUnitProductSearch(t *testing.T) {
 
 		assert.Empty(t, res)
 		require.Error(t, err)
-		require.ErrorContains(t, err, "pgx.Rows.Scan")
+		require.ErrorContains(t, err, "Search")
 	})
 }
 

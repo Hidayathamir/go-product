@@ -107,7 +107,7 @@ func TestUnitProductCacheGetDetailByID(t *testing.T) {
 
 		assert.Empty(t, product)
 		require.Error(t, err)
-		require.ErrorContains(t, err, "json.Unmarshal")
+		require.ErrorContains(t, err, "able to get value from redis but error when json unmarshal")
 	})
 }
 
@@ -204,6 +204,6 @@ func TestUnitProductCacheGetDetailBySKU(t *testing.T) {
 
 		assert.Empty(t, product)
 		require.Error(t, err)
-		require.ErrorContains(t, err, "json.Unmarshal")
+		require.ErrorContains(t, err, "able to get value from redis but error when json unmarshal")
 	})
 }

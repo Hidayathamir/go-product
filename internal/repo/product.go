@@ -157,7 +157,7 @@ func (p *Product) GetDetailByID(ctx context.Context, id int64) (goproductdto.Res
 }
 
 // GetDetailBySKU implements IProduct.
-func (p *Product) GetDetailBySKU(ctx context.Context, sku string) (goproductdto.ResProductDetail, error) { //nolint:dupl
+func (p *Product) GetDetailBySKU(ctx context.Context, sku string) (goproductdto.ResProductDetail, error) {
 	product, err := p.cache.GetDetailBySKU(ctx, sku)
 	if err == nil {
 		return product, nil
