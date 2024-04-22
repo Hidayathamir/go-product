@@ -98,7 +98,6 @@ linters:
     - usestdlibvars
     - wastedassign
     - whitespace
-    - wrapcheck
     - zerologlint
   disable:
     - exhaustruct
@@ -113,6 +112,7 @@ linters:
     - testpackage
     - tparallel
     - varnamelen
+    - wrapcheck
     - wsl
 
 issues:

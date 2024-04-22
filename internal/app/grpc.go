@@ -1,12 +1,12 @@
 package app
 
 import (
-	"fmt"
 	"net"
 	"strconv"
 
 	"github.com/Hidayathamir/go-product/internal/config"
 	controllergrpc "github.com/Hidayathamir/go-product/internal/controller/grpc"
+	"github.com/Hidayathamir/go-product/internal/pkg/trace"
 	"github.com/Hidayathamir/go-product/internal/repo"
 	"github.com/Hidayathamir/go-product/internal/repo/cache"
 	"github.com/Hidayathamir/go-product/internal/repo/db"
@@ -24,13 +24,13 @@ func runGRPCServer(cfg config.Config, db *db.Postgres, redis *cache.Redis) error
 	addr := net.JoinHostPort(cfg.GRPC.Host, strconv.Itoa(cfg.GRPC.Port))
 	lis, err := net.Listen("tcp", addr)
 	if err != nil {
-		return fmt.Errorf("net.Listen: %w", err)
+		return trace.Wrap(err)
 	}
 
 	logrus.WithField("address", addr).Info("run grpc server")
 	err = grpcServer.Serve(lis)
 	if err != nil {
-		return fmt.Errorf("grpc.Server.Serve: %w", err)
+		return trace.Wrap(err)
 	}
 
 	return nil

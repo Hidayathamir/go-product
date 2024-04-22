@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/Hidayathamir/go-product/internal/config"
+	"github.com/Hidayathamir/go-product/internal/pkg/trace"
 	"github.com/Hidayathamir/go-product/pkg/goproductdto"
 )
 
@@ -73,18 +74,20 @@ func (p *Product) keyDetailBySlug(slug string) string {
 func (p *Product) GetDetailByID(ctx context.Context, id int64) (goproductdto.ResProductDetail, error) {
 	val, err := p.redis.client.Get(ctx, p.keyDetailByID(id)).Result()
 	if err != nil {
-		return goproductdto.ResProductDetail{}, fmt.Errorf("Redis.rdb.Get: %w", err)
+		return goproductdto.ResProductDetail{}, trace.Wrap(err)
 	}
 
 	product := goproductdto.ResProductDetail{}
 	err = json.Unmarshal([]byte(val), &product)
 	if err != nil {
-		err := fmt.Errorf("json.Unmarshal, able to get value from redis but error when json unmarshal, trying to delete redis cache key: %w", err)
+		err := fmt.Errorf("able to get value from redis but error when json unmarshal, trying to delete redis cache key: %w", err)
 
 		errDel := p.redis.client.Del(ctx, p.keyDetailByID(id)).Err()
 		if errDel != nil {
-			err = fmt.Errorf("Redis.rdb.Del, error delete redis cache key: %w", errDel)
+			err = fmt.Errorf("error delete redis cache key: %w", errDel)
 		}
+
+		err = trace.Wrap(err)
 
 		return goproductdto.ResProductDetail{}, err
 	}
@@ -96,12 +99,12 @@ func (p *Product) GetDetailByID(ctx context.Context, id int64) (goproductdto.Res
 func (p *Product) SetDetailByID(ctx context.Context, product goproductdto.ResProductDetail, expire time.Duration) error {
 	jsonByte, err := json.Marshal(product)
 	if err != nil {
-		return fmt.Errorf("json.Marshal: %w", err)
+		return trace.Wrap(err)
 	}
 
 	err = p.redis.client.Set(ctx, p.keyDetailByID(product.ID), string(jsonByte), expire).Err()
 	if err != nil {
-		return fmt.Errorf("Redis.rdb.Set: %w", err)
+		return trace.Wrap(err)
 	}
 
 	return nil
@@ -111,18 +114,20 @@ func (p *Product) SetDetailByID(ctx context.Context, product goproductdto.ResPro
 func (p *Product) GetDetailBySKU(ctx context.Context, sku string) (goproductdto.ResProductDetail, error) {
 	val, err := p.redis.client.Get(ctx, p.keyDetailBySKU(sku)).Result()
 	if err != nil {
-		return goproductdto.ResProductDetail{}, fmt.Errorf("Redis.rdb.Get: %w", err)
+		return goproductdto.ResProductDetail{}, trace.Wrap(err)
 	}
 
 	product := goproductdto.ResProductDetail{}
 	err = json.Unmarshal([]byte(val), &product)
 	if err != nil {
-		err := fmt.Errorf("json.Unmarshal, able to get value from redis but error when json unmarshal, trying to delete redis cache key: %w", err)
+		err := fmt.Errorf("able to get value from redis but error when json unmarshal, trying to delete redis cache key: %w", err)
 
 		errDel := p.redis.client.Del(ctx, p.keyDetailBySKU(sku)).Err()
 		if errDel != nil {
-			err = fmt.Errorf("Redis.rdb.Del, error delete redis cache key: %w", errDel)
+			err = fmt.Errorf("error delete redis cache key: %w", errDel)
 		}
+
+		err = trace.Wrap(err)
 
 		return goproductdto.ResProductDetail{}, err
 	}
@@ -134,12 +139,12 @@ func (p *Product) GetDetailBySKU(ctx context.Context, sku string) (goproductdto.
 func (p *Product) SetDetailBySKU(ctx context.Context, product goproductdto.ResProductDetail, expire time.Duration) error {
 	jsonByte, err := json.Marshal(product)
 	if err != nil {
-		return fmt.Errorf("json.Marshal: %w", err)
+		return trace.Wrap(err)
 	}
 
 	err = p.redis.client.Set(ctx, p.keyDetailBySKU(product.SKU), string(jsonByte), expire).Err()
 	if err != nil {
-		return fmt.Errorf("Redis.rdb.Set: %w", err)
+		return trace.Wrap(err)
 	}
 
 	return nil
@@ -149,18 +154,20 @@ func (p *Product) SetDetailBySKU(ctx context.Context, product goproductdto.ResPr
 func (p *Product) GetDetailBySlug(ctx context.Context, slug string) (goproductdto.ResProductDetail, error) {
 	val, err := p.redis.client.Get(ctx, p.keyDetailBySlug(slug)).Result()
 	if err != nil {
-		return goproductdto.ResProductDetail{}, fmt.Errorf("Redis.rdb.Get: %w", err)
+		return goproductdto.ResProductDetail{}, trace.Wrap(err)
 	}
 
 	product := goproductdto.ResProductDetail{}
 	err = json.Unmarshal([]byte(val), &product)
 	if err != nil {
-		err := fmt.Errorf("json.Unmarshal, able to get value from redis but error when json unmarshal, trying to delete redis cache key: %w", err)
+		err := fmt.Errorf("able to get value from redis but error when json unmarshal, trying to delete redis cache key: %w", err)
 
 		errDel := p.redis.client.Del(ctx, p.keyDetailBySlug(slug)).Err()
 		if errDel != nil {
-			err = fmt.Errorf("Redis.rdb.Del, error delete redis cache key: %w", errDel)
+			err = fmt.Errorf("error delete redis cache key: %w", errDel)
 		}
+
+		err = trace.Wrap(err)
 
 		return goproductdto.ResProductDetail{}, err
 	}
@@ -172,12 +179,12 @@ func (p *Product) GetDetailBySlug(ctx context.Context, slug string) (goproductdt
 func (p *Product) SetDetailBySlug(ctx context.Context, product goproductdto.ResProductDetail, expire time.Duration) error {
 	jsonByte, err := json.Marshal(product)
 	if err != nil {
-		return fmt.Errorf("json.Marshal: %w", err)
+		return trace.Wrap(err)
 	}
 
 	err = p.redis.client.Set(ctx, p.keyDetailBySlug(product.Slug), string(jsonByte), expire).Err()
 	if err != nil {
-		return fmt.Errorf("Redis.rdb.Set: %w", err)
+		return trace.Wrap(err)
 	}
 
 	return nil

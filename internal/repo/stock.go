@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/Hidayathamir/go-product/internal/config"
+	"github.com/Hidayathamir/go-product/internal/pkg/trace"
 	"github.com/Hidayathamir/go-product/internal/repo/db"
 	"github.com/Hidayathamir/go-product/internal/repo/db/table"
 	sq "github.com/Masterminds/squirrel"
@@ -47,16 +48,17 @@ func (s *Stock) IncrementStock(ctx context.Context, productID int64) error {
 		}).
 		ToSql()
 	if err != nil {
-		return fmt.Errorf("Stock.db.Builder.ToSql: %w", err)
+		return trace.Wrap(err)
 	}
 
 	commandTag, err := s.db.Pool.Exec(ctx, sql, args...)
 	if err != nil {
-		return fmt.Errorf("Stock.db.Pool.Exec: %w", err)
+		return trace.Wrap(err)
 	}
 
 	if commandTag.RowsAffected() == 0 {
-		return fmt.Errorf("pgconn.CommandTag.RowsAffected == 0: %w", pgx.ErrNoRows)
+		err := fmt.Errorf("rows affected == 0: %w", pgx.ErrNoRows)
+		return trace.Wrap(err)
 	}
 
 	return nil
@@ -72,16 +74,17 @@ func (s *Stock) DecrementStock(ctx context.Context, productID int64) error {
 		}).
 		ToSql()
 	if err != nil {
-		return fmt.Errorf("Stock.db.Builder.ToSql: %w", err)
+		return trace.Wrap(err)
 	}
 
 	commandTag, err := s.db.Pool.Exec(ctx, sql, args...)
 	if err != nil {
-		return fmt.Errorf("Stock.db.Pool.Exec: %w", err)
+		return trace.Wrap(err)
 	}
 
 	if commandTag.RowsAffected() == 0 {
-		return fmt.Errorf("pgconn.CommandTag.RowsAffected == 0: %w", pgx.ErrNoRows)
+		err := fmt.Errorf("rows affected == 0: %w", pgx.ErrNoRows)
+		return trace.Wrap(err)
 	}
 
 	return nil

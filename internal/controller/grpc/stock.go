@@ -2,9 +2,9 @@ package controllergrpc
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/Hidayathamir/go-product/internal/config"
+	"github.com/Hidayathamir/go-product/internal/pkg/trace"
 	"github.com/Hidayathamir/go-product/internal/usecase"
 	"github.com/Hidayathamir/go-product/pkg/goproductdto"
 	"github.com/Hidayathamir/go-product/pkg/goproductgrpc"
@@ -36,7 +36,7 @@ func (s *Stock) IncrementStock(c context.Context, r *goproductgrpc.ReqIncrementS
 
 	err := s.usecaseStock.IncrementStock(c, req)
 	if err != nil {
-		return nil, fmt.Errorf("Stock.usecaseStock.IncrementStock: %w", err)
+		return nil, trace.Wrap(err)
 	}
 
 	res := &goproductgrpc.StockVoid{}
@@ -52,7 +52,7 @@ func (s *Stock) DecrementStock(c context.Context, r *goproductgrpc.ReqDecrementS
 
 	err := s.usecaseStock.DecrementStock(c, req)
 	if err != nil {
-		return nil, fmt.Errorf("Stock.usecaseStock.DecrementStock: %w", err)
+		return nil, trace.Wrap(err)
 	}
 
 	res := &goproductgrpc.StockVoid{}

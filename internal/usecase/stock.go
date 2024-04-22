@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/Hidayathamir/go-product/internal/config"
+	"github.com/Hidayathamir/go-product/internal/pkg/trace"
 	"github.com/Hidayathamir/go-product/internal/repo"
 	"github.com/Hidayathamir/go-product/pkg/goproductdto"
 	"github.com/Hidayathamir/go-product/pkg/goproducterror"
@@ -40,13 +41,13 @@ func NewStock(cfg config.Config, repoStock repo.IStock) *Stock {
 func (s *Stock) IncrementStock(ctx context.Context, req goproductdto.ReqIncrementStock) error {
 	err := req.Validate()
 	if err != nil {
-		err := fmt.Errorf("goproductdto.ReqIncrementStock.Validate: %w", err)
+		err := trace.Wrap(err)
 		return fmt.Errorf("%w: %w", goproducterror.ErrRequestInvalid, err)
 	}
 
 	err = s.repoStock.IncrementStock(ctx, req.ProductID)
 	if err != nil {
-		return fmt.Errorf("Stock.repoStock.IncrementStock: %w", err)
+		return trace.Wrap(err)
 	}
 
 	return nil
@@ -56,13 +57,13 @@ func (s *Stock) IncrementStock(ctx context.Context, req goproductdto.ReqIncremen
 func (s *Stock) DecrementStock(ctx context.Context, req goproductdto.ReqDecrementStock) error {
 	err := req.Validate()
 	if err != nil {
-		err := fmt.Errorf("goproductdto.ReqDecrementStock.Validate: %w", err)
+		err := trace.Wrap(err)
 		return fmt.Errorf("%w: %w", goproducterror.ErrRequestInvalid, err)
 	}
 
 	err = s.repoStock.DecrementStock(ctx, req.ProductID)
 	if err != nil {
-		return fmt.Errorf("Stock.repoStock.DecrementStock: %w", err)
+		return trace.Wrap(err)
 	}
 
 	return nil

@@ -3,8 +3,8 @@ package pgxtxmanager
 
 import (
 	"context"
-	"fmt"
 
+	"github.com/Hidayathamir/go-product/internal/pkg/trace"
 	"github.com/jackc/pgx/v5"
 	"github.com/sirupsen/logrus"
 )
@@ -27,7 +27,7 @@ func SQLTransaction(ctx context.Context, dbTx DBTx, fn func(context.Context) err
 		var err error
 		tx, err = dbTx.Begin(ctx)
 		if err != nil {
-			return fmt.Errorf("DBTx.Begin: %w", err)
+			return trace.Wrap(err)
 		}
 		ctx = context.WithValue(ctx, CtxKey, tx)
 	}
@@ -38,13 +38,13 @@ func SQLTransaction(ctx context.Context, dbTx DBTx, fn func(context.Context) err
 		if err != nil {
 			errRollback := tx.Rollback(ctx)
 			if errRollback != nil {
-				logrus.Warnf("pgx.Tx.Rollback: %v", errRollback)
+				logrus.Warn(trace.Wrap(errRollback))
 			}
 			return err
 		}
 		errCommit := tx.Commit(ctx)
 		if errCommit != nil {
-			return fmt.Errorf("pgx.Tx.Commit: %w", errCommit)
+			return trace.Wrap(errCommit)
 		}
 	}
 

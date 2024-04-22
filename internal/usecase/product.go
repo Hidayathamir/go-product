@@ -6,6 +6,7 @@ import (
 	"fmt"
 
 	"github.com/Hidayathamir/go-product/internal/config"
+	"github.com/Hidayathamir/go-product/internal/pkg/trace"
 	"github.com/Hidayathamir/go-product/internal/repo"
 	"github.com/Hidayathamir/go-product/pkg/goproductdto"
 	"github.com/Hidayathamir/go-product/pkg/goproducterror"
@@ -43,13 +44,13 @@ func NewProduct(cfg config.Config, repoProduct repo.IProduct) *Product {
 func (p *Product) Search(ctx context.Context, req goproductdto.ReqProductSearch) (goproductdto.ResProductSearch, error) {
 	err := req.Validate()
 	if err != nil {
-		err := fmt.Errorf("goproductdto.ReqProductSearch.Validate: %w", err)
+		err := trace.Wrap(err)
 		return goproductdto.ResProductSearch{}, fmt.Errorf("%w: %w", goproducterror.ErrRequestInvalid, err)
 	}
 
 	products, err := p.repoProduct.Search(ctx, req.Keyword)
 	if err != nil {
-		return goproductdto.ResProductSearch{}, fmt.Errorf("Product.repoProduct.Search: %w", err)
+		return goproductdto.ResProductSearch{}, trace.Wrap(err)
 	}
 
 	return products, nil
@@ -59,14 +60,14 @@ func (p *Product) Search(ctx context.Context, req goproductdto.ReqProductSearch)
 func (p *Product) GetDetail(ctx context.Context, req goproductdto.ReqProductDetail) (goproductdto.ResProductDetail, error) {
 	err := req.Validate()
 	if err != nil {
-		err := fmt.Errorf("goproductdto.ReqProductDetail.Validate: %w", err)
+		err := trace.Wrap(err)
 		return goproductdto.ResProductDetail{}, fmt.Errorf("%w: %w", goproducterror.ErrRequestInvalid, err)
 	}
 
 	if req.ID != 0 {
 		product, err := p.repoProduct.GetDetailByID(ctx, req.ID)
 		if err != nil {
-			return goproductdto.ResProductDetail{}, fmt.Errorf("Product.repoProduct.GetDetailByID: %w", err)
+			return goproductdto.ResProductDetail{}, trace.Wrap(err)
 		}
 		return product, nil
 	}
@@ -74,7 +75,7 @@ func (p *Product) GetDetail(ctx context.Context, req goproductdto.ReqProductDeta
 	if req.SKU != "" {
 		product, err := p.repoProduct.GetDetailBySKU(ctx, req.SKU)
 		if err != nil {
-			return goproductdto.ResProductDetail{}, fmt.Errorf("Product.repoProduct.GetDetailBySKU: %w", err)
+			return goproductdto.ResProductDetail{}, trace.Wrap(err)
 		}
 		return product, nil
 	}
@@ -82,7 +83,7 @@ func (p *Product) GetDetail(ctx context.Context, req goproductdto.ReqProductDeta
 	if req.Slug != "" {
 		product, err := p.repoProduct.GetDetailBySlug(ctx, req.Slug)
 		if err != nil {
-			return goproductdto.ResProductDetail{}, fmt.Errorf("Product.repoProduct.GetDetailBySlug: %w", err)
+			return goproductdto.ResProductDetail{}, trace.Wrap(err)
 		}
 		return product, nil
 	}
@@ -95,13 +96,13 @@ func (p *Product) GetDetail(ctx context.Context, req goproductdto.ReqProductDeta
 func (p *Product) Add(ctx context.Context, req goproductdto.ReqProductAdd) (goproductdto.ResProductAdd, error) {
 	err := req.Validate()
 	if err != nil {
-		err := fmt.Errorf("goproductdto.ReqProductAdd.Validate: %w", err)
+		err := trace.Wrap(err)
 		return goproductdto.ResProductAdd{}, fmt.Errorf("%w: %w", goproducterror.ErrRequestInvalid, err)
 	}
 
 	productID, err := p.repoProduct.Add(ctx, req)
 	if err != nil {
-		return goproductdto.ResProductAdd{}, fmt.Errorf("Product.repoProduct.Add: %w", err)
+		return goproductdto.ResProductAdd{}, trace.Wrap(err)
 	}
 
 	res := goproductdto.ResProductAdd{

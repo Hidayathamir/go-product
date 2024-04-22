@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/Hidayathamir/go-product/internal/config"
+	"github.com/Hidayathamir/go-product/internal/pkg/trace"
 	_ "github.com/jackc/pgx/v5/stdlib" // don't really understand, remove if you know what you do, i just following this article about pgx to sql.DB. https://github.com/jackc/pgx/wiki/Getting-started-with-pgx-through-database-sql#hello-world-from-postgresql
 	migrate "github.com/rubenv/sql-migrate"
 	"github.com/sirupsen/logrus"
@@ -20,12 +21,12 @@ func MigrateUp(cfg config.Config, schemaMigrationPath string) error {
 
 	db, err := sql.Open("pgx", url)
 	if err != nil {
-		return fmt.Errorf("sql.Open: %w", err)
+		return trace.Wrap(err)
 	}
 	defer func() {
 		err := db.Close()
 		if err != nil {
-			logrus.Warnf("sql.DB.Close: %v", err)
+			logrus.Warn(trace.Wrap(err))
 		}
 	}()
 
@@ -49,7 +50,8 @@ func MigrateUp(cfg config.Config, schemaMigrationPath string) error {
 	}
 
 	if err != nil {
-		return fmt.Errorf("err 10 times when try to migrate: %w", err)
+		err := fmt.Errorf("error 10 times when try to migrate: %w", err)
+		return trace.Wrap(err)
 	}
 
 	logrus.Infof("migrate done, %d migration applied 🟢", countMigrationApplied)

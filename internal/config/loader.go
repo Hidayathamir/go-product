@@ -1,8 +1,7 @@
 package config
 
 import (
-	"fmt"
-
+	"github.com/Hidayathamir/go-product/internal/pkg/trace"
 	"github.com/ilyakaznacheev/cleanenv"
 )
 
@@ -21,7 +20,7 @@ type YamlLoader struct {
 func (y *YamlLoader) loadConfig(cfg *Config) error {
 	err := cleanenv.ReadConfig(y.Path, cfg)
 	if err != nil {
-		return fmt.Errorf("cleanenv.ReadConfig: %w", err)
+		return trace.Wrap(err)
 	}
 	return nil
 }
@@ -39,12 +38,12 @@ func (e *EnvLoader) loadConfig(cfg *Config) error {
 	if e.YAMLPath != "" {
 		err := cleanenv.ReadConfig(e.YAMLPath, cfg)
 		if err != nil {
-			return fmt.Errorf("cleanenv.ReadConfig: %w", err)
+			return trace.Wrap(err)
 		}
 	}
 	err := cleanenv.ReadEnv(cfg)
 	if err != nil {
-		return fmt.Errorf("cleanenv.ReadEnv: %w", err)
+		return trace.Wrap(err)
 	}
 	return nil
 }

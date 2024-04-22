@@ -10,6 +10,7 @@ import (
 	"github.com/Hidayathamir/go-product/internal/entity"
 	"github.com/Hidayathamir/go-product/internal/pkg/pgxtxmanager"
 	"github.com/Hidayathamir/go-product/internal/pkg/query"
+	"github.com/Hidayathamir/go-product/internal/pkg/trace"
 	"github.com/Hidayathamir/go-product/internal/repo/cache"
 	"github.com/Hidayathamir/go-product/internal/repo/db"
 	"github.com/Hidayathamir/go-product/internal/repo/db/table"
@@ -72,7 +73,7 @@ func (p *Product) Search(ctx context.Context, keyword string) (goproductdto.ResP
 		}).
 		ToSql()
 	if err != nil {
-		return goproductdto.ResProductSearch{}, fmt.Errorf("Product.db.Builder.ToSql: %w", err)
+		return goproductdto.ResProductSearch{}, trace.Wrap(err)
 	}
 
 	var rows pgx.Rows
@@ -82,7 +83,7 @@ func (p *Product) Search(ctx context.Context, keyword string) (goproductdto.ResP
 		rows, err = p.db.Pool.Query(ctx, sql, args...)
 	}
 	if err != nil {
-		return goproductdto.ResProductSearch{}, fmt.Errorf("pgx.Query: %w", err)
+		return goproductdto.ResProductSearch{}, trace.Wrap(err)
 	}
 	defer rows.Close()
 
@@ -95,7 +96,7 @@ func (p *Product) Search(ctx context.Context, keyword string) (goproductdto.ResP
 			&product.Description, &product.Stock, &product.CreatedAt, &product.UpdatedAt,
 		)
 		if err != nil {
-			return goproductdto.ResProductSearch{}, fmt.Errorf("pgx.Rows.Scan: %w", err)
+			return goproductdto.ResProductSearch{}, trace.Wrap(err)
 		}
 
 		products = append(products, product)
@@ -111,7 +112,7 @@ func (p *Product) GetDetailByID(ctx context.Context, id int64) (goproductdto.Res
 		return product, nil
 	}
 
-	logrus.Warnf("Product.cache.GetDetailByID: %v", err)
+	logrus.Warn(trace.Wrap(err))
 
 	sql, args, err := p.db.Builder.
 		Select(
@@ -123,7 +124,7 @@ func (p *Product) GetDetailByID(ctx context.Context, id int64) (goproductdto.Res
 		Where(sq.Eq{table.Product.Dot.ID: id}).
 		ToSql()
 	if err != nil {
-		return goproductdto.ResProductDetail{}, fmt.Errorf("Product.db.Builder.ToSql: %w", err)
+		return goproductdto.ResProductDetail{}, trace.Wrap(err)
 	}
 
 	var row pgx.Row
@@ -140,7 +141,7 @@ func (p *Product) GetDetailByID(ctx context.Context, id int64) (goproductdto.Res
 		&product.CreatedAt, &product.UpdatedAt,
 	)
 	if err != nil {
-		err := fmt.Errorf("pgx.Row.Scan: %w", err)
+		err := trace.Wrap(err)
 		if errors.Is(err, pgx.ErrNoRows) {
 			err = fmt.Errorf("%w: %w", goproducterror.ErrProductNotFound, err)
 		}
@@ -149,7 +150,7 @@ func (p *Product) GetDetailByID(ctx context.Context, id int64) (goproductdto.Res
 
 	err = p.cache.SetDetailByID(ctx, product, goproduct.DefaultCacheExpire)
 	if err != nil {
-		logrus.Warnf("Product.cache.SetDetailByID: %v", err)
+		logrus.Warn(trace.Wrap(err))
 	}
 
 	return product, nil
@@ -162,7 +163,7 @@ func (p *Product) GetDetailBySKU(ctx context.Context, sku string) (goproductdto.
 		return product, nil
 	}
 
-	logrus.Warnf("Product.cache.GetDetailBySKU: %v", err)
+	logrus.Warn(trace.Wrap(err))
 
 	sql, args, err := p.db.Builder.
 		Select(
@@ -174,7 +175,7 @@ func (p *Product) GetDetailBySKU(ctx context.Context, sku string) (goproductdto.
 		Where(sq.Eq{table.Product.Dot.SKU: sku}).
 		ToSql()
 	if err != nil {
-		return goproductdto.ResProductDetail{}, fmt.Errorf("Product.db.Builder.ToSql: %w", err)
+		return goproductdto.ResProductDetail{}, trace.Wrap(err)
 	}
 
 	var row pgx.Row
@@ -191,7 +192,7 @@ func (p *Product) GetDetailBySKU(ctx context.Context, sku string) (goproductdto.
 		&product.CreatedAt, &product.UpdatedAt,
 	)
 	if err != nil {
-		err := fmt.Errorf("pgx.Row.Scan: %w", err)
+		err := trace.Wrap(err)
 		if errors.Is(err, pgx.ErrNoRows) {
 			err = fmt.Errorf("%w: %w", goproducterror.ErrProductNotFound, err)
 		}
@@ -213,7 +214,7 @@ func (p *Product) GetDetailBySlug(ctx context.Context, slug string) (goproductdt
 		return product, nil
 	}
 
-	logrus.Warnf("Product.cache.GetDetailBySlug: %v", err)
+	logrus.Warn(trace.Wrap(err))
 
 	sql, args, err := p.db.Builder.
 		Select(
@@ -225,7 +226,7 @@ func (p *Product) GetDetailBySlug(ctx context.Context, slug string) (goproductdt
 		Where(sq.Eq{table.Product.Dot.Slug: slug}).
 		ToSql()
 	if err != nil {
-		return goproductdto.ResProductDetail{}, fmt.Errorf("Product.db.Builder.ToSql: %w", err)
+		return goproductdto.ResProductDetail{}, trace.Wrap(err)
 	}
 
 	var row pgx.Row
@@ -242,7 +243,7 @@ func (p *Product) GetDetailBySlug(ctx context.Context, slug string) (goproductdt
 		&product.CreatedAt, &product.UpdatedAt,
 	)
 	if err != nil {
-		err := fmt.Errorf("pgx.Row.Scan: %w", err)
+		err := trace.Wrap(err)
 		if errors.Is(err, pgx.ErrNoRows) {
 			err = fmt.Errorf("%w: %w", goproducterror.ErrProductNotFound, err)
 		}
@@ -251,7 +252,7 @@ func (p *Product) GetDetailBySlug(ctx context.Context, slug string) (goproductdt
 
 	err = p.cache.SetDetailBySlug(ctx, product, goproduct.DefaultCacheExpire)
 	if err != nil {
-		logrus.Warnf("Product.cache.SetDetailBySlug: %v", err)
+		logrus.Warn(trace.Wrap(err))
 	}
 
 	return product, nil
@@ -274,7 +275,7 @@ func (p *Product) Add(ctx context.Context, req goproductdto.ReqProductAdd) (int6
 		var err error
 		productID, err = p.addProduct(ctx, product)
 		if err != nil {
-			return fmt.Errorf("Product.addProduct: %w", err)
+			return trace.Wrap(err)
 		}
 
 		stock := entity.Stock{
@@ -286,13 +287,13 @@ func (p *Product) Add(ctx context.Context, req goproductdto.ReqProductAdd) (int6
 
 		_, err = p.addStock(ctx, stock)
 		if err != nil {
-			return fmt.Errorf("Product.addStock: %w", err)
+			return trace.Wrap(err)
 		}
 
 		return nil
 	})
 	if err != nil {
-		return 0, fmt.Errorf("pgxtxmanager.SQLTransaction: %w", err)
+		return 0, trace.Wrap(err)
 	}
 
 	return productID, nil
@@ -312,7 +313,7 @@ func (p *Product) addProduct(ctx context.Context, product entity.Product) (int64
 		Suffix(query.Returning(table.Product.ID)).
 		ToSql()
 	if err != nil {
-		return 0, fmt.Errorf("Product.db.Builder.ToSql: %w", err)
+		return 0, trace.Wrap(err)
 	}
 
 	var row pgx.Row
@@ -325,7 +326,7 @@ func (p *Product) addProduct(ctx context.Context, product entity.Product) (int64
 	var productID int64
 	err = row.Scan(&productID)
 	if err != nil {
-		err := fmt.Errorf("pgx.Row.Scan: %w", err)
+		err := trace.Wrap(err)
 
 		var pgErr *pgconn.PgError
 		if !errors.As(err, &pgErr) {
@@ -360,7 +361,7 @@ func (p *Product) addStock(ctx context.Context, stock entity.Stock) (int64, erro
 		Suffix(query.Returning(table.Stock.ID)).
 		ToSql()
 	if err != nil {
-		return 0, fmt.Errorf("Product.db.Builder.ToSql: %w", err)
+		return 0, trace.Wrap(err)
 	}
 
 	var row pgx.Row
@@ -373,7 +374,7 @@ func (p *Product) addStock(ctx context.Context, stock entity.Stock) (int64, erro
 	var stockID int64
 	err = row.Scan(&stockID)
 	if err != nil {
-		err := fmt.Errorf("pgx.Row.Scan: %w", err)
+		err := trace.Wrap(err)
 
 		var pgErr *pgconn.PgError
 		if !errors.As(err, &pgErr) {

@@ -4,6 +4,7 @@ import (
 	"path/filepath"
 
 	"github.com/Hidayathamir/go-product/internal/config"
+	"github.com/Hidayathamir/go-product/internal/pkg/trace"
 	"github.com/sirupsen/logrus"
 )
 
@@ -19,7 +20,7 @@ func initConfig(arg cliArg) config.Config {
 
 	cfg, err := config.Init(cfgLoader)
 	if err != nil {
-		logrus.Fatalf("config.Init: %v", err)
+		logrus.Fatal(trace.Wrap(err))
 	}
 
 	return cfg

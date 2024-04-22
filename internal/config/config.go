@@ -3,6 +3,8 @@ package config
 
 import (
 	"fmt"
+
+	"github.com/Hidayathamir/go-product/internal/pkg/trace"
 )
 
 // Init initiate configurations either from config yml or env var.
@@ -11,17 +13,17 @@ func Init(cfgLoader Loader) (Config, error) {
 
 	err := cfgLoader.loadConfig(&cfg)
 	if err != nil {
-		return Config{}, fmt.Errorf("Loader.loadConfig: %w", err)
+		return Config{}, trace.Wrap(err)
 	}
 
 	err = cfg.validate()
 	if err != nil {
-		return Config{}, fmt.Errorf("config.Validate: %w", err)
+		return Config{}, trace.Wrap(err)
 	}
 
 	err = initLogrusConfig(cfg)
 	if err != nil {
-		return Config{}, fmt.Errorf("initLogrusConfig: %w", err)
+		return Config{}, trace.Wrap(err)
 	}
 
 	initGinConfig(cfg)
@@ -43,12 +45,12 @@ type Config struct {
 func (c *Config) validate() error {
 	err := c.App.Environment.validate()
 	if err != nil {
-		return fmt.Errorf("Config.app.Environment.validate: %w", err)
+		return trace.Wrap(err)
 	}
 
 	err = c.Logger.LogLevel.validate()
 	if err != nil {
-		return fmt.Errorf("Config.logger.LogLevel.validate: %w", err)
+		return trace.Wrap(err)
 	}
 
 	return nil

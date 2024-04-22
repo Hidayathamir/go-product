@@ -4,6 +4,7 @@ package jutil
 import (
 	"encoding/json"
 
+	"github.com/Hidayathamir/go-product/internal/pkg/trace"
 	"github.com/sirupsen/logrus"
 )
 
@@ -11,7 +12,7 @@ import (
 func ToJSONString(v any) string {
 	jsonByte, err := json.Marshal(v)
 	if err != nil {
-		logrus.Warnf("json.Marshal: %v", err)
+		logrus.Warn(trace.Wrap(err))
 		return ""
 	}
 	return string(jsonByte)

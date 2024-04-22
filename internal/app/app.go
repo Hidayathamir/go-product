@@ -3,6 +3,7 @@ package app
 
 import (
 	"github.com/Hidayathamir/go-product/internal/config"
+	"github.com/Hidayathamir/go-product/internal/pkg/trace"
 	"github.com/Hidayathamir/go-product/internal/repo/cache"
 	"github.com/Hidayathamir/go-product/internal/repo/db"
 	"github.com/sirupsen/logrus"
@@ -22,14 +23,14 @@ func Run() {
 
 	err := runGRPCServer(cfg, db, redis)
 	if err != nil {
-		logrus.Fatalf("runGRPCServer: %v", err)
+		logrus.Fatal(trace.Wrap(err))
 	}
 }
 
 func newDBPostgres(cfg config.Config) *db.Postgres {
 	db, err := db.NewPGPoolConn(cfg)
 	if err != nil {
-		logrus.Fatalf("db.NewPostgresPoolConnection: %v", err)
+		logrus.Fatal(trace.Wrap(err))
 	}
 	return db
 }

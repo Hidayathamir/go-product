@@ -2,8 +2,7 @@
 package pghelper
 
 import (
-	"fmt"
-
+	"github.com/Hidayathamir/go-product/internal/pkg/trace"
 	"github.com/jackc/pgx/v5"
 )
 
@@ -11,7 +10,7 @@ import (
 func GetPort(dbURL string) (int, error) {
 	connConfig, err := pgx.ParseConfig(dbURL)
 	if err != nil {
-		return 0, fmt.Errorf("pgx.ParseConfig: %w", err)
+		return 0, trace.Wrap(err)
 	}
 	return int(connConfig.Port), nil
 }

@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/Hidayathamir/go-product/internal/config"
+	"github.com/Hidayathamir/go-product/internal/pkg/trace"
 	"github.com/Masterminds/squirrel"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
@@ -40,7 +41,7 @@ func NewPGPoolConn(cfg config.Config) (*Postgres, error) {
 
 	poolConfig, err := pgxpool.ParseConfig(url)
 	if err != nil {
-		return nil, fmt.Errorf("pgxpool.ParseConfig: %w", err)
+		return nil, trace.Wrap(err)
 	}
 	poolConfig.MaxConns = int32(cfg.PG.PoolMax)
 
@@ -75,7 +76,8 @@ func NewPGPoolConn(cfg config.Config) (*Postgres, error) {
 	}
 
 	if err != nil {
-		return nil, fmt.Errorf("err 10 times when try to create conn pool: %w", err)
+		err := fmt.Errorf("error 10 times when try to create conn pool: %w", err)
+		return nil, trace.Wrap(err)
 	}
 
 	logrus.Info("success create db connection pool 🟢")

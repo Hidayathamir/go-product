@@ -2,9 +2,9 @@ package controllergrpc
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/Hidayathamir/go-product/internal/config"
+	"github.com/Hidayathamir/go-product/internal/pkg/trace"
 	"github.com/Hidayathamir/go-product/internal/usecase"
 	"github.com/Hidayathamir/go-product/pkg/goproductdto"
 	"github.com/Hidayathamir/go-product/pkg/goproductgrpc"
@@ -37,7 +37,7 @@ func (p *Product) Search(c context.Context, r *goproductgrpc.ReqProductSearch) (
 
 	resSearch, err := p.usecaseProduct.Search(c, req)
 	if err != nil {
-		err := fmt.Errorf("Product.usecaseProduct.Search: %w", err)
+		err := trace.Wrap(err)
 		return nil, err
 	}
 
@@ -73,7 +73,7 @@ func (p *Product) GetDetail(c context.Context, r *goproductgrpc.ReqProductDetail
 
 	resGetDetail, err := p.usecaseProduct.GetDetail(c, req)
 	if err != nil {
-		err := fmt.Errorf("Product.usecaseProduct.GetDetail: %w", err)
+		err := trace.Wrap(err)
 		return nil, err
 	}
 
@@ -103,7 +103,7 @@ func (p *Product) Add(c context.Context, r *goproductgrpc.ReqProductAdd) (*gopro
 
 	resAdd, err := p.usecaseProduct.Add(c, req)
 	if err != nil {
-		err := fmt.Errorf("Product.usecaseProduct.Add: %w", err)
+		err := trace.Wrap(err)
 		return nil, err
 	}
 
