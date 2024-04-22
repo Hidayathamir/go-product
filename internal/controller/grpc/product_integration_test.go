@@ -30,7 +30,8 @@ func TestIntegrationProductSearch(t *testing.T) {
 
 		redis := cache.NewRedis(cfg)
 
-		repoProduct := repo.NewProduct(cfg, pg, redis)
+		cache := cache.NewProduct(cfg, redis)
+		repoProduct := repo.NewProduct(cfg, pg, cache)
 		usecaseProduct := usecase.NewProduct(cfg, repoProduct)
 		controllerProduct := NewProduct(cfg, usecaseProduct)
 
@@ -103,7 +104,8 @@ func TestIntegrationProductSearch(t *testing.T) {
 
 		redis := cache.NewRedis(cfg)
 
-		repoProduct := repo.NewProduct(cfg, pg, redis)
+		cache := cache.NewProduct(cfg, redis)
+		repoProduct := repo.NewProduct(cfg, pg, cache)
 		usecaseProduct := usecase.NewProduct(cfg, repoProduct)
 		controllerProduct := NewProduct(cfg, usecaseProduct)
 
@@ -193,7 +195,8 @@ func TestIntegrationProductSearch(t *testing.T) {
 
 		redis := cache.NewRedis(cfg)
 
-		repoProduct := repo.NewProduct(cfg, pg, redis)
+		cache := cache.NewProduct(cfg, redis)
+		repoProduct := repo.NewProduct(cfg, pg, cache)
 		usecaseProduct := usecase.NewProduct(cfg, repoProduct)
 		controllerProduct := NewProduct(cfg, usecaseProduct)
 

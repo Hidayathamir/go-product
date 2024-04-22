@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/Hidayathamir/go-product/internal/config"
 	"github.com/Hidayathamir/go-product/pkg/goproductdto"
 )
 
@@ -31,23 +32,37 @@ type IProduct interface {
 	SetDetailBySlug(ctx context.Context, data goproductdto.ResProductDetail, expire time.Duration) error
 }
 
-var _ IProduct = &Redis{}
+// Product -.
+type Product struct {
+	cfg   config.Config
+	redis *Redis
+}
+
+var _ IProduct = &Product{}
+
+// NewProduct -.
+func NewProduct(cfg config.Config, redis *Redis) *Product {
+	return &Product{
+		cfg:   cfg,
+		redis: redis,
+	}
+}
 
 ///////////////////////////////// redis cache key /////////////////////////////////
 
 const productRedisKeyPrefix = "product"
 
-func (p *Redis) keyDetailByID(id int64) string {
+func (p *Product) keyDetailByID(id int64) string {
 	keyList := []string{p.cfg.App.Name, productRedisKeyPrefix, "DetailByID", strconv.FormatInt(id, 10)}
 	return strings.Join(keyList, ":")
 }
 
-func (p *Redis) keyDetailBySKU(sku string) string {
+func (p *Product) keyDetailBySKU(sku string) string {
 	keyList := []string{p.cfg.App.Name, productRedisKeyPrefix, "DetailBySKU", sku}
 	return strings.Join(keyList, ":")
 }
 
-func (p *Redis) keyDetailBySlug(slug string) string {
+func (p *Product) keyDetailBySlug(slug string) string {
 	keyList := []string{p.cfg.App.Name, productRedisKeyPrefix, "DetailBySlug", slug}
 	return strings.Join(keyList, ":")
 }
@@ -55,8 +70,8 @@ func (p *Redis) keyDetailBySlug(slug string) string {
 ///////////////////////////////// redis cache key /////////////////////////////////
 
 // GetDetailByID implements IProduct.
-func (p *Redis) GetDetailByID(ctx context.Context, id int64) (goproductdto.ResProductDetail, error) {
-	val, err := p.rdb.Get(ctx, p.keyDetailByID(id)).Result()
+func (p *Product) GetDetailByID(ctx context.Context, id int64) (goproductdto.ResProductDetail, error) {
+	val, err := p.redis.client.Get(ctx, p.keyDetailByID(id)).Result()
 	if err != nil {
 		return goproductdto.ResProductDetail{}, fmt.Errorf("Redis.rdb.Get: %w", err)
 	}
@@ -66,7 +81,7 @@ func (p *Redis) GetDetailByID(ctx context.Context, id int64) (goproductdto.ResPr
 	if err != nil {
 		err := fmt.Errorf("json.Unmarshal, able to get value from redis but error when json unmarshal, trying to delete redis cache key: %w", err)
 
-		errDel := p.rdb.Del(ctx, p.keyDetailByID(id)).Err()
+		errDel := p.redis.client.Del(ctx, p.keyDetailByID(id)).Err()
 		if errDel != nil {
 			err = fmt.Errorf("Redis.rdb.Del, error delete redis cache key: %w", errDel)
 		}
@@ -78,13 +93,13 @@ func (p *Redis) GetDetailByID(ctx context.Context, id int64) (goproductdto.ResPr
 }
 
 // SetDetailByID implements IProduct.
-func (p *Redis) SetDetailByID(ctx context.Context, product goproductdto.ResProductDetail, expire time.Duration) error {
+func (p *Product) SetDetailByID(ctx context.Context, product goproductdto.ResProductDetail, expire time.Duration) error {
 	jsonByte, err := json.Marshal(product)
 	if err != nil {
 		return fmt.Errorf("json.Marshal: %w", err)
 	}
 
-	err = p.rdb.Set(ctx, p.keyDetailByID(product.ID), string(jsonByte), expire).Err()
+	err = p.redis.client.Set(ctx, p.keyDetailByID(product.ID), string(jsonByte), expire).Err()
 	if err != nil {
 		return fmt.Errorf("Redis.rdb.Set: %w", err)
 	}
@@ -93,8 +108,8 @@ func (p *Redis) SetDetailByID(ctx context.Context, product goproductdto.ResProdu
 }
 
 // GetDetailBySKU implements IProduct.
-func (p *Redis) GetDetailBySKU(ctx context.Context, sku string) (goproductdto.ResProductDetail, error) {
-	val, err := p.rdb.Get(ctx, p.keyDetailBySKU(sku)).Result()
+func (p *Product) GetDetailBySKU(ctx context.Context, sku string) (goproductdto.ResProductDetail, error) {
+	val, err := p.redis.client.Get(ctx, p.keyDetailBySKU(sku)).Result()
 	if err != nil {
 		return goproductdto.ResProductDetail{}, fmt.Errorf("Redis.rdb.Get: %w", err)
 	}
@@ -104,7 +119,7 @@ func (p *Redis) GetDetailBySKU(ctx context.Context, sku string) (goproductdto.Re
 	if err != nil {
 		err := fmt.Errorf("json.Unmarshal, able to get value from redis but error when json unmarshal, trying to delete redis cache key: %w", err)
 
-		errDel := p.rdb.Del(ctx, p.keyDetailBySKU(sku)).Err()
+		errDel := p.redis.client.Del(ctx, p.keyDetailBySKU(sku)).Err()
 		if errDel != nil {
 			err = fmt.Errorf("Redis.rdb.Del, error delete redis cache key: %w", errDel)
 		}
@@ -116,13 +131,13 @@ func (p *Redis) GetDetailBySKU(ctx context.Context, sku string) (goproductdto.Re
 }
 
 // SetDetailBySKU implements IProduct.
-func (p *Redis) SetDetailBySKU(ctx context.Context, product goproductdto.ResProductDetail, expire time.Duration) error {
+func (p *Product) SetDetailBySKU(ctx context.Context, product goproductdto.ResProductDetail, expire time.Duration) error {
 	jsonByte, err := json.Marshal(product)
 	if err != nil {
 		return fmt.Errorf("json.Marshal: %w", err)
 	}
 
-	err = p.rdb.Set(ctx, p.keyDetailBySKU(product.SKU), string(jsonByte), expire).Err()
+	err = p.redis.client.Set(ctx, p.keyDetailBySKU(product.SKU), string(jsonByte), expire).Err()
 	if err != nil {
 		return fmt.Errorf("Redis.rdb.Set: %w", err)
 	}
@@ -131,8 +146,8 @@ func (p *Redis) SetDetailBySKU(ctx context.Context, product goproductdto.ResProd
 }
 
 // GetDetailBySlug implements IProduct.
-func (p *Redis) GetDetailBySlug(ctx context.Context, slug string) (goproductdto.ResProductDetail, error) {
-	val, err := p.rdb.Get(ctx, p.keyDetailBySlug(slug)).Result()
+func (p *Product) GetDetailBySlug(ctx context.Context, slug string) (goproductdto.ResProductDetail, error) {
+	val, err := p.redis.client.Get(ctx, p.keyDetailBySlug(slug)).Result()
 	if err != nil {
 		return goproductdto.ResProductDetail{}, fmt.Errorf("Redis.rdb.Get: %w", err)
 	}
@@ -142,7 +157,7 @@ func (p *Redis) GetDetailBySlug(ctx context.Context, slug string) (goproductdto.
 	if err != nil {
 		err := fmt.Errorf("json.Unmarshal, able to get value from redis but error when json unmarshal, trying to delete redis cache key: %w", err)
 
-		errDel := p.rdb.Del(ctx, p.keyDetailBySlug(slug)).Err()
+		errDel := p.redis.client.Del(ctx, p.keyDetailBySlug(slug)).Err()
 		if errDel != nil {
 			err = fmt.Errorf("Redis.rdb.Del, error delete redis cache key: %w", errDel)
 		}
@@ -154,13 +169,13 @@ func (p *Redis) GetDetailBySlug(ctx context.Context, slug string) (goproductdto.
 }
 
 // SetDetailBySlug implements IProduct.
-func (p *Redis) SetDetailBySlug(ctx context.Context, product goproductdto.ResProductDetail, expire time.Duration) error {
+func (p *Product) SetDetailBySlug(ctx context.Context, product goproductdto.ResProductDetail, expire time.Duration) error {
 	jsonByte, err := json.Marshal(product)
 	if err != nil {
 		return fmt.Errorf("json.Marshal: %w", err)
 	}
 
-	err = p.rdb.Set(ctx, p.keyDetailBySlug(product.Slug), string(jsonByte), expire).Err()
+	err = p.redis.client.Set(ctx, p.keyDetailBySlug(product.Slug), string(jsonByte), expire).Err()
 	if err != nil {
 		return fmt.Errorf("Redis.rdb.Set: %w", err)
 	}
