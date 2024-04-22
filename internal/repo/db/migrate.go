@@ -44,7 +44,7 @@ func MigrateUp(cfg config.Config, schemaMigrationPath string) error {
 
 		logrus.
 			WithField("attempt count", i+1).
-			Warnf("err migrate: migrate.Exec: %v", err)
+			Warn(trace.Wrap(err))
 
 		time.Sleep(time.Second)
 	}

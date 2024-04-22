@@ -65,7 +65,7 @@ func NewPGPoolConn(cfg config.Config) (*Postgres, error) {
 		if err != nil {
 			logrus.
 				WithField("attempt count", i+1).
-				Warnf("Postgres.Pool.Ping: %v", err)
+				Warn(trace.Wrap(err))
 
 			time.Sleep(time.Second)
 
