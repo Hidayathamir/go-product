@@ -4,6 +4,7 @@ package trace
 import (
 	"fmt"
 	"runtime"
+	"strings"
 )
 
 func funcName(skip int) string {
@@ -17,7 +18,11 @@ func funcName(skip int) string {
 		return "?"
 	}
 
-	return fn.Name()
+	funcNameWithModule := fn.Name()
+	funcNameWithModuleSplit := strings.Split(funcNameWithModule, "/")
+	funcName := funcNameWithModuleSplit[len(funcNameWithModuleSplit)-1]
+
+	return funcName
 }
 
 // Wrap -.
