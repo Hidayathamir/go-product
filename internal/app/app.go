@@ -2,10 +2,14 @@
 package app
 
 import (
+	"flag"
+	"path/filepath"
+
 	"github.com/Hidayathamir/go-product/internal/config"
 	"github.com/Hidayathamir/go-product/internal/pkg/trace"
 	"github.com/Hidayathamir/go-product/internal/repo/cache"
 	"github.com/Hidayathamir/go-product/internal/repo/db"
+	"github.com/ilyakaznacheev/cleanenv"
 	"github.com/sirupsen/logrus"
 )
 
@@ -15,30 +19,64 @@ func Run() {
 
 	cfg := initConfig(arg)
 
-	handleCommandLineArgsMigrate(cfg, arg)
+	handleCLIArgs(cfg, arg)
 
-	db := newDBPostgres(cfg)
+	dbPostgres, err := db.NewPGPoolConn(cfg)
+	ifErrFatal(err)
 
-	redis := newCacheRedis(cfg)
+	cacheRedis, err := cache.NewRedis(cfg)
+	ifErrFatal(err)
 
-	err := runGRPCServer(cfg, db, redis)
-	if err != nil {
-		logrus.Fatal(trace.Wrap(err))
+	err = runGRPCServer(cfg, dbPostgres, cacheRedis)
+	ifErrFatal(err)
+}
+
+type cliArg struct {
+	isIncludeMigrate bool
+	isLoadEnv        bool
+}
+
+func parseCLIArgs() cliArg {
+	arg := cliArg{}
+
+	flag.BoolVar(&arg.isIncludeMigrate, "include-migrate", false, "is include migrate, if true will do migrate before run app, default false.")
+	flag.BoolVar(&arg.isLoadEnv, "load-env", false, "is load env var, if true load env var and override config, default false.")
+
+	flag.Usage = cleanenv.FUsage(flag.CommandLine.Output(), &config.Config{}, nil, flag.Usage)
+
+	flag.Parse()
+
+	return arg
+}
+
+func initConfig(arg cliArg) config.Config {
+	yamlPath := filepath.Join("internal", "config", "config.yml")
+
+	var cfgLoader config.Loader
+	if arg.isLoadEnv {
+		cfgLoader = &config.EnvLoader{YAMLPath: yamlPath}
+	} else {
+		cfgLoader = &config.YamlLoader{Path: yamlPath}
+	}
+
+	cfg, err := config.Init(cfgLoader)
+	ifErrFatal(err)
+
+	return cfg
+}
+
+func handleCLIArgs(cfg config.Config, arg cliArg) {
+	if arg.isIncludeMigrate {
+		schemaMigrationPath := filepath.Join("internal", "repo", "db", "schema_migration")
+		err := db.MigrateUp(cfg, schemaMigrationPath)
+		if err != nil {
+			logrus.Fatal(trace.Wrap(err))
+		}
 	}
 }
 
-func newDBPostgres(cfg config.Config) *db.Postgres {
-	db, err := db.NewPGPoolConn(cfg)
+func ifErrFatal(err error) {
 	if err != nil {
 		logrus.Fatal(trace.Wrap(err))
 	}
-	return db
-}
-
-func newCacheRedis(cfg config.Config) *cache.Redis {
-	redis, err := cache.NewRedis(cfg)
-	if err != nil {
-		logrus.Fatal(trace.Wrap(err))
-	}
-	return redis
 }

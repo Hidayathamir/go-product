@@ -16,10 +16,10 @@ import (
 	"google.golang.org/grpc"
 )
 
-func runGRPCServer(cfg config.Config, db *db.Postgres, redis *cache.Redis) error {
+func runGRPCServer(cfg config.Config, dbPostgres *db.Postgres, cacheRedis *cache.Redis) error {
 	grpcServer := grpc.NewServer()
 
-	registerServer(cfg, grpcServer, db, redis)
+	registerServer(cfg, grpcServer, dbPostgres, cacheRedis)
 
 	addr := net.JoinHostPort(cfg.GRPC.Host, strconv.Itoa(cfg.GRPC.Port))
 	lis, err := net.Listen("tcp", addr)
@@ -36,24 +36,24 @@ func runGRPCServer(cfg config.Config, db *db.Postgres, redis *cache.Redis) error
 	return nil
 }
 
-func registerServer(cfg config.Config, grpcServer *grpc.Server, db *db.Postgres, redis *cache.Redis) {
-	cProduct := injectionProductGRPC(cfg, db, redis)
-	cStock := injectionStockGRPC(cfg, db)
+func registerServer(cfg config.Config, grpcServer *grpc.Server, dbPostgres *db.Postgres, cacheRedis *cache.Redis) {
+	tProduct := injectionProductGRPC(cfg, dbPostgres, cacheRedis)
+	tStock := injectionStockGRPC(cfg, dbPostgres)
 
-	goproductgrpc.RegisterProductServer(grpcServer, cProduct)
-	goproductgrpc.RegisterStockServer(grpcServer, cStock)
+	goproductgrpc.RegisterProductServer(grpcServer, tProduct)
+	goproductgrpc.RegisterStockServer(grpcServer, tStock)
 }
 
-func injectionProductGRPC(cfg config.Config, db *db.Postgres, redis *cache.Redis) *transportgrpc.Product {
-	cache := cache.NewProduct(cfg, redis)
-	repoProduct := repo.NewProduct(cfg, db, cache)
+func injectionProductGRPC(cfg config.Config, dbPostgres *db.Postgres, cacheRedis *cache.Redis) *transportgrpc.Product {
+	cacheProduct := cache.NewProduct(cfg, cacheRedis)
+	repoProduct := repo.NewProduct(cfg, dbPostgres, cacheProduct)
 	usecaseProduct := usecase.NewProduct(cfg, repoProduct)
 	transportProduct := transportgrpc.NewProduct(cfg, usecaseProduct)
 	return transportProduct
 }
 
-func injectionStockGRPC(cfg config.Config, db *db.Postgres) *transportgrpc.Stock {
-	repoStock := repo.NewStock(cfg, db)
+func injectionStockGRPC(cfg config.Config, dbPostgres *db.Postgres) *transportgrpc.Stock {
+	repoStock := repo.NewStock(cfg, dbPostgres)
 	usecaseStock := usecase.NewStock(cfg, repoStock)
 	transportStock := transportgrpc.NewStock(cfg, usecaseStock)
 	return transportStock
