@@ -1,6 +1,8 @@
-package controllerhttp
+package http
 
-import "github.com/Hidayathamir/go-product/pkg/goproductdto"
+import (
+	"github.com/Hidayathamir/go-product/pkg/goproductdto"
+)
 
 // ResSearch -.
 type ResSearch struct {

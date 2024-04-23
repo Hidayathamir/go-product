@@ -1,4 +1,4 @@
-package controllerhttp
+package http
 
 // ResError -.
 type ResError struct {
