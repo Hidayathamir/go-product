@@ -22,13 +22,19 @@ func Run() {
 	handleCLIArgs(cfg, arg)
 
 	dbPostgres, err := db.NewPGPoolConn(cfg)
-	ifErrFatal(err)
+	if err != nil {
+		logrus.Fatal(trace.Wrap(err))
+	}
 
 	cacheRedis, err := cache.NewRedis(cfg)
-	ifErrFatal(err)
+	if err != nil {
+		logrus.Fatal(trace.Wrap(err))
+	}
 
 	err = runGRPCServer(cfg, dbPostgres, cacheRedis)
-	ifErrFatal(err)
+	if err != nil {
+		logrus.Fatal(trace.Wrap(err))
+	}
 }
 
 type cliArg struct {
@@ -60,7 +66,9 @@ func initConfig(arg cliArg) config.Config {
 	}
 
 	cfg, err := config.Init(cfgLoader)
-	ifErrFatal(err)
+	if err != nil {
+		logrus.Fatal(trace.Wrap(err))
+	}
 
 	return cfg
 }
@@ -72,11 +80,5 @@ func handleCLIArgs(cfg config.Config, arg cliArg) {
 		if err != nil {
 			logrus.Fatal(trace.Wrap(err))
 		}
-	}
-}
-
-func ifErrFatal(err error) {
-	if err != nil {
-		logrus.Fatal(trace.Wrap(err))
 	}
 }
