@@ -9,7 +9,7 @@ import (
 	"github.com/Hidayathamir/go-product/internal/repo"
 	"github.com/Hidayathamir/go-product/internal/repo/cache"
 	"github.com/Hidayathamir/go-product/internal/repo/db"
-	controllergrpc "github.com/Hidayathamir/go-product/internal/transport/grpc"
+	transportgrpc "github.com/Hidayathamir/go-product/internal/transport/grpc"
 	"github.com/Hidayathamir/go-product/internal/usecase"
 	"github.com/Hidayathamir/go-product/pkg/goproductgrpc"
 	"github.com/sirupsen/logrus"
@@ -44,17 +44,17 @@ func registerServer(cfg config.Config, grpcServer *grpc.Server, db *db.Postgres,
 	goproductgrpc.RegisterStockServer(grpcServer, cStock)
 }
 
-func injectionProductGRPC(cfg config.Config, db *db.Postgres, redis *cache.Redis) *controllergrpc.Product {
+func injectionProductGRPC(cfg config.Config, db *db.Postgres, redis *cache.Redis) *transportgrpc.Product {
 	cache := cache.NewProduct(cfg, redis)
 	repoProduct := repo.NewProduct(cfg, db, cache)
 	usecaseProduct := usecase.NewProduct(cfg, repoProduct)
-	controllerProduct := controllergrpc.NewProduct(cfg, usecaseProduct)
-	return controllerProduct
+	transportProduct := transportgrpc.NewProduct(cfg, usecaseProduct)
+	return transportProduct
 }
 
-func injectionStockGRPC(cfg config.Config, db *db.Postgres) *controllergrpc.Stock {
+func injectionStockGRPC(cfg config.Config, db *db.Postgres) *transportgrpc.Stock {
 	repoStock := repo.NewStock(cfg, db)
 	usecaseStock := usecase.NewStock(cfg, repoStock)
-	controllerStock := controllergrpc.NewStock(cfg, usecaseStock)
-	return controllerStock
+	transportStock := transportgrpc.NewStock(cfg, usecaseStock)
+	return transportStock
 }

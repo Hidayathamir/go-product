@@ -10,7 +10,7 @@ import (
 	"github.com/Hidayathamir/go-product/pkg/goproductgrpc"
 )
 
-// Stock is controller GRPC for stock related.
+// Stock is transport GRPC for stock related.
 type Stock struct {
 	goproductgrpc.UnimplementedStockServer
 

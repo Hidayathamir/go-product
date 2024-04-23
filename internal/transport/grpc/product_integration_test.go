@@ -34,7 +34,7 @@ func TestIntegrationProductSearch(t *testing.T) {
 		cache := cache.NewProduct(cfg, redis)
 		repoProduct := repo.NewProduct(cfg, pg, cache)
 		usecaseProduct := usecase.NewProduct(cfg, repoProduct)
-		controllerProduct := NewProduct(cfg, usecaseProduct)
+		transportProduct := NewProduct(cfg, usecaseProduct)
 
 		p1Desc := "product 1 description"
 		timeNow := time.Now()
@@ -84,7 +84,7 @@ func TestIntegrationProductSearch(t *testing.T) {
 		req := &goproductgrpc.ReqProductSearch{
 			Keyword: "uct 1 descrip",
 		}
-		res, err := controllerProduct.Search(context.Background(), req)
+		res, err := transportProduct.Search(context.Background(), req)
 
 		require.NoError(t, err)
 		require.Equal(t, len(expectedRes.GetProducts()), len(res.GetProducts()))
@@ -109,7 +109,7 @@ func TestIntegrationProductSearch(t *testing.T) {
 		cache := cache.NewProduct(cfg, redis)
 		repoProduct := repo.NewProduct(cfg, pg, cache)
 		usecaseProduct := usecase.NewProduct(cfg, repoProduct)
-		controllerProduct := NewProduct(cfg, usecaseProduct)
+		transportProduct := NewProduct(cfg, usecaseProduct)
 
 		p1Desc := "product 1 description"
 		timeNow := time.Now()
@@ -169,7 +169,7 @@ func TestIntegrationProductSearch(t *testing.T) {
 		req := &goproductgrpc.ReqProductSearch{
 			Keyword: "uct 1 descrip",
 		}
-		res, err := controllerProduct.Search(context.Background(), req)
+		res, err := transportProduct.Search(context.Background(), req)
 
 		require.NoError(t, err)
 		require.Equal(t, len(expectedRes.GetProducts()), len(res.GetProducts()))
@@ -201,7 +201,7 @@ func TestIntegrationProductSearch(t *testing.T) {
 		cache := cache.NewProduct(cfg, redis)
 		repoProduct := repo.NewProduct(cfg, pg, cache)
 		usecaseProduct := usecase.NewProduct(cfg, repoProduct)
-		controllerProduct := NewProduct(cfg, usecaseProduct)
+		transportProduct := NewProduct(cfg, usecaseProduct)
 
 		p1 := goproductdto.ReqProductAdd{
 			SKU:         uuid.NewString(),
@@ -236,7 +236,7 @@ func TestIntegrationProductSearch(t *testing.T) {
 		}
 
 		req := &goproductgrpc.ReqProductSearch{Keyword: uuid.NewString()}
-		res, err := controllerProduct.Search(context.Background(), req)
+		res, err := transportProduct.Search(context.Background(), req)
 
 		require.NoError(t, err)
 		require.Equal(t, len(expectedRes.GetProducts()), len(res.GetProducts()))

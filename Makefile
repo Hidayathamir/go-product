@@ -33,7 +33,7 @@ go-test-unit:
 # Run test unit.
 go-test-integration:
 	go clean -testcache && \
-	go test -cover ./internal/controller/... -run TestIntegration
+	go test -cover ./internal/transport/... -run TestIntegration
 
 ###################################
 

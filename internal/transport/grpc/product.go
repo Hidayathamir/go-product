@@ -11,7 +11,7 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-// Product is controller GRPC for product related.
+// Product is transport GRPC for product related.
 type Product struct {
 	goproductgrpc.UnimplementedProductServer
 

@@ -135,19 +135,21 @@ linters-settings:
         yaml: snake
   depguard:
     rules:
-      controller_layer_only:
+      gin_transport_http_layer_only:
         list-mode: lax
         files:
-          - "!**/internal/controller/http/**"
+          - "!**/internal/transport/http/**"
+          # Addition
           - "!**/config/gin.go"
           - "!**/pkg/gouserhttp/**"
         deny:
           - pkg: github.com/gin-gonic/gin
-            desc: "gin should only be used in controller http layer"
-      repo_layer_only:
+            desc: "gin should only be used in transport http layer"
+      goredis_pgx_repo_layer_only:
         list-mode: lax
         files:
           - "!**/internal/repo/**"
+          # Addition
           - "!**/internal/pkg/**"
         deny:
           - pkg: github.com/jackc/pgx
