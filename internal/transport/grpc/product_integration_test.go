@@ -1,4 +1,4 @@
-package controllergrpc
+package grpc
 
 import (
 	"context"
