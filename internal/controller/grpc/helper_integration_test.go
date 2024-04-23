@@ -4,12 +4,14 @@ import (
 	"context"
 	"os"
 	"path/filepath"
+	"strconv"
 	"testing"
 	"time"
 
 	"github.com/Hidayathamir/go-product/internal/config"
 	"github.com/Hidayathamir/go-product/internal/pkg/pghelper"
 	"github.com/Hidayathamir/go-product/internal/repo/db"
+	"github.com/alicebob/miniredis/v2"
 	"github.com/stretchr/testify/require"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/modules/postgres"
@@ -30,7 +32,21 @@ func initTestIntegration(t *testing.T) config.Config {
 
 	dbMigrateUp(t, cfg)
 
+	s := miniredis.RunT(t)
+	updateConfigRedis(t, &cfg, s)
+
 	return cfg
+}
+
+func updateConfigRedis(t *testing.T, cfg *config.Config, s *miniredis.Miniredis) {
+	t.Helper()
+
+	cfg.Redis.Host = s.Host()
+
+	port, err := strconv.Atoi(s.Port())
+	require.NoError(t, err)
+
+	cfg.Redis.Port = port
 }
 
 func configInit(t *testing.T) config.Config {

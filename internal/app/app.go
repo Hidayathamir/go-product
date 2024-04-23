@@ -19,7 +19,7 @@ func Run() {
 
 	db := newDBPostgres(cfg)
 
-	redis := cache.NewRedis(cfg)
+	redis := newCacheRedis(cfg)
 
 	err := runGRPCServer(cfg, db, redis)
 	if err != nil {
@@ -33,4 +33,12 @@ func newDBPostgres(cfg config.Config) *db.Postgres {
 		logrus.Fatal(trace.Wrap(err))
 	}
 	return db
+}
+
+func newCacheRedis(cfg config.Config) *cache.Redis {
+	redis, err := cache.NewRedis(cfg)
+	if err != nil {
+		logrus.Fatal(trace.Wrap(err))
+	}
+	return redis
 }

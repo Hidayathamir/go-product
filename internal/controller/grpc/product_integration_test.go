@@ -28,7 +28,8 @@ func TestIntegrationProductSearch(t *testing.T) {
 		pg, err := db.NewPGPoolConn(cfg)
 		require.NoError(t, err)
 
-		redis := cache.NewRedis(cfg)
+		redis, err := cache.NewRedis(cfg)
+		require.NoError(t, err)
 
 		cache := cache.NewProduct(cfg, redis)
 		repoProduct := repo.NewProduct(cfg, pg, cache)
@@ -102,7 +103,8 @@ func TestIntegrationProductSearch(t *testing.T) {
 		pg, err := db.NewPGPoolConn(cfg)
 		require.NoError(t, err)
 
-		redis := cache.NewRedis(cfg)
+		redis, err := cache.NewRedis(cfg)
+		require.NoError(t, err)
 
 		cache := cache.NewProduct(cfg, redis)
 		repoProduct := repo.NewProduct(cfg, pg, cache)
@@ -193,7 +195,8 @@ func TestIntegrationProductSearch(t *testing.T) {
 		pg, err := db.NewPGPoolConn(cfg)
 		require.NoError(t, err)
 
-		redis := cache.NewRedis(cfg)
+		redis, err := cache.NewRedis(cfg)
+		require.NoError(t, err)
 
 		cache := cache.NewProduct(cfg, redis)
 		repoProduct := repo.NewProduct(cfg, pg, cache)

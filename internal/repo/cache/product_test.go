@@ -26,12 +26,9 @@ func TestUnitProductCacheGetDetailByID(t *testing.T) {
 			Addr: s.Addr(),
 		})
 
-		cfg := config.Config{}
-
 		p := &Product{
-			cfg: cfg,
+			cfg: config.Config{},
 			redis: &Redis{
-				cfg:    cfg,
 				client: rdb,
 			},
 		}
@@ -64,12 +61,9 @@ func TestUnitProductCacheGetDetailByID(t *testing.T) {
 			Addr: s.Addr(),
 		})
 
-		cfg := config.Config{}
-
 		p := &Product{
-			cfg: cfg,
+			cfg: config.Config{},
 			redis: &Redis{
-				cfg:    cfg,
 				client: rdb,
 			},
 		}
@@ -89,12 +83,9 @@ func TestUnitProductCacheGetDetailByID(t *testing.T) {
 			Addr: s.Addr(),
 		})
 
-		cfg := config.Config{}
-
 		p := &Product{
-			cfg: cfg,
+			cfg: config.Config{},
 			redis: &Redis{
-				cfg:    cfg,
 				client: rdb,
 			},
 		}
@@ -123,12 +114,9 @@ func TestUnitProductCacheGetDetailBySKU(t *testing.T) {
 			Addr: s.Addr(),
 		})
 
-		cfg := config.Config{}
-
 		p := &Product{
-			cfg: cfg,
+			cfg: config.Config{},
 			redis: &Redis{
-				cfg:    cfg,
 				client: rdb,
 			},
 		}
@@ -161,12 +149,9 @@ func TestUnitProductCacheGetDetailBySKU(t *testing.T) {
 			Addr: s.Addr(),
 		})
 
-		cfg := config.Config{}
-
 		p := &Product{
-			cfg: cfg,
+			cfg: config.Config{},
 			redis: &Redis{
-				cfg:    cfg,
 				client: rdb,
 			},
 		}
@@ -186,12 +171,9 @@ func TestUnitProductCacheGetDetailBySKU(t *testing.T) {
 			Addr: s.Addr(),
 		})
 
-		cfg := config.Config{}
-
 		p := &Product{
-			cfg: cfg,
+			cfg: config.Config{},
 			redis: &Redis{
-				cfg:    cfg,
 				client: rdb,
 			},
 		}
