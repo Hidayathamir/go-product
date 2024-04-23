@@ -5,11 +5,11 @@ import (
 	"strconv"
 
 	"github.com/Hidayathamir/go-product/internal/config"
-	controllergrpc "github.com/Hidayathamir/go-product/internal/controller/grpc"
 	"github.com/Hidayathamir/go-product/internal/pkg/trace"
 	"github.com/Hidayathamir/go-product/internal/repo"
 	"github.com/Hidayathamir/go-product/internal/repo/cache"
 	"github.com/Hidayathamir/go-product/internal/repo/db"
+	controllergrpc "github.com/Hidayathamir/go-product/internal/transport/grpc"
 	"github.com/Hidayathamir/go-product/internal/usecase"
 	"github.com/Hidayathamir/go-product/pkg/goproductgrpc"
 	"github.com/sirupsen/logrus"
